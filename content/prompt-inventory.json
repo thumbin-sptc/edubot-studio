@@ -1,0 +1,632 @@
+{
+  "version": "0.2",
+  "sources": {
+    "특수학급": {
+      "pdfFile": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pageCount": 63
+    },
+    "특수학교": {
+      "pdfFile": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pageCount": 42
+    },
+    "도담데이": {
+      "pdfFile": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pageCount": 32
+    }
+  },
+  "items": [
+    {
+      "id": "SC-001",
+      "title": "교사철학 작성하기",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 7,
+      "section": "교육철학 및 교육 방향 설계",
+      "category": "교육과정 설계",
+      "schoolLevel": "공통",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-002"
+      ]
+    },
+    {
+      "id": "SC-002",
+      "title": "특수학급 교육목표 및 구현중점",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 8,
+      "section": "교육과정 운영 방향 설계 / 교육목표 및 구현중점",
+      "category": "교육과정 설계",
+      "schoolLevel": "공통",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-003"
+      ]
+    },
+    {
+      "id": "SC-003",
+      "title": "구현중점별 사업 세부 추진 계획",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 9,
+      "section": "교육과정 운영 방향 설계 / 구현중점별 사업 세부 추진 계획",
+      "category": "교육과정 설계",
+      "schoolLevel": "공통",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-004",
+      "title": "월별 수학과 교육과정 운영 계획",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 11,
+      "section": "연간 교육과정 운영 계획 / 다학년 수학과 교육과정 재구성",
+      "category": "교육과정 재구성",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-006"
+      ]
+    },
+    {
+      "id": "SC-005",
+      "title": "사회정서교육 특색교육활동 운영 계획",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 14,
+      "section": "연간 교육과정 운영 계획 / 사회정서교육",
+      "category": "특색교육활동",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-007"
+      ]
+    },
+    {
+      "id": "SC-006",
+      "title": "다학년 수학과 교수·학습 과정안",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 20,
+      "section": "교수·학습 과정안 설계 / 다학년 수학과",
+      "category": "수업 설계",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-008"
+      ]
+    },
+    {
+      "id": "SC-007",
+      "title": "사회정서교육 연계 교수·학습 과정안",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 24,
+      "section": "교수·학습 과정안 설계 / 사회정서교육",
+      "category": "수업 설계",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-008",
+      "title": "수학과 평가계획 재구성안",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 27,
+      "section": "교과별 평가 계획 / 수학과 평가계획 분석 및 재구성",
+      "category": "평가 설계",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-009"
+      ]
+    },
+    {
+      "id": "SC-009",
+      "title": "학생별 평가방법 및 평가기준",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 32,
+      "section": "교과별 평가 계획 / 학생별 평가방법 및 평가기준 설계",
+      "category": "평가 설계",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-010",
+      "title": "월별 수학과 교육과정 운영 계획",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 36,
+      "section": "연간 교육과정 운영 계획 / 다학년 수학과 교육과정 재구성",
+      "category": "교육과정 재구성",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-012"
+      ]
+    },
+    {
+      "id": "SC-011",
+      "title": "진로·직업 연계 특색교육활동 운영 계획",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 40,
+      "section": "연간 교육과정 운영 계획 / 진로·직업 연계 주제중심활동",
+      "category": "특색교육활동",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-013"
+      ]
+    },
+    {
+      "id": "SC-012",
+      "title": "다학년 수학과 교수·학습 과정안",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 45,
+      "section": "교수·학습 과정안 설계 / 다학년 수학과",
+      "category": "수업 설계",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-014"
+      ]
+    },
+    {
+      "id": "SC-013",
+      "title": "진로·직업 연계 교수·학습 과정안",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 48,
+      "section": "교수·학습 과정안 설계 / 진로·직업 연계 주제중심활동",
+      "category": "수업 설계",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-014",
+      "title": "수학과 평가계획 재구성안",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 52,
+      "section": "교과별 평가 계획 / 수학과 평가계획 분석 및 재구성",
+      "category": "평가 설계",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SC-015"
+      ]
+    },
+    {
+      "id": "SC-015",
+      "title": "학생별 평가방법 및 평가기준",
+      "source": "특수학급",
+      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
+      "pdfPage": 58,
+      "section": "교과별 평가 계획 / 학생별 평가방법 및 평가기준 설계",
+      "category": "평가 설계",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SS-001",
+      "title": "교사철학 작성하기",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 5,
+      "section": "교육철학 및 교육 방향 설계",
+      "category": "교육과정 설계",
+      "schoolLevel": "공통",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-002"
+      ]
+    },
+    {
+      "id": "SS-002",
+      "title": "학급 경영 목표 및 중점",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 5,
+      "section": "교육과정 운영 방향 설계",
+      "category": "교육과정 설계",
+      "schoolLevel": "공통",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SS-003",
+      "title": "사회 교과 연간 교육과정 운영 계획",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 7,
+      "section": "초등 / 연간 교육과정 운영 계획 / 사회",
+      "category": "교육과정 재구성",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-005"
+      ]
+    },
+    {
+      "id": "SS-004",
+      "title": "일상생활 활동 교육과정 운영 계획",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 11,
+      "section": "초등 / 연간 교육과정 운영 계획 / 일상생활 활동",
+      "category": "교육과정 재구성",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-006"
+      ]
+    },
+    {
+      "id": "SS-005",
+      "title": "사회 교과 교수·학습 과정안",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 12,
+      "section": "초등 / 교수학습 과정안 / 사회",
+      "category": "수업 설계",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-007"
+      ]
+    },
+    {
+      "id": "SS-006",
+      "title": "일상생활 활동 교수·학습 과정안",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 15,
+      "section": "초등 / 교수학습 과정안 / 일상생활 활동",
+      "category": "수업 설계",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-008"
+      ]
+    },
+    {
+      "id": "SS-007",
+      "title": "사회 교육과정 평가 계획",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 17,
+      "section": "초등 / 운영 평가 / 사회",
+      "category": "평가 설계",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SS-008",
+      "title": "일상생활 활동 교육과정 평가 계획",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 19,
+      "section": "초등 / 운영 평가 / 일상생활 활동",
+      "category": "평가 설계",
+      "schoolLevel": "초등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SS-009",
+      "title": "사회 교과 연간 교육과정 운영 계획",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 22,
+      "section": "중등 / 연간 교육과정 운영 계획 / 사회",
+      "category": "교육과정 재구성",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-011"
+      ]
+    },
+    {
+      "id": "SS-010",
+      "title": "일상생활 활동 교육과정 운영 계획",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 24,
+      "section": "중등 / 연간 교육과정 운영 계획 / 일상생활 활동",
+      "category": "교육과정 재구성",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-012"
+      ]
+    },
+    {
+      "id": "SS-011",
+      "title": "사회 교과 교수·학습 과정안",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 27,
+      "section": "중등 / 교수학습 과정안 / 사회",
+      "category": "수업 설계",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-013"
+      ]
+    },
+    {
+      "id": "SS-012",
+      "title": "일상생활 활동 교수·학습 과정안",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 29,
+      "section": "중등 / 교수학습 과정안 / 일상생활 활동",
+      "category": "수업 설계",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "SS-014"
+      ]
+    },
+    {
+      "id": "SS-013",
+      "title": "사회 교육과정 평가 계획",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 31,
+      "section": "중등 / 운영 평가 / 사회",
+      "category": "평가 설계",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SS-014",
+      "title": "일상생활 활동 교육과정 평가 계획",
+      "source": "특수학교",
+      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfPage": 33,
+      "section": "중등 / 운영 평가 / 일상생활 활동",
+      "category": "평가 설계",
+      "schoolLevel": "중등",
+      "promptType": "structured-writing",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-001",
+      "title": "누리과정 5개 영역별 놀이상황 관찰 분석",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 4,
+      "section": "영·유아 관찰내용을 바탕으로 현행수준 파악 / 누리과정",
+      "category": "현행수준 분석",
+      "schoolLevel": "유치",
+      "promptType": "practice-prompt",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "DD-003"
+      ]
+    },
+    {
+      "id": "DD-002",
+      "title": "발달영역별 놀이상황 관찰 분석",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 7,
+      "section": "영·유아 관찰내용을 바탕으로 현행수준 파악 / 발달영역",
+      "category": "현행수준 분석",
+      "schoolLevel": "유치",
+      "promptType": "practice-prompt",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "DD-003"
+      ]
+    },
+    {
+      "id": "DD-003",
+      "title": "현행수준 기반 학기별 IEP 목표·평가계획",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 11,
+      "section": "IEP / 학기별 목표",
+      "category": "IEP",
+      "schoolLevel": "유치",
+      "promptType": "practice-prompt",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": [
+        "DD-004",
+        "DD-005"
+      ]
+    },
+    {
+      "id": "DD-004",
+      "title": "학기별 목표 연계 월별 개별화교육계획",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 12,
+      "section": "IEP / 월별 목표",
+      "category": "IEP",
+      "schoolLevel": "유치",
+      "promptType": "practice-prompt",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-005",
+      "title": "도담데이 놀이활동 연계 월별 개별화교육계획",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 13,
+      "section": "IEP / 도담데이 놀이 연계",
+      "category": "IEP",
+      "schoolLevel": "유치",
+      "promptType": "practice-prompt",
+      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X01",
+      "title": "책놀이 월간계획 세부항목 요청",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 2,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "놀이 프로그램",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "간편 복사",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X02",
+      "title": "기존 유치원 교육과정 재구성 도우미 (8개 항목)",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 16,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "교육과정 재구성",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "기존 도구 연계 검토",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X03",
+      "title": "애착증진 신체놀이 월간계획 요청",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 22,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "놀이 프로그램",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "간편 복사",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X04",
+      "title": "애착증진 신체놀이 월간계획 상세 요청",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 22,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "놀이 프로그램",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "간편 복사",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X05",
+      "title": "애착증진 신체놀이 초등 이음교육 연계",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 22,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "이음교육",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "간편 복사",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X06",
+      "title": "교사 관찰기록 기반 서술형 놀이 평가",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 27,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "놀이 평가",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "맞춤 입력 마법사 후보",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X07",
+      "title": "수준별 그림 짝짓기 활동지 생성",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 29,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "수업자료",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "간편 복사",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X08",
+      "title": "바인더북 활동자료 제작",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 30,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "수업자료",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "맞춤 입력 마법사 후보",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "DD-X09",
+      "title": "그림 생성 후 PPT 변환 요청",
+      "source": "도담데이",
+      "sourcePdf": "TalkFile_도담데이 프로그램 활용(통합) .pdf(1).pdf",
+      "pdfPage": 31,
+      "section": "본문 활용 예시 (박스 프롬프트와 별도)",
+      "category": "수업자료",
+      "schoolLevel": "유치",
+      "promptType": "example-or-existing-tool",
+      "suggestedPresentation": "단계형 예시 안내",
+      "status": "예시 유형 확인 / 라이브러리 포함 여부 검토",
+      "suggestedNextIds": []
+    }
+  ]
+}
