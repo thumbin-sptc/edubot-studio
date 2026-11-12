@@ -1,0 +1,135 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edubot-studio.example.invalid/schemas/prompt-template.schema.json",
+  "title": "EDU-BOT Studio prompt template (draft-compatible)",
+  "type": "object",
+  "required": [
+    "id",
+    "version",
+    "publicationStatus",
+    "title",
+    "sourceOriginalText",
+    "templateText",
+    "steps",
+    "fields"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "publicationStatus": {
+      "enum": [
+        "draft",
+        "reviewed",
+        "published"
+      ]
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source": {
+      "type": "object"
+    },
+    "sourceOriginalText": {
+      "type": "string",
+      "minLength": 1
+    },
+    "templateText": {
+      "type": "string",
+      "minLength": 1
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 0,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "kind": {
+            "type": "string"
+          },
+          "fieldIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "fields": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "kind",
+          "label",
+          "required",
+          "placeholderToken"
+        ],
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "kind": {
+            "enum": [
+              "single-select",
+              "multi-select",
+              "short-text",
+              "long-text",
+              "number",
+              "repeatable"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "placeholderToken": {
+            "type": "string"
+          },
+          "itemType": {
+            "type": "string"
+          },
+          "exampleItems": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "relatedPromptIds": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "mode": {
+      "enum": [
+        "wizard",
+        "simple-copy"
+      ]
+    }
+  },
+  "additionalProperties": true
+}
