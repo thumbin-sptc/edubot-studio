@@ -10,6 +10,7 @@ coverage/
 *.log
 .DS_Store
 *.tsbuildinfo
+next-env.d.ts
 # Real student/teacher materials or PDF manuscripts must not be committed by default
 private-data/
 local-manuscripts/
