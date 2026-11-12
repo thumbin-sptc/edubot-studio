@@ -5,7 +5,7 @@ import {
   type AttachmentMode,
   type PromptAttachment,
   type PromptField,
-  type PromptTemplate,
+  type WizardTemplate,
 } from "./prompt-template.ts";
 
 export type ChoiceValue = { selected: string[]; useOther: boolean; other: string };
@@ -92,7 +92,7 @@ export function getFieldValue(inputs: PromptInputs, id: string): FieldValue | un
   return Object.hasOwn(inputs.fieldValues, id) ? inputs.fieldValues[id] : undefined;
 }
 
-export function validatePromptInputs(template: PromptTemplate, inputs: PromptInputs): Map<string, string> {
+export function validatePromptInputs(template: WizardTemplate, inputs: PromptInputs): Map<string, string> {
   const errors = new Map<string, string>();
   for (const field of template.fields) {
     const error = validateFieldValue(field, getFieldValue(inputs, field.id));
@@ -119,7 +119,7 @@ export function formatFieldValue(field: PromptField, value: FieldValue | undefin
   return typeof value === "string" ? value.trim() : "";
 }
 
-export function generatePrompt(template: PromptTemplate, inputs: PromptInputs): string {
+export function generatePrompt(template: WizardTemplate, inputs: PromptInputs): string {
   if (validatePromptInputs(template, inputs).size) throw new Error("Invalid prompt inputs");
   const values = new Map(template.fields.map((field) => [
     field.placeholderToken,

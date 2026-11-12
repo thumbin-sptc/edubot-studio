@@ -1,6 +1,7 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { forgetResult } from "./browser-results";
 import { notifyStudioStorage, observeStudioStorage } from "./browser-storage";
 import { isSavingEnabled } from "./save-preference";
 export { changeBrowserPreference } from "./browser-storage";
@@ -81,6 +82,7 @@ export function removeBrowserDraft(draft: Draft | "all"): boolean {
     const storage = window.localStorage;
     if (draft === "all") deleteAllDrafts(storage);
     else deleteDraft(storage, draft);
+    forgetResult(draft);
     return true;
   } catch {
     return false;

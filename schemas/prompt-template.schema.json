@@ -120,8 +120,36 @@
     },
     "relatedPromptIds": {
       "type": "array",
+      "uniqueItems": true,
       "items": {
-        "type": "string"
+        "type": "string",
+        "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+      }
+    },
+    "previousResultImports": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "required": ["fieldId", "sourcePromptIds"],
+        "additionalProperties": false,
+        "properties": {
+          "fieldId": {
+            "type": "string",
+            "pattern": "^[A-Za-z][A-Za-z0-9_-]*$",
+            "description": "Existing long-text field id. Each field id may appear at most once."
+          },
+          "sourcePromptIds": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "pattern": "^[A-Za-z][A-Za-z0-9_-]*$"
+            },
+            "description": "Explicit source allowlist. Self references are invalid. Only published sources are used at runtime."
+          }
+        }
       }
     },
     "mode": {

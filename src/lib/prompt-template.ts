@@ -17,6 +17,16 @@ type FieldBase = {
 };
 
 export type PromptOption = { value: string; label: string };
+export type PreviousResultImport = { fieldId: string; sourcePromptIds: string[] };
+export type PromptCatalogMetadata = {
+  category?: string;
+  schoolEnvironment?: string;
+  schoolLevel?: string;
+  source?: string;
+  section?: string;
+  pdfPage?: number;
+  bookPage?: number;
+};
 export type PromptField = FieldBase & (
   | { kind: TextKind }
   | { kind: "number"; min?: number; max?: number }
@@ -52,9 +62,14 @@ export type PromptTemplate = {
   fields: PromptField[];
   attachments: PromptAttachment[];
   steps: PromptStep[];
+  catalog: PromptCatalogMetadata;
+  relatedPromptIds?: string[];
+  previousResultImports: PreviousResultImport[];
 };
 
 export type PublishedPrompt = PromptTemplate & { publicationStatus: "published" };
+export type WizardTemplate = Pick<PromptTemplate, "id" | "title" | "summary" | "version" | "mode" |
+  "templateText" | "fields" | "attachments" | "steps">;
 
 export function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);
@@ -114,6 +129,71 @@ function inputToken(value: unknown, id: string): string {
 
 function validateUnique(values: string[], name: string): void {
   if (new Set(values).size !== values.length) throw new Error(`Duplicate ${name}`);
+}
+
+export function isResultImportField(field: { kind?: unknown }): boolean {
+  return field.kind === "long-text";
+}
+
+function parsePromptIds(raw: unknown, name: string, ownerId: string) {
+  const ids = requireArray(raw, name).map((entry) => requireId(entry, name));
+  validateUnique(ids, name);
+  if (ids.includes(ownerId)) throw new Error(`Self reference in ${name}`);
+  return ids;
+}
+
+export function parsePromptLinks(data: Record<string, unknown>, ownerId: string, fields: Array<{ id?: unknown; kind?: unknown }>) {
+  const relatedPromptIds = data.relatedPromptIds === undefined
+    ? undefined : parsePromptIds(data.relatedPromptIds, "relatedPromptIds", ownerId);
+  const imports = data.previousResultImports === undefined ? [] : requireArray(data.previousResultImports, "previousResultImports");
+  const previousResultImports = imports.map((raw): PreviousResultImport => {
+    const rule = requireRecord(raw, "previousResultImports entry");
+    const fieldId = requireId(rule.fieldId, "import fieldId");
+    const field = fields.find(({ id }) => id === fieldId);
+    if (!field || !isResultImportField(field)) throw new Error(`Import field ${fieldId} must be an existing long-text field`);
+    if (Object.keys(rule).some((key) => key !== "fieldId" && key !== "sourcePromptIds")) {
+      throw new Error(`Unsupported import option for ${fieldId}`);
+    }
+    const sourcePromptIds = parsePromptIds(rule.sourcePromptIds, "sourcePromptIds", ownerId);
+    if (!sourcePromptIds.length) throw new Error(`No approved source ids for import field ${fieldId}`);
+    return { fieldId, sourcePromptIds };
+  });
+  validateUnique(previousResultImports.map(({ fieldId }) => fieldId), "previous result import fields");
+  return { relatedPromptIds, previousResultImports };
+}
+
+function positivePage(raw: unknown): number | undefined {
+  return typeof raw === "number" && Number.isSafeInteger(raw) && raw > 0 ? raw : undefined;
+}
+
+function catalogText(raw: unknown): string | undefined {
+  return typeof raw === "string" && raw.trim() ? raw.trim() : undefined;
+}
+
+export function parseInventoryMetadata(raw: Record<string, unknown>): PromptCatalogMetadata {
+  return {
+    category: catalogText(raw.category),
+    schoolEnvironment: catalogText(raw.schoolEnvironment),
+    schoolLevel: catalogText(raw.schoolLevel),
+    source: catalogText(raw.source),
+    section: catalogText(raw.section),
+    pdfPage: positivePage(raw.pdfPage),
+    bookPage: positivePage(raw.bookPage),
+  };
+}
+
+function parseCatalogMetadata(data: Record<string, unknown>): PromptCatalogMetadata {
+  const display = isRecord(data.display) ? data.display : {};
+  const source = isRecord(data.source) ? data.source : {};
+  return {
+    category: catalogText(display.category),
+    schoolEnvironment: catalogText(display.schoolEnvironment),
+    schoolLevel: catalogText(display.schoolLevel),
+    source: catalogText(source.document),
+    section: catalogText(source.section),
+    pdfPage: positivePage(source.pdfPage),
+    bookPage: positivePage(source.bookPage),
+  };
 }
 
 function parseField(raw: unknown): PromptField {
@@ -283,6 +363,8 @@ export function parsePromptTemplate(raw: unknown): PromptTemplate {
     fields,
     attachments,
     steps: parseSteps(data.steps, fields, attachments, mode),
+    catalog: parseCatalogMetadata(data),
+    ...parsePromptLinks(data, id, fields),
   };
 }
 

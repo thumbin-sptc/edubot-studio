@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useId, useRef } from "react";
 import { currentOutput, type Draft } from "@/lib/prompt-drafts";
 import { isChoiceValue } from "@/lib/prompt-engine";
 import { CopyPrompt } from "./prompt-controls";
@@ -14,6 +14,19 @@ export function DraftOutput({ output, onChange }: { output: string; onChange?: (
         autoComplete="off" spellCheck={false}
         readOnly={!onChange} onChange={(event) => onChange?.(event.target.value)} />
       <CopyPrompt text={output} target={target} />
+    </div>
+  );
+}
+
+function ArchivedAnswer({ answer }: { answer: string }) {
+  const id = useId();
+  const target = useRef<HTMLTextAreaElement>(null);
+  return (
+    <div className="prompt-output">
+      <label htmlFor={id}>이전에 보관한 AI 답변</label>
+      <textarea ref={target} id={id} className="prompt-input" rows={5} readOnly value={answer}
+        autoComplete="off" spellCheck={false} />
+      <CopyPrompt text={answer} target={target} buttonLabel="보관한 AI 답변 복사" successLabel="보관한 AI 답변을 복사했습니다." />
     </div>
   );
 }
@@ -44,12 +57,7 @@ export function DraftArchive({ draft }: { draft: Draft }) {
         </dl>
       )}
       {output !== null ? <DraftOutput output={output} /> : <p>저장된 완성 프롬프트가 없습니다.</p>}
-      {draft.externalAiResult && (
-        <div className="draft-inputs">
-          <strong>이전에 보관한 AI 답변</strong>
-          <p>{draft.externalAiResult}</p>
-        </div>
-      )}
+      {draft.externalAiResult && <ArchivedAnswer answer={draft.externalAiResult} />}
     </div>
   );
 }

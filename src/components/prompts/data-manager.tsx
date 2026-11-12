@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { changeBrowserPreference, removeBrowserDraft, useDraftStorage } from "@/lib/browser-drafts";
+import { forgetResult } from "@/lib/browser-results";
 import { removeBrowserCreateData, useCreateSession } from "@/lib/create/browser-session";
 import { devices, platforms } from "@/lib/create/model";
 import { draftKey, type Draft } from "@/lib/prompt-drafts";
@@ -27,6 +28,7 @@ export function DataManager() {
       ? removeBrowserCreateData(deletion === "all")
       : removeBrowserDraft(deletion);
     if (ok) {
+      if (deletion === "all") forgetResult("all");
       if (deletion === "all" || (typeof deletion !== "string" && selected === draftKey(deletion))) setSelected(null);
       setMessage({ error: false, text: typeof deletion === "string" ? "저장 데이터를 삭제했습니다." : "저장된 작성본을 삭제했습니다." });
     } else {

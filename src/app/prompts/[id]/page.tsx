@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { PromptWizard } from "@/components/prompts/prompt-wizard";
-import { getPublishedPrompt, getPublishedPromptSummaries } from "@/lib/published-prompts";
+import { getPromptWizardData, getPublishedPrompt, getPublishedPromptSummaries } from "@/lib/published-prompts";
 
 type Props = { params: Promise<{ id: string }> };
 
@@ -23,5 +23,5 @@ export default async function PromptPage({ params }: Props) {
   const { id } = await params;
   const template = await getPublishedPrompt(id);
   if (!template) notFound();
-  return <PromptWizard template={template} />;
+  return <PromptWizard {...await getPromptWizardData(template)} />;
 }

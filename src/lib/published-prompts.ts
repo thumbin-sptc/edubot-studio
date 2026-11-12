@@ -2,17 +2,14 @@ import "server-only";
 
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
-import { parsePublishedPrompt, promptIdPattern } from "./prompt-template";
-
-type PublishedPromptSummary = {
-  id: string;
-  title: string;
-  summary?: string;
-};
+import { cache } from "react";
+import { approvedResultSources, indexInventory, publicPromptSummary, relatedPublicPrompts } from "./prompt-catalog";
+import { parsePublishedPrompt, promptIdPattern, type PublishedPrompt, type WizardTemplate } from "./prompt-template";
 
 const promptDirectory = join(process.cwd(), "content", "prompts");
+const inventoryPath = join(process.cwd(), "content", "prompt-inventory.json");
 
-export async function getPublishedPromptSummaries(): Promise<PublishedPromptSummary[]> {
+const getPublishedPrompts = cache(async (): Promise<PublishedPrompt[]> => {
   const entries = await readdir(promptDirectory, { withFileTypes: true });
   const filenames = entries
     .filter((entry) => entry.isFile() && entry.name.endsWith(".json"))
@@ -20,12 +17,10 @@ export async function getPublishedPromptSummaries(): Promise<PublishedPromptSumm
     .sort();
 
   const templates = await Promise.all(filenames.map((filename) => getPublishedPrompt(filename.slice(0, -5))));
-  return templates.flatMap((template) => template
-    ? [{ id: template.id, title: template.title, summary: template.summary }]
-    : []);
-}
+  return templates.filter((template) => template !== null);
+});
 
-export async function getPublishedPrompt(id: string) {
+export const getPublishedPrompt = cache(async (id: string) => {
   if (!promptIdPattern.test(id)) return null;
 
   let file: string;
@@ -36,4 +31,22 @@ export async function getPublishedPrompt(id: string) {
     throw error;
   }
   return parsePublishedPrompt(JSON.parse(file), id);
+});
+
+export const getPublishedPromptSummaries = cache(async () => {
+  const templates = await getPublishedPrompts();
+  if (!templates.length) return [];
+  const inventory = indexInventory(JSON.parse(await readFile(inventoryPath, "utf8")));
+  return templates.map((template) => publicPromptSummary(template, inventory.get(template.id)));
+});
+
+export async function getPromptWizardData(prompt: PublishedPrompt) {
+  const [catalog, published] = await Promise.all([getPublishedPromptSummaries(), getPublishedPrompts()]);
+  const { id, title, summary, version, mode, templateText, fields, attachments, steps } = prompt;
+  const template: WizardTemplate = { id, title, summary, version, mode, templateText, fields, attachments, steps };
+  return {
+    template,
+    related: relatedPublicPrompts(prompt, catalog),
+    imports: approvedResultSources(prompt, published),
+  };
 }

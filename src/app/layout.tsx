@@ -5,6 +5,7 @@ import type { ReactNode } from "react";
 import { Navigation } from "@/components/navigation";
 import "./globals.css";
 import "./prompts.css";
+import "./prompts/catalog.css";
 
 export const metadata: Metadata = {
   title: {

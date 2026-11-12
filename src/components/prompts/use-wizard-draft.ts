@@ -2,23 +2,29 @@
 
 import { useRef, useState } from "react";
 import { changeBrowserPreference, readBrowserDraft, saveBrowserDraft, type useDraftStorage } from "@/lib/browser-drafts";
-import { createDraft, type Draft, type DraftRecord, type SavedDraftRecord } from "@/lib/prompt-drafts";
-import type { PromptTemplate } from "@/lib/prompt-template";
+import { forgetResult, rememberResult, useResultMemory } from "@/lib/browser-results";
+import { createDraft, draftKey, type Draft, type DraftRecord, type SavedDraftRecord } from "@/lib/prompt-drafts";
+import type { WizardTemplate } from "@/lib/prompt-template";
 
 type SaveConflict = { existing: DraftRecord; enable: boolean };
 
-function resumeDraft(template: PromptTemplate, stored: Draft): Draft {
+function resumeDraft(template: WizardTemplate, stored: Draft): Draft {
   const step = template.steps.find(({ id }) => id === stored.currentStepId);
   if (step && (step.kind !== "generated-output" || stored.generatedOutput !== null)) return stored;
   return { ...stored, currentStepId: template.steps[0].id };
 }
 
 export function useWizardDraft(
-  template: PromptTemplate,
+  template: WizardTemplate,
   storage: ReturnType<typeof useDraftStorage>,
   initial: SavedDraftRecord | undefined,
 ) {
-  const [draft, setDraft] = useState(() => initial ? resumeDraft(template, initial.draft) : createDraft(template));
+  const memory = useResultMemory();
+  const [draft, setDraft] = useState(() => {
+    if (initial) return resumeDraft(template, initial.draft);
+    const blank = createDraft(template);
+    return { ...blank, externalAiResult: memory.get(draftKey(blank))?.externalAiResult };
+  });
   const lastSaved = useRef({ raw: initial?.raw ?? null, draft: initial ? draft : null });
   const changedWhileOff = useRef(false);
   const [paused, setPaused] = useState(false);
@@ -43,6 +49,7 @@ export function useWizardDraft(
     switch (result.kind) {
       case "saved":
         lastSaved.current = { raw: result.raw, draft: next };
+        forgetResult(next);
         changedWhileOff.current = false;
         setPaused(false);
         setMessage("");
@@ -59,9 +66,10 @@ export function useWizardDraft(
     }
   }
 
-  function update(next: Draft) {
+  function update(next: Draft, answerChanged = false) {
     const updated = { ...next, updatedAt: new Date().toISOString() };
     setDraft(updated);
+    if (answerChanged) rememberResult(updated);
     if (!storage.enabled) {
       changedWhileOff.current = true;
       return;
@@ -81,6 +89,7 @@ export function useWizardDraft(
   function toggle() {
     if (storage.enabled) {
       if (changeBrowserPreference(false)) {
+        rememberResult(draft);
         setMessage("");
         setPaused(false);
       } else {
@@ -127,6 +136,7 @@ export function useWizardDraft(
     lastSaved.current = { raw: existing.raw, draft: restored };
     changedWhileOff.current = false;
     setDraft(restored);
+    forgetResult(restored);
     setPaused(false);
     setMessage("");
     return true;
@@ -134,6 +144,7 @@ export function useWizardDraft(
 
   return {
     draft, update, toggle, conflict, resolveConflict, paused, message,
+    updateAnswer: (externalAiResult: string | undefined) => update({ ...draft, externalAiResult }, true),
     cancelConflict: () => setConflict(null),
     retry: () => retrySave(),
   };

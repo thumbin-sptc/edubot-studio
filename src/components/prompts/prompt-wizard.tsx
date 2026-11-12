@@ -3,12 +3,16 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useDraftStorage } from "@/lib/browser-drafts";
+import { useResultMemory } from "@/lib/browser-results";
 import {
   currentOutput, draftKey, needsRegenerationConfirmation, restoreGeneratedOutput,
   withGeneratedOutput, type SavedDraftRecord,
 } from "@/lib/prompt-drafts";
 import { generatePrompt, getFieldValue, validatePromptInputs } from "@/lib/prompt-engine";
-import type { PromptStep, PublishedPrompt } from "@/lib/prompt-template";
+import type { PublishedResultSource } from "@/lib/prompt-catalog";
+import { availableResults } from "@/lib/prompt-results";
+import type { PromptStep, WizardTemplate } from "@/lib/prompt-template";
+import { ExternalAnswer, PreviousAnswer } from "./ai-results";
 import { DraftOutput } from "./draft-output";
 import { DecisionDialog, StorageToggle } from "./prompt-controls";
 import { useWizardDraft } from "./use-wizard-draft";
@@ -16,8 +20,13 @@ import { AttachmentField, fieldDomId, WizardField } from "./wizard-fields";
 
 type StorageState = ReturnType<typeof useDraftStorage>;
 type OutputDecision = { type: "restore" } | { type: "regenerate"; output: string };
+type WizardProps = {
+  template: WizardTemplate;
+  related: readonly { id: string; title: string }[];
+  imports: readonly { fieldId: string; sources: readonly PublishedResultSource[] }[];
+};
 
-export function PromptWizard({ template }: { template: PublishedPrompt }) {
+export function PromptWizard({ template, related, imports }: WizardProps) {
   const storage = useDraftStorage();
   const identity = { promptId: template.id, templateVersion: template.version };
   const key = draftKey(identity);
@@ -35,19 +44,20 @@ export function PromptWizard({ template }: { template: PublishedPrompt }) {
         <p>학생 이름은 가명으로 적고, 학번이나 건강 정보 등 학생을 식별할 수 있는 정보는 입력하지 마세요. 작성 내용은 이 앱의 서버로 전송하지 않습니다.</p>
       </section>
       {storage.ready
-        ? <WizardSession key={key} template={template} storage={storage} initial={initial} older={older} />
+        ? <WizardSession key={key} template={template} related={related} imports={imports}
+            storage={storage} initial={initial} older={older} />
         : <p role="status">작성 화면을 준비하고 있습니다.</p>}
     </section>
   );
 }
 
-function WizardSession({ template, storage, initial, older }: {
-  template: PublishedPrompt;
+function WizardSession({ template, storage, initial, older, related, imports }: WizardProps & {
   storage: StorageState;
   initial?: SavedDraftRecord;
   older: SavedDraftRecord[];
 }) {
   const session = useWizardDraft(template, storage, initial);
+  const memory = useResultMemory();
   const { draft, update } = session;
   const [started, setStarted] = useState(Boolean(initial) || older.length === 0);
   const [checkedFields, setCheckedFields] = useState<Set<string>>(() => new Set());
@@ -175,9 +185,23 @@ function WizardSession({ template, storage, initial, older }: {
           <div className="prompt-fields">
             {step.fieldIds.map((id) => {
               const field = template.fields.find((entry) => entry.id === id)!;
-              return <WizardField key={id} field={field} value={getFieldValue(draft, id)}
-                error={checkedFields.has(id) ? errors.get(id) : undefined}
-                onChange={(value) => update({ ...draft, fieldValues: { ...draft.fieldValues, [id]: value } })} />;
+              const value = getFieldValue(draft, id);
+              const rule = imports.find(({ fieldId }) => fieldId === id);
+              return (
+                <div key={id} className="grid gap-3">
+                  <WizardField field={field} value={value}
+                    error={checkedFields.has(id) ? errors.get(id) : undefined}
+                    onChange={(value) => update({ ...draft, fieldValues: { ...draft.fieldValues, [id]: value } })} />
+                  {rule && field.kind === "long-text" && (
+                    <PreviousAnswer fieldLabel={field.label} existing={typeof value === "string" ? value : ""}
+                      candidates={availableResults(rule.sources, memory, storage.drafts.map(({ draft }) => draft), storage.enabled)}
+                      onImport={(text) => {
+                        update({ ...draft, fieldValues: { ...draft.fieldValues, [id]: text } });
+                        setFocus({ id: fieldDomId(id) });
+                      }} />
+                  )}
+                </div>
+              );
             })}
           </div>
         )}
@@ -217,6 +241,10 @@ function WizardSession({ template, storage, initial, older }: {
                 <button className="action action-secondary" type="button"
                   onClick={() => setDecision({ type: "restore" })}>자동 생성본으로 복원</button>
               )}
+            </div>
+            <div className="grid gap-3 mt-5">
+              <ExternalAnswer answer={draft.externalAiResult} saving={storage.enabled}
+                onChange={(answer) => session.updateAnswer(answer)} related={related} />
             </div>
           </>
         )}

@@ -1,5 +1,5 @@
 import { isAttachmentMode, isChoiceValue, type FieldValue, type PromptInputs } from "./prompt-engine.ts";
-import { isRecord, promptIdPattern, versionPattern, type PromptTemplate } from "./prompt-template.ts";
+import { isRecord, promptIdPattern, versionPattern, type WizardTemplate } from "./prompt-template.ts";
 import { isSavingEnabled } from "./save-preference.ts";
 
 export { isSavingEnabled, savePreferenceKey, setSavingEnabled } from "./save-preference.ts";
@@ -32,7 +32,7 @@ export function draftKey({ promptId, templateVersion }: DraftIdentity): string {
   return `${draftPrefix}${promptId}@${templateVersion}`;
 }
 
-export function createDraft(template: PromptTemplate): Draft {
+export function createDraft(template: WizardTemplate): Draft {
   return {
     schemaVersion: 1,
     promptId: template.id,
