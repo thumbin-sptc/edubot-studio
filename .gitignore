@@ -1,0 +1,15 @@
+node_modules/
+.next/
+out/
+dist/
+coverage/
+.vercel/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+*.tsbuildinfo
+# Real student/teacher materials or PDF manuscripts must not be committed by default
+private-data/
+local-manuscripts/

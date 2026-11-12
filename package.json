@@ -1,0 +1,14 @@
+{
+  "name": "edubot-studio",
+  "version": "0.3.0",
+  "private": true,
+  "type": "module",
+  "description": "Codex kickoff repository: docs, draft prompt content, validation only; Next.js to be scaffolded by CODEX-01",
+  "scripts": {
+    "validate:content": "node scripts/validate-content.mjs",
+    "test": "node --test tests/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  }
+}
