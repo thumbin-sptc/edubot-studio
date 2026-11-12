@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { inspectCreateContent } from '../src/lib/create/content.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
@@ -83,15 +84,18 @@ export function validateContent() {
     if (filename !== `${template.id}.json`) fail(errors,`${filename}: filename does not match id`);
     for (const error of validatePrompt(template,ids)) fail(errors,`${filename}: ${error}`);
   }
-  return {errors, inventoryCount: inventory.items.length, officialCount: inventory.items.filter((p)=>!p.id.startsWith('DD-X')).length, candidateCount: inventory.items.filter((p)=>p.id.startsWith('DD-X')).length, templateCount: paths.length};
+  const creation = inspectCreateContent(root);
+  errors.push(...creation.errors);
+  return {errors, inventoryCount: inventory.items.length, officialCount: inventory.items.filter((p)=>!p.id.startsWith('DD-X')).length, candidateCount: inventory.items.filter((p)=>p.id.startsWith('DD-X')).length, templateCount: paths.length, publishedGuideCount: creation.entries.filter((entry) => entry.support === 'supported').length};
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {
-  const {errors,inventoryCount,officialCount,candidateCount,templateCount}=validateContent();
+  const {errors,inventoryCount,officialCount,candidateCount,templateCount,publishedGuideCount}=validateContent();
   if (errors.length) {
     console.error('❌ 콘텐츠 무결성 검사 실패:\n' + errors.map((e)=>' - '+e).join('\n'));
     process.exitCode=1;
   } else {
     console.log(`✅ 원고 공식 프롬프트 ${officialCount}건 + 추가 후보 ${candidateCount}건 (메타데이터 총 ${inventoryCount}건), draft 템플릿 ${templateCount}건 무결성 검사 통과`);
+    console.log(`✅ 에듀봇 제작 콘텐츠 검사 통과 (공개 가이드 ${publishedGuideCount}건)`);
   }
 }

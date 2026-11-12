@@ -10,7 +10,7 @@
     "start": "next start",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "next typegen && tsc --noEmit",
-    "validate:content": "node scripts/validate-content.mjs",
+    "validate:content": "node --experimental-strip-types scripts/validate-content.mjs",
     "test": "node --experimental-strip-types --test tests/*.test.mjs"
   },
   "engines": {

@@ -1,8 +1,10 @@
 import { isAttachmentMode, isChoiceValue, type FieldValue, type PromptInputs } from "./prompt-engine.ts";
 import { isRecord, promptIdPattern, versionPattern, type PromptTemplate } from "./prompt-template.ts";
+import { isSavingEnabled } from "./save-preference.ts";
+
+export { isSavingEnabled, savePreferenceKey, setSavingEnabled } from "./save-preference.ts";
 
 export const draftPrefix = "edubot-studio:draft:";
-export const savePreferenceKey = "edubot-studio:save-enabled";
 
 export type Draft = PromptInputs & {
   schemaVersion: 1;
@@ -137,14 +139,6 @@ export function readDrafts(storage: DraftStorage): { drafts: SavedDraftRecord[];
   });
   drafts.sort((left, right) => Date.parse(right.draft.updatedAt) - Date.parse(left.draft.updatedAt));
   return { drafts, unreadable: keys.length - drafts.length };
-}
-
-export function isSavingEnabled(storage: DraftStorage): boolean {
-  return storage.getItem(savePreferenceKey) === "true";
-}
-
-export function setSavingEnabled(storage: DraftStorage, enabled: boolean): void {
-  storage.setItem(savePreferenceKey, String(enabled));
 }
 
 export function writeDraft(storage: DraftStorage, draft: Draft, expected: string | null) {

@@ -1,15 +1,14 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
+import { notifyStudioStorage, observeStudioStorage } from "./browser-storage";
+import { isSavingEnabled } from "./save-preference";
+export { changeBrowserPreference } from "./browser-storage";
 import {
   deleteAllDrafts,
   deleteDraft,
-  draftPrefix,
-  isSavingEnabled,
   readDraft,
   readDrafts,
-  savePreferenceKey,
-  setSavingEnabled,
   writeDraft,
   type Draft,
   type SavedDraftRecord,
@@ -49,9 +48,7 @@ function subscribe(subscriber: () => void) {
   subscribers.add(subscriber);
   if (!listening) {
     listening = true;
-    window.addEventListener("storage", (event) => {
-      if (event.key === null || event.key === savePreferenceKey || event.key.startsWith(draftPrefix)) refresh();
-    });
+    observeStudioStorage(refresh);
     refresh();
   }
   return () => { subscribers.delete(subscriber); };
@@ -66,17 +63,6 @@ export function readBrowserDraft(draft: Draft) {
     return readDraft(window.localStorage, draft);
   } catch {
     return null;
-  }
-}
-
-export function changeBrowserPreference(enabled: boolean): boolean {
-  try {
-    setSavingEnabled(window.localStorage, enabled);
-    return true;
-  } catch {
-    return false;
-  } finally {
-    refresh();
   }
 }
 
@@ -99,6 +85,6 @@ export function removeBrowserDraft(draft: Draft | "all"): boolean {
   } catch {
     return false;
   } finally {
-    refresh();
+    notifyStudioStorage();
   }
 }

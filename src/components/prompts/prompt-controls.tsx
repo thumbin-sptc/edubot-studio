@@ -64,7 +64,14 @@ export function StorageToggle({ enabled, available, onToggle }: {
   );
 }
 
-export function CopyPrompt({ text, target }: { text: string; target: RefObject<HTMLTextAreaElement | null> }) {
+export function CopyPrompt({
+  text, target, buttonLabel = "프롬프트 복사", successLabel = "프롬프트를 복사했습니다.",
+}: {
+  text: string;
+  target: RefObject<HTMLTextAreaElement | null>;
+  buttonLabel?: string;
+  successLabel?: string;
+}) {
   const [status, setStatus] = useState<{ text: string; result: "copied" | "manual" } | null>(null);
   const [copying, setCopying] = useState(false);
   const current = status?.text === text ? status.result : null;
@@ -75,7 +82,8 @@ export function CopyPrompt({ text, target }: { text: string; target: RefObject<H
     const clipboard = navigator.clipboard;
     const result = await copyPromptText(text, clipboard?.writeText?.bind(clipboard));
     setCopying(false);
-    if (target.current?.value !== text) return;
+    // The textarea normalizes line endings, while the clipboard must keep the original text.
+    if (target.current?.value !== text.replace(/\r\n?/g, "\n")) return;
     setStatus({ text, result });
     if (result === "manual") {
       target.current.focus();
@@ -86,9 +94,9 @@ export function CopyPrompt({ text, target }: { text: string; target: RefObject<H
   return (
     <div className="prompt-copy">
       <p className="muted">외부 AI에 붙여넣으면 해당 서비스의 데이터 처리 정책이 적용됩니다. 학생을 식별할 수 있는 정보는 지워 주세요.</p>
-      <button className="action" type="button" onClick={copy} disabled={copying || !text.trim()}>프롬프트 복사</button>
+      <button className="action" type="button" onClick={copy} disabled={copying || !text.trim()}>{buttonLabel}</button>
       <p className="prompt-copy-status" role="status">
-        {current === "copied" && "프롬프트를 복사했습니다."}
+        {current === "copied" && successLabel}
         {current === "manual" && "자동 복사를 사용할 수 없습니다. 본문을 선택한 뒤 기기의 복사 메뉴 또는 Ctrl+C / ⌘C를 사용해 주세요."}
       </p>
     </div>
