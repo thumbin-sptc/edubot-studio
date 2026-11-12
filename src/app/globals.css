@@ -51,10 +51,12 @@ body {
   background: var(--color-paper);
   color: var(--color-accent);
   font-weight: 700;
+  clip-path: inset(50%);
   transform: translateY(calc(-100% - 24px));
 }
 
 .skip-link:focus {
+  clip-path: none;
   transform: none;
 }
 

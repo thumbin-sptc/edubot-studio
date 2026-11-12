@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { Navigation } from "@/components/navigation";
 import "./globals.css";
+import "./prompts.css";
 
 export const metadata: Metadata = {
   title: {

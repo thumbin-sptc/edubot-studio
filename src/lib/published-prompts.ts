@@ -2,6 +2,7 @@ import "server-only";
 
 import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
+import { parsePublishedPrompt, promptIdPattern } from "./prompt-template";
 
 type PublishedPromptSummary = {
   id: string;
@@ -18,23 +19,21 @@ export async function getPublishedPromptSummaries(): Promise<PublishedPromptSumm
     .map((entry) => entry.name)
     .sort();
 
-  const summaries = await Promise.all(filenames.map(async (filename) => {
-    const file = await readFile(join(promptDirectory, filename), "utf8");
-    const template = JSON.parse(file) as Record<string, unknown> | null;
+  const templates = await Promise.all(filenames.map((filename) => getPublishedPrompt(filename.slice(0, -5))));
+  return templates.flatMap((template) => template
+    ? [{ id: template.id, title: template.title, summary: template.summary }]
+    : []);
+}
 
-    if (template?.publicationStatus !== "published") return null;
+export async function getPublishedPrompt(id: string) {
+  if (!promptIdPattern.test(id)) return null;
 
-    const { id, title, summary } = template;
-    if (typeof id !== "string" || !id.trim() || typeof title !== "string" || !title.trim()) {
-      throw new Error(`Invalid published prompt metadata in ${filename}`);
-    }
-
-    return {
-      id,
-      title,
-      summary: typeof summary === "string" ? summary : undefined,
-    };
-  }));
-
-  return summaries.filter((summary) => summary !== null);
+  let file: string;
+  try {
+    file = await readFile(join(promptDirectory, `${id}.json`), "utf8");
+  } catch (error) {
+    if ((error as NodeJS.ErrnoException).code === "ENOENT") return null;
+    throw error;
+  }
+  return parsePublishedPrompt(JSON.parse(file), id);
 }
