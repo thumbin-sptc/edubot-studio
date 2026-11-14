@@ -3,6 +3,8 @@
 import { useId, useRef, useState } from "react";
 import { CopyPrompt } from "@/components/prompts/prompt-controls";
 import { buildSelectedBundle, composeInstruction, isRecommended, isSelected, type ZipBuilder } from "@/lib/create/engine";
+import { fetchKnowledgeBlob, requestZipDownload } from "@/lib/create/zip-client";
+import { zipLimits } from "@/lib/create/zip-policy";
 import {
   environments, personalizationFields, schoolLevels, type Instruction, type Knowledge, type Personalization, type Platform,
 } from "@/lib/create/model";
@@ -78,6 +80,7 @@ export function KnowledgePanel({ platform, resources, personalization, overrides
   const [message, setMessage] = useState("");
   const [working, setWorking] = useState(false);
   const [alternatives, setAlternatives] = useState<Knowledge[]>([]);
+  const downloading = useRef(false);
   const hasSelection = resources.some((file) => isSelected(file, personalization, overrides));
   if (!resources.length) return null;
 
@@ -86,29 +89,31 @@ export function KnowledgePanel({ platform, resources, personalization, overrides
   }
 
   async function downloadBundle() {
-    if (!zipBuilder) return;
+    if (!zipBuilder || downloading.current || !hasSelection) return;
+    downloading.current = true;
     setWorking(true);
     setAlternatives([]);
-    setMessage("");
-    const result = await buildSelectedBundle(resources, personalization, overrides, async (path) => {
-      const response = await fetch(path, { mode: "same-origin" });
-      if (!response.ok) throw new Error("Knowledge download failed");
-      return response.blob();
-    }, zipBuilder);
-    setWorking(false);
-    if (result.kind === "failed") {
-      setAlternatives(result.alternatives);
-      setMessage("ZIP을 만들지 못했습니다. 아래에서 파일을 개별 다운로드해 주세요.");
-    } else if (result.kind === "ready") {
-      const url = URL.createObjectURL(result.zip);
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = "edubot-knowledge.zip";
-      document.body.append(link);
-      link.click();
-      link.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 1000);
-      setMessage("선택한 파일의 ZIP 다운로드를 시작했습니다.");
+    setMessage("선택한 파일의 ZIP을 만들고 있습니다.");
+    try {
+      const result = await buildSelectedBundle(resources, personalization, overrides,
+        (_, file) => fetchKnowledgeBlob(file, window.location.origin), zipBuilder);
+      if (result.kind === "ready") {
+        requestZipDownload(result.zip);
+        setMessage("ZIP 다운로드를 요청했습니다. 브라우저의 다운로드 목록을 확인해 주세요.");
+      } else if (result.kind === "empty") {
+        setMessage("ZIP에 넣을 파일을 선택해 주세요.");
+      } else {
+        setAlternatives(result.alternatives);
+        setMessage(result.kind === "limit"
+          ? `ZIP은 최대 ${zipLimits.files}개, 합계 ${zipLimits.bytes / 1024 / 1024} MiB까지 만들 수 있습니다. 선택을 줄이거나 개별 다운로드를 이용해 주세요.`
+          : "ZIP을 만들지 못했습니다. 아래에서 파일을 개별 다운로드해 주세요.");
+      }
+    } catch {
+      setAlternatives(resources.filter((file) => isSelected(file, personalization, overrides)));
+      setMessage("브라우저에서 ZIP 다운로드를 시작하지 못했습니다. 아래에서 파일을 개별 다운로드해 주세요.");
+    } finally {
+      downloading.current = false;
+      setWorking(false);
     }
   }
 
@@ -139,7 +144,7 @@ export function KnowledgePanel({ platform, resources, personalization, overrides
       </ul>
       {zipBuilder && (
         <button type="button" className="action" disabled={!hasSelection || working}
-          onClick={downloadBundle}>선택한 파일 ZIP 다운로드</button>
+          onClick={downloadBundle}>{working ? "ZIP 만드는 중" : "선택한 파일 ZIP 다운로드"}</button>
       )}
       <p role="status">{message}</p>
       {alternatives.length > 0 && (

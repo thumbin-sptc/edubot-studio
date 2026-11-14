@@ -1,0 +1,11 @@
+# The branch-based GitHub Pages site serves project documentation.
+# Next.js separately publishes only validated application content and assets.
+exclude:
+  - content/
+  - public/
+  - scripts/
+  - schemas/
+  - src/
+  - tests/
+  - private-data/
+  - local-manuscripts/

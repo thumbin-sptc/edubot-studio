@@ -7,6 +7,7 @@ import {
   type CompletionCheck, type CreateAction, type CreateMedia, type CreateStep, type Instruction,
   type Knowledge, type Platform, type PublishedCreateEntry, type VerifiedNote,
 } from "./model.ts";
+import { knowledgeFilename, uniqueZipNames } from "./zip-policy.ts";
 
 const imageExtensions = [".png", ".jpg", ".jpeg", ".webp"];
 const downloadExtensions = [".pdf", ".txt", ".md", ".csv", ".docx", ".xlsx", ".pptx"];
@@ -74,8 +75,12 @@ function publishedRecords(root: string, folder: string, errors: string[]) {
     try {
       if (!file.isFile()) throw new Error("Content entry must be a regular JSON file");
       const raw: unknown = JSON.parse(readFileSync(join(directory, file.name), "utf8"));
-      if (!isRecord(raw) || raw.publicationStatus !== "published") return [];
+      if (!isRecord(raw) || (raw.publicationStatus !== "draft" && raw.publicationStatus !== "reviewed" &&
+          raw.publicationStatus !== "published")) {
+        throw new Error("Invalid publicationStatus");
+      }
       if (id(raw.id) !== file.name.slice(0, -5)) throw new Error("Content id does not match filename");
+      if (raw.publicationStatus !== "published") return [];
       return [{ file: file.name, raw }];
     } catch (error) {
       errors.push(`content/${folder}/${file.name}: ${(error as Error).message}`);
@@ -94,7 +99,7 @@ function asset(root: string, raw: unknown, folder: string, extensions: string[])
   if (!metadata.isFile() || !metadata.size || relative(diskPath, realpathSync(diskPath)) !== "") {
     throw new Error(`Invalid ${folder} asset file`);
   }
-  return { path, size: metadata.size };
+  return { path, diskPath, size: metadata.size };
 }
 
 function parseInstruction(raw: Record<string, unknown>): Instruction {
@@ -118,6 +123,8 @@ function parseKnowledge(root: string, raw: Record<string, unknown>): Knowledge {
   const verification = verifyRights(raw);
   const file = asset(root, raw.path, "downloads", downloadExtensions);
   if (raw.fileSize !== file.size) throw new Error("Knowledge file size mismatch");
+  const sha256 = createHash("sha256").update(readFileSync(file.diskPath)).digest("hex");
+  if (raw.sha256 !== undefined && raw.sha256 !== sha256) throw new Error("Knowledge file hash mismatch");
   if (raw.category !== "common" && raw.category !== "optional") throw new Error("Invalid knowledge category");
   const rules = raw.recommendedFor === undefined ? undefined : record(raw.recommendedFor, "recommendation");
   const platformNotes: Partial<Record<Platform, VerifiedNote>> = {};
@@ -134,6 +141,7 @@ function parseKnowledge(root: string, raw: Record<string, unknown>): Knowledge {
     description: text(raw.description, "knowledge description"),
     path: file.path,
     fileSize: file.size,
+    sha256,
     fileVersion: version(raw.fileVersion),
     category: raw.category,
     verifiedAt: verification,
@@ -219,7 +227,9 @@ function parseGuide(root: string, raw: Record<string, unknown>, instructions: Ma
     return file;
   });
   unique(resources.map((file) => file.id), "knowledge ids");
-  unique(resources.map((file) => file.path.split("/").at(-1)!), "knowledge filenames");
+  if (!uniqueZipNames(resources.map((file) => knowledgeFilename(file.path) ?? ""))) {
+    throw new Error("Invalid or duplicate knowledge filenames");
+  }
   if (!resources.some((file) => file.category === "common")) throw new Error("Guide requires approved common knowledge");
   const steps = array(raw.steps, "guide steps").map((step) => parseStep(root, step, raw.device === "mobile-web"));
   unique(steps.map((step) => step.id), "step ids");
@@ -232,13 +242,13 @@ function parseGuide(root: string, raw: Record<string, unknown>, instructions: Ma
 
 function verifyPublicInventory(root: string, approved: Set<string>, errors: string[]) {
   function walk(path: string) {
-    for (const entry of list(join(root, "public", ...path.slice(1).split("/")))) {
+    for (const entry of list(join(root, "public", path.slice(1)))) {
       const child = `${path}/${entry.name}`;
       if (entry.isDirectory()) walk(child);
       else if (!entry.isFile() || !approved.has(child)) errors.push(`Unapproved public asset: ${child}`);
     }
   }
-  for (const folder of ["tutorials", "downloads"]) walk(`/${folder}`);
+  walk("");
 }
 
 export function inspectCreateContent(root: string) {
@@ -246,6 +256,7 @@ export function inspectCreateContent(root: string) {
   const approvedAssets = new Set<string>();
   const instructions = new Map<string, Instruction>();
   const knowledge = new Map<string, Knowledge>();
+  const knowledgePaths = new Set<string>();
   const entries: PublishedCreateEntry[] = [];
   function inspect(folder: string, parse: (raw: Record<string, unknown>) => void) {
     for (const { raw, file } of publishedRecords(root, folder, errors)) {
@@ -262,6 +273,9 @@ export function inspectCreateContent(root: string) {
   });
   inspect("knowledge", (raw) => {
     const file = parseKnowledge(root, raw);
+    const path = file.path.toLowerCase();
+    if (knowledgePaths.has(path)) throw new Error("Duplicate knowledge asset path");
+    knowledgePaths.add(path);
     knowledge.set(file.id, file);
   });
   inspect("create", (raw) => entries.push(parseGuide(root, raw, instructions, knowledge)));

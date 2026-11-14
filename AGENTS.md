@@ -2,7 +2,7 @@
 
 ## 목적과 문서 읽기 순서
 이 저장소는 중도중복장애교육연구회 EDU-BOT Studio 무료 웹앱용 개발 소스다.
-**시작하기 전에** `README.md` → `docs/DECISIONS.md` → `docs/PRD.md` → `docs/UX-SPEC.md` → `docs/PROMPT-SCHEMA.md` → `docs/CONTENT-POLICY.md` → `docs/ACCEPTANCE.md` → `tasks/CODEX-01.md` 순으로 읽는다.
+**시작하기 전에** `README.md` → `docs/DECISIONS.md` → `docs/PRD.md` → `docs/UX-SPEC.md` → `docs/PROMPT-SCHEMA.md` → `docs/CONTENT-POLICY.md` → `docs/ACCEPTANCE.md`를 읽고, 현재 작업의 `tasks/CODEX-XX.md` 또는 사용자가 제공한 해당 지시서를 읽는다. 콘텐츠 공개 작업에는 `docs/CONTENT-RELEASE.md`를 함께 확인한다.
 
 ## 절대 원칙
 1. 홈에서 **나만의 에듀봇 만들기**와 **프롬프트 라이브러리**는 동등한 비중이다.

@@ -183,6 +183,20 @@ export function parseInventoryMetadata(raw: Record<string, unknown>): PromptCata
 }
 
 function parseCatalogMetadata(data: Record<string, unknown>): PromptCatalogMetadata {
+  if (data.publicationStatus === "published") {
+    for (const [key, names] of [
+      ["display", ["category", "schoolEnvironment", "schoolLevel"]],
+      ["source", ["document", "section"]],
+    ] as const) {
+      if (data[key] === undefined) continue;
+      const metadata = requireRecord(data[key], key);
+      for (const name of names) optionalText(metadata[name], `${key}.${name}`);
+    }
+    const source = isRecord(data.source) ? data.source : {};
+    for (const key of ["pdfPage", "bookPage"]) {
+      if (source[key] !== undefined && positivePage(source[key]) === undefined) throw new Error(`Invalid source.${key}`);
+    }
+  }
   const display = isRecord(data.display) ? data.display : {};
   const source = isRecord(data.source) ? data.source : {};
   return {

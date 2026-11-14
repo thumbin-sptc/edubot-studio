@@ -7,6 +7,7 @@ import { updateCreateSession, useCreateSession } from "@/lib/create/browser-sess
 import { completionLabels, getCompletionChecks } from "@/lib/create/engine";
 import { createHref, devices, platforms, type PublishedGuide } from "@/lib/create/model";
 import { getCreateProgress, hasPreviousProgress, updateCreateProgress, type CreateProgress } from "@/lib/create/session";
+import { createKnowledgeZip } from "@/lib/create/zip-client";
 import { CreateCopy, InstructionPanel, KnowledgePanel } from "./create-actions";
 import { CreateStorageControls } from "./create-storage-controls";
 import { DemoMedia } from "./demo-media";
@@ -101,6 +102,7 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
                     );
                     return (
                       <KnowledgePanel key={key} platform={guide.platform} resources={guide.resources}
+                        zipBuilder={createKnowledgeZip}
                         personalization={personalization} overrides={progress.selections}
                         onSelect={(id, selected) => updateProgress((current) => ({
                           ...current, selections: { ...current.selections, [id]: selected },

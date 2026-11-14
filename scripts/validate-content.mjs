@@ -82,14 +82,19 @@ function validateProvisionalOriginal(template, errors) {
 
 export function validateInventory(inventory) {
   const errors=[];
-  if (!Array.isArray(inventory.items)) return ['inventory.items must be an array'];
+  if (!Array.isArray(inventory?.items)) return ['inventory.items must be an array'];
   const ids = new Set();
-  for (const item of inventory.items) {
-    if (typeof item.id!=='string'||!item.id) fail(errors,'inventory item missing id');
+  const items = inventory.items.filter(isRecord);
+  if (items.length !== inventory.items.length) fail(errors, 'inventory items must be objects');
+  for (const item of items) {
+    if (typeof item.id !== 'string' || !promptIdPattern.test(item.id)) fail(errors,'invalid inventory item id');
     if (ids.has(item.id)) fail(errors,`duplicate inventory id: ${item.id}`);
     ids.add(item.id);
   }
-  for (const item of inventory.items) {
+  for (const item of items) {
+    for (const field of ['pdfPage', 'bookPage']) {
+      if (item[field] != null && (!Number.isSafeInteger(item[field]) || item[field] < 1)) fail(errors, `invalid ${field} for ${item.id}`);
+    }
     if (item.suggestedNextIds === undefined) continue;
     if (!Array.isArray(item.suggestedNextIds)) {
       fail(errors, `invalid suggestedNextIds for ${item.id}`);
@@ -129,10 +134,20 @@ export function promptLinkWarnings(templates, inventory) {
   return warnings;
 }
 
+export function brokenPublishedReferences(templates, inventoryIds) {
+  const known = new Set([...inventoryIds, ...templates.filter(isRecord).map(({ id }) => id)]);
+  return templates.filter((template) => template?.publicationStatus === 'published').flatMap((template) => {
+    const { relatedPromptIds, previousResultImports } = parsePromptLinks(template, template.id, template.fields);
+    const linked = new Set([...(relatedPromptIds ?? []), ...previousResultImports.flatMap(({ sourcePromptIds }) => sourcePromptIds)]);
+    return [...linked].filter((id) => !known.has(id)).map((id) => `${template.id}: unknown public link reference ${id}`);
+  });
+}
+
 export function validateContent() {
   const inventory = read('content/prompt-inventory.json');
   const errors = validateInventory(inventory);
-  const ids=new Set(inventory.items.map((p)=>p.id));
+  const items = Array.isArray(inventory?.items) ? inventory.items.filter(isRecord) : [];
+  const ids = new Set(items.map((item) => item.id));
   const promptDir=path.join(root,'content/prompts');
   const paths=fs.readdirSync(promptDir).filter((name)=>name.endsWith('.json'));
   const templates = [];
@@ -144,8 +159,10 @@ export function validateContent() {
   }
   const creation = inspectCreateContent(root);
   errors.push(...creation.errors);
+  if (!errors.length) errors.push(...brokenPublishedReferences(templates, ids));
   const warnings = errors.length ? [] : promptLinkWarnings(templates, inventory);
-  return {errors, warnings, inventoryCount: inventory.items.length, officialCount: inventory.items.filter((p)=>!p.id.startsWith('DD-X')).length, candidateCount: inventory.items.filter((p)=>p.id.startsWith('DD-X')).length, templateCount: paths.length, publishedPromptCount: templates.filter((template) => template?.publicationStatus === 'published').length, publishedGuideCount: creation.entries.filter((entry) => entry.support === 'supported').length};
+  const candidateCount = items.filter(({ id }) => typeof id === 'string' && id.startsWith('DD-X')).length;
+  return {errors, warnings, inventoryCount: items.length, officialCount: items.length - candidateCount, candidateCount, templateCount: paths.length, publishedPromptCount: templates.filter((template) => template?.publicationStatus === 'published').length, publishedGuideCount: creation.entries.filter((entry) => entry.support === 'supported').length};
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -2,6 +2,7 @@ import {
   personalizationFields,
   type CompletionCheck, type CompletionKind, type Knowledge, type Personalization, type PublishedGuide,
 } from "./model.ts";
+import { knowledgeFilename, uniqueZipNames, zipLimits } from "./zip-policy.ts";
 
 export const completionLabels: Record<CompletionKind, string> = {
   role: "에듀봇 역할 확인",
@@ -48,16 +49,21 @@ export async function buildSelectedBundle(
   resources: Knowledge[],
   input: Personalization,
   overrides: Record<string, boolean>,
-  load: (path: string) => Promise<Blob>,
+  load: (path: string, file: Knowledge) => Promise<Blob>,
   zip: ZipBuilder,
 ) {
   const selected = resources.filter((file) => isSelected(file, input, overrides));
   if (!selected.length) return { kind: "empty" as const };
+  if (selected.length > zipLimits.files || selected.reduce((bytes, file) => bytes + file.fileSize, 0) > zipLimits.bytes) {
+    return { kind: "limit" as const, alternatives: selected };
+  }
+  const names = selected.map(({ path }) => knowledgeFilename(path) ?? "");
   try {
-    const files = await Promise.all(selected.map(async ({ path }) => ({
-      name: path.split("/").at(-1)!,
-      data: await load(path),
-    })));
+    if (!uniqueZipNames(names)) throw new Error("Unsafe or duplicate ZIP filenames");
+    const files = [];
+    for (const [index, file] of selected.entries()) {
+      files.push({ name: names[index], data: await load(file.path, file) });
+    }
     return { kind: "ready" as const, zip: await zip(files) };
   } catch {
     return { kind: "failed" as const, alternatives: selected };

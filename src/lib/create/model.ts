@@ -26,6 +26,7 @@ export type Knowledge = {
   recommendedFor?: { schoolLevels?: string[]; environments?: string[] };
   verifiedAt: string;
   fileSize: number;
+  sha256: string;
   fileVersion: string;
   platformNotes?: Partial<Record<Platform, VerifiedNote>>;
 };
