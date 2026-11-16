@@ -51,6 +51,24 @@ export function syntheticGuides() {
     }));
 }
 
+export function syntheticTextGuide(guide = syntheticGuides()[0]) {
+  const instructions = {
+    intro: ["합성 화면을 열고 테스트 계정을 선택합니다.", "합성 프로젝트 이름을 입력하고 목록에서 다시 엽니다."],
+    instruction: ["합성 프로젝트에서 지침을 입력할 항목을 찾습니다.", "합성 지침을 붙여넣고 저장 결과를 확인합니다."],
+    files: ["합성 공통 파일을 준비합니다.", "합성 프로젝트에 파일을 추가하고 자료 목록을 확인합니다."],
+  };
+  const steps = guide.steps.map((step) => {
+    const converted = { ...step, format: "text-only", instructions: instructions[step.id] };
+    delete converted.media;
+    return converted;
+  });
+  return {
+    ...guide, steps,
+    verification: { method: "hands-on", recordId: "QA-SYNTHETIC-VERIFICATION", stepIds: steps.map(({ id }) => id) },
+    publicationApproval: { releaseApproved: true, recordId: "QA-SYNTHETIC-APPROVAL", approvedAt: verifiedAt },
+  };
+}
+
 export function writeFixture(root, relativePath, value) {
   const path = join(root, ...relativePath.split("/"));
   mkdirSync(dirname(path), { recursive: true });
@@ -74,8 +92,11 @@ export function writeCreateFixtures(root, guides = syntheticGuides(), extraAsset
       fileSize: buffer.length, fileVersion: "1.0.0", publicationStatus, ...rights,
     });
   }
-  writeFixture(root, "public/tutorials/qa-synthetic.gif", gif);
-  writeFixture(root, "public/tutorials/qa-still.png", still);
+  const mediaPaths = new Set(guides.flatMap(({ steps }) => Array.isArray(steps)
+    ? steps.flatMap(({ media }) => [media?.path, media?.stillPath])
+    : []));
+  if (mediaPaths.has("/tutorials/qa-synthetic.gif")) writeFixture(root, "public/tutorials/qa-synthetic.gif", gif);
+  if (mediaPaths.has("/tutorials/qa-still.png")) writeFixture(root, "public/tutorials/qa-still.png", still);
   for (const [path, data] of Object.entries(extraAssets)) writeFixture(root, `public${path}`, data);
   for (const guide of guides) writeFixture(root, `content/create/${guide.id}.json`, guide);
 }

@@ -36,9 +36,24 @@ CI와 공개용 빌드는 기록의 형식과 상태, 버전·해시 일치, 그
 - [ ] `content/instructions/<id>.json`에는 승인된 `coreInstruction`, `version`, UTF-8 원문의 SHA-256인 `sha256`, `licenseStatus: approved`, 실제 `verifiedAt`을 기록한다. JSON 문자열을 파싱한 값 그대로 해시하고, 개인화가 없어도 정확히 같은 원문이 복사되는지 확인한다.
 - [ ] `content/knowledge/<id>.json`의 `path`, `fileSize`(바이트), `fileVersion`, 권리, 확인일을 승인된 `public/downloads/` 실파일과 대조한다. `sha256`을 기록하면 검사기가 실파일과 대조하며, 브라우저는 빌드에서 계산한 해시로 응답 바이트를 확인한다. 공통/선택 분류, 추천 학교급·교육 환경, 플랫폼별 제한과 확인일은 실제 확인값을 쓴다. 같은 조합의 다운로드 이름은 대소문자를 무시하고 고유해야 한다.
 - [ ] `content/create/<id>.json`의 ChatGPT·Claude·Gemini × PC·모바일 웹 절차를 조합별로 직접 확인한다. 지침·파일 ID, 단계 순서, 외부 링크 및 확인일, 사용자 자가 확인 문구, 점검 질문과 돌아갈 단계를 실제값으로 작성한다.
-- [ ] 권리를 확인한 영상/GIF, 정지 이미지와 필요한 자막을 `public/tutorials/`에 배치한다. 단계별 텍스트 대안을 검수하고 영상 오류 시 대체 화면, 재생·정지, 동작 줄이기 설정을 확인한다.
+- [ ] 시연형 단계에는 권리를 확인한 영상 또는 GIF와 텍스트 대안을 등록한다. 정지 이미지와 필요한 자막도 권리를 확인해 `public/tutorials/`에 배치하고 오류 대안, 재생·정지, 동작 줄이기를 확인한다. 기존 단계의 `media.kind: "video" | "gif"` 구조를 그대로 읽으며 `format: "media"`도 사용할 수 있다.
+- [ ] 텍스트 전용 단계에는 `format: "text-only"`를 명시하고 아래의 텍스트와 검수·게시 기록을 작성한다. 한 가이드에서 시연형과 텍스트 전용 단계를 함께 쓸 수 있다.
 - [ ] 확인된 조합만 개별적으로 `published`로 전환한다. 미검수 조합은 준비 중으로 둔다. 실제로 미지원임이 확인된 조합에는 확인일과 근거를 기록한다.
-- [ ] 경로, 파일 또는 지침을 바꾸면 연결과 실파일, 해시·크기·버전을 다시 검수한다. 이전 가이드 진행 기록을 보존하도록 가이드 버전도 변경하고, 회수한 파일은 공개 디렉터리에서도 제거한다.
+- [ ] 가이드 내용을 개정하거나 시연을 추가하면 가이드 ID를 유지하고 버전을 올린다. 기존 진행 기록은 해당 버전에 보관된다. 경로, 파일, 지침의 연결과 해시·크기를 다시 검수하고 회수된 파일은 공개 디렉터리에서 제거한다.
+
+### 텍스트 전용 단계와 승인 필드
+
+| 필드 | 요구 사항과 검증 실패 메시지 |
+| --- | --- |
+| `steps[].format` | `text-only`를 명시한다. 생략하면 기존 시연형으로 검사한다. 알 수 없는 값은 `Unknown step format`으로 거절한다. |
+| `steps[].media` | 텍스트 전용 단계에서는 항목을 생략한다. `null` 포함 선언 시 `Text-only step must not declare media`로 거절한다. |
+| `steps[].title`, `description`, `checkLabel` | 제목, 짧은 안내, 외부 서비스에서 직접 확인할 항목을 넣는다. 빈 값은 `Missing text-only …`, 문자나 숫자가 없는 값과 `TODO`·`미정` 같은 임시 표기는 `Incomplete text-only …`로 거절한다. |
+| `steps[].instructions` | 실제 조작 순서대로 서로 다른 문장 두 개 이상을 배열로 넣는다. 배열이 아니면 `Invalid text-only instructions`, 중복이면 `Duplicate text-only instructions`, 두 개 미만이면 `Text-only step requires at least two ordered instructions`로 거절한다. |
+| `steps[].actions` | 안전한 외부 이동, 지침 복사, 지식 자료 내려받기 중 해당 단계에 필요한 동작을 등록한다. 빈 배열은 `Text-only step requires an action`으로 거절한다. |
+| `verifiedAt`, `verification` | 가이드의 실제 조작 검수일과 `{ method: "hands-on", recordId, stepIds }`를 기록한다. 텍스트 전용 단계가 하나라도 있으면 `stepIds`에 가이드의 모든 단계 ID가 정확히 한 번 들어가야 한다. 공식 도움말 대조만으로는 실제 조작 완료를 기록하지 않는다. |
+| `publicationApproval` | 별도 공개 결정에 해당하는 `{ releaseApproved: true, recordId, approvedAt }`를 기록한다. 승인일은 실제 조작 검수일과 같거나 이후여야 한다. |
+
+기록 ID는 비공개 검수·승인 자료를 참조합니다. 검수자가 실제 계정으로 각 단계와 완료 점검을 수행하고, 안내문만 읽어도 조작과 결과 확인이 가능한지 확인합니다. 자동 검사는 구조와 기록을 확인합니다. 승인된 기본 지침의 원문·해시, 공통 지식 파일 한 개 이상, 실파일 권리·크기·해시, 지침/자료 동작과 세 종류 완료 점검은 동일하게 검사합니다. 현재 ChatGPT PC 안내 초안은 실제 조작과 자료·게시 승인을 기다리고 있습니다.
 
 ## 4. 검사와 배포 확인
 

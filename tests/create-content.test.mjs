@@ -1,10 +1,13 @@
 import assert from "node:assert/strict";
+import { spawnSync } from "node:child_process";
 import { mkdtempSync, readFileSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { test } from "node:test";
+import { fileURLToPath } from "node:url";
 import { inspectCreateContent } from "../src/lib/create/content.ts";
-import { syntheticGuides, writeCreateFixtures, writeFixture } from "./fixtures/synthetic-create.mjs";
+import { guideAssetPaths } from "../src/lib/create/model.ts";
+import { syntheticGuides, syntheticTextGuide, writeCreateFixtures, writeFixture } from "./fixtures/synthetic-create.mjs";
 
 function testRoot(t) {
   const root = mkdtempSync(join(tmpdir(), "edubot-create-"));
@@ -26,10 +29,142 @@ test("all six combinations have independent step sequences and approved assets",
   assert.equal(new Set(entries.map((entry) => entry.steps.map(({ id }) => id).join(","))).size, 6);
   for (const entry of entries) {
     assert.deepEqual(entry.steps.map(({ id }) => id), guides.find(({ id }) => id === entry.id).steps.map(({ id }) => id));
-    assert.ok(entry.steps.every(({ media }) => media.path && media.fallbackText));
+    assert.ok(entry.steps.every(({ format, media }) => format === "media" && media.path && media.fallbackText));
     assert.equal(entry.resources.length, 3);
     assert.equal(entry.checks.length, 3);
   }
+});
+
+test("approved text-only stages have ordered instructions and only approved download assets", (t) => {
+  const root = testRoot(t);
+  const guide = syntheticTextGuide();
+  writeCreateFixtures(root, [guide]);
+  const { entries, errors } = inspectCreateContent(root);
+  assert.deepEqual(errors, []);
+  assert.equal(entries.length, 1);
+  for (const [index, step] of entries[0].steps.entries()) {
+    assert.equal(step.format, "text-only");
+    assert.deepEqual(step.instructions, guide.steps[index].instructions);
+    assert.ok(!Object.hasOwn(step, "media"));
+    assert.ok(step.actions.length && step.checkLabel);
+  }
+  assert.deepEqual(guideAssetPaths(entries[0]), ["/downloads/qa-common.txt", "/downloads/qa-context.txt", "/downloads/qa-optional.txt"]);
+  assert.ok(!JSON.stringify(entries).includes("QA-SYNTHETIC-APPROVAL"));
+});
+
+test("text-only stages reject missing, incomplete, ambiguous or wrongly typed content", (t) => {
+  const cases = [
+    [(step) => { delete step.format; }, /Invalid approved demonstration media/],
+    [(step) => { step.format = "text"; }, /Unknown step format/],
+    [(step) => { step.format = "media"; }, /Invalid approved demonstration media/],
+    [(step) => { step.media = null; }, /must not declare media/],
+    [(step) => { delete step.description; }, /text-only step description/],
+    [(step) => { step.title = "TODO."; }, /Incomplete text-only step title/],
+    [(step) => { step.checkLabel = " "; }, /text-only self-check label/],
+    [(step) => { step.actions = []; }, /requires an action/],
+    [(step) => { delete step.instructions; }, /Invalid text-only instructions/],
+    [(step) => { step.instructions = "설명만 한 줄"; }, /Invalid text-only instructions/],
+    [(step) => { step.instructions = ["화면을 열어 확인합니다."]; }, /at least two ordered instructions/],
+    [(step) => { step.instructions[0] = ""; }, /Missing text-only instruction/],
+    [(step) => { step.instructions[0] = "검증 대기"; }, /Incomplete text-only instruction/],
+    [(step) => { step.instructions = ["합성 문장", " 합성   문장 "]; }, /Duplicate text-only instructions/],
+  ];
+  for (const [change, expected] of cases) {
+    const root = testRoot(t);
+    const guide = syntheticTextGuide();
+    change(guide.steps[0]);
+    writeCreateFixtures(root, [guide]);
+    const result = inspectCreateContent(root);
+    assert.equal(result.entries.length, 0);
+    assert.match(result.errors.join("\n"), expected);
+  }
+});
+
+test("text-only publication requires hands-on coverage and a separate release decision", (t) => {
+  const cases = [
+    [(guide) => { delete guide.verification; }, /hands-on verification/],
+    [(guide) => { guide.verification.method = "documentation"; }, /hands-on verification/],
+    [(guide) => { guide.verification.stepIds.pop(); }, /cover every step/],
+    [(guide) => { guide.verification.stepIds[1] = guide.verification.stepIds[0]; }, /Duplicate verified step IDs/],
+    [(guide) => { guide.verification.stepIds[1] = "wrong"; }, /cover every step/],
+    [(guide) => { delete guide.publicationApproval; }, /text-only publication approval/],
+    [(guide) => { guide.publicationApproval.releaseApproved = false; }, /separate release approval/],
+    [(guide) => { guide.publicationApproval.approvedAt = "2024-12-31"; }, /predates hands-on verification/],
+    [(guide) => { guide.publicationApproval.approvedAt = "2025-02-30"; }, /approvedAt/],
+    [(guide) => { delete guide.verifiedAt; }, /verifiedAt/],
+    [(guide) => { guide.knowledgeIds = ["test-optional"]; }, /approved common knowledge/],
+  ];
+  for (const [change, expected] of cases) {
+    const root = testRoot(t);
+    const guide = syntheticTextGuide();
+    change(guide);
+    writeCreateFixtures(root, [guide]);
+    const result = inspectCreateContent(root);
+    assert.equal(result.entries.length, 0);
+    assert.match(result.errors.join("\n"), expected);
+  }
+});
+
+test("legacy video and explicit media stages preserve captions in a mixed guide", (t) => {
+  const root = testRoot(t);
+  const [legacy] = syntheticGuides();
+  const media = { ...legacy.steps[0].media, kind: "video", path: "/tutorials/qa-video.webm", captionsPath: "/tutorials/qa-video.vtt" };
+  legacy.steps[0].media = media;
+  const mixed = syntheticTextGuide({ ...syntheticGuides()[2] });
+  mixed.steps[0] = { ...syntheticGuides()[2].steps[0], format: "media", media };
+  writeCreateFixtures(root, [legacy, mixed], {
+    "/tutorials/qa-video.webm": Buffer.from("synthetic unit fixture with video suffix"),
+    "/tutorials/qa-video.vtt": Buffer.from("WEBVTT\n"),
+  });
+  const { entries, errors } = inspectCreateContent(root);
+  assert.deepEqual(errors, []);
+  assert.equal(entries.length, 2);
+  for (const entry of entries) {
+    const { format, media } = entry.steps[0];
+    assert.equal(format, "media");
+    assert.equal(media.kind, "video");
+    assert.equal(media.captionsPath, "/tutorials/qa-video.vtt");
+    assert.ok(guideAssetPaths(entry).includes(media.path));
+  }
+});
+
+test("draft and reviewed text-only guides cannot leak instructions or unapproved assets into a static export", (t) => {
+  const root = testRoot(t);
+  const guide = syntheticTextGuide();
+  writeCreateFixtures(root, [guide]);
+  const marker = "CODEX-19-PRIVATE-INSTRUCTIONS";
+  for (const [index, publicationStatus] of ["draft", "reviewed"].entries()) {
+    const { id, steps, platform, device } = syntheticTextGuide(syntheticGuides()[index + 2]);
+    steps[0].instructions = [marker];
+    writeFixture(root, `content/create/${id}.json`, { id, publicationStatus, steps, platform, device });
+  }
+  const { entries, errors } = inspectCreateContent(root);
+  assert.deepEqual(errors, []);
+  assert.deepEqual(entries.map(({ id }) => id), [guide.id]);
+  const exportCheck = () => spawnSync(process.execPath, [
+    fileURLToPath(new URL("../scripts/check-public-build.mjs", import.meta.url)),
+  ], { cwd: root, encoding: "utf8" });
+  writeFixture(root, "out/404.html", Buffer.from("<p>404</p>"));
+  for (const route of ["", "prompts/", "create/", "data/", "help/", "create/chatgpt/desktop-web/"]) {
+    for (const name of ["index.html", "index.txt", "__next._full.txt", "__next._tree.txt"]) {
+      writeFixture(root, `out/${route}${name}`, Buffer.from("<p>synthetic route</p>"));
+    }
+  }
+  for (const path of guideAssetPaths(entries[0])) writeFixture(root, "out" + path, readFileSync(join(root, "public" + path)));
+  const passed = exportCheck();
+  assert.equal(passed.status, 0, passed.stderr);
+  assert.match(passed.stdout, /1 public guides/);
+  for (const path of ["create/index.html", "create/__next._full.txt", "_next/static/chunks/guide.js"]) {
+    writeFixture(root, "out/" + path, Buffer.from(marker));
+    const leaked = exportCheck();
+    assert.equal(leaked.status, 1);
+    assert.match(leaked.stderr, /Unpublished content found/);
+    writeFixture(root, "out/" + path, Buffer.from("synthetic route"));
+  }
+  writeFixture(root, "out/downloads/draft.txt", Buffer.from("synthetic private file"));
+  const unexpected = exportCheck();
+  assert.equal(unexpected.status, 1);
+  assert.match(unexpected.stderr, /Unexpected file in Pages export/);
 });
 
 test("draft and reviewed guides are excluded before parsing and verified unsupported entries remain status-only", (t) => {
@@ -79,11 +214,12 @@ test("rights, exact source hash and approved knowledge membership are enforced",
     ["instructions/test-core", { publicationStatus: "reviewed" }, /requires an approved instruction/],
     ["knowledge/test-common", { licenseStatus: "pending" }, /Missing rights approval/],
     ["knowledge/test-common", { fileSize: 1 }, /Knowledge file size mismatch/],
+    ["knowledge/test-common", { sha256: "a".repeat(64) }, /Knowledge file hash mismatch/],
     ["knowledge/test-common", { publicationStatus: "draft" }, /unapproved or missing knowledge/],
   ];
   for (const [name, change, expected] of cases) {
     const root = testRoot(t);
-    writeCreateFixtures(root, [syntheticGuides()[0]]);
+    writeCreateFixtures(root, [syntheticTextGuide()]);
     const path = `content/${name}.json`;
     const raw = JSON.parse(readFileSync(join(root, path), "utf8"));
     writeFixture(root, path, { ...raw, ...change });

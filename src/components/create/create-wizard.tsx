@@ -10,6 +10,7 @@ import { getCreateProgress, hasPreviousProgress, updateCreateProgress, type Crea
 import { createKnowledgeZip } from "@/lib/create/zip-client";
 import { CreateCopy, InstructionPanel, KnowledgePanel } from "./create-actions";
 import { CreateStorageControls } from "./create-storage-controls";
+import { CreateStepInstructions } from "./create-step-instructions";
 import { CreateStepCheck, CreateWizardFlow } from "./create-wizard-flow";
 import { DemoMedia } from "./demo-media";
 
@@ -18,6 +19,7 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
   const progress = getCreateProgress(session, guide);
   const step = guide.steps.find(({ id }) => id === progress.stepId);
   const personalization = session.personalization;
+  const textOnly = guide.steps.every(({ format }) => format === "text-only");
 
   function updateProgress(change: (previous: CreateProgress) => CreateProgress) {
     updateCreateSession((current) => updateCreateProgress(
@@ -27,7 +29,7 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
   }
 
   return (
-    <div className="shell create-wizard" data-create-wizard>
+    <div className={textOnly ? "shell create-wizard create-wizard-text" : "shell create-wizard"} data-create-wizard>
       <Link className="prompt-back" href="/create">← 플랫폼·기기 바꾸기</Link>
       <header className="wizard-heading">
         <h1>나만의 에듀봇 만들기</h1>
@@ -44,10 +46,11 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
             {(headingId, move) => step ? (
                 <section className="create-stage info-panel">
                   <h2 id={headingId} tabIndex={-1}>{step.title}</h2>
-                  <div className="create-stage-grid">
-                    <DemoMedia key={step.id} media={step.media} title={step.title} />
+                  <div className={step.format === "media" ? "create-stage-grid" : "create-stage-text"}>
+                    {step.format === "media" && <DemoMedia key={step.id} media={step.media} title={step.title} />}
                     <div className="create-step-details">
                       <p>{step.description}</p>
+                      {step.format === "text-only" && <CreateStepInstructions instructions={step.instructions} />}
                       {step.mascot && (
                         <aside className="create-mascot">
                           <Image src={publicAssetUrl(step.mascot.path)} alt="" width={48} height={48} />

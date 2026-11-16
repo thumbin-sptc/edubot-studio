@@ -94,6 +94,21 @@ test("steps can advance without checking, and progress is independent by combina
   }
 });
 
+test("adding approved media with a version bump keeps the text guide's saved step and checks", () => {
+  const textGuide = { ...guide, steps: guide.steps.map(step => ({ ...step, format: "text-only" })) };
+  const revised = {
+    ...textGuide, version: "1.1.0",
+    steps: textGuide.steps.map(step => ({ ...step, format: "media" })),
+  };
+  const saved = updateCreateProgress(newCreateSession(), textGuide, {
+    stepId: "files", checked: ["intro"], selections: { common: false },
+  });
+  const reopened = parseCreateSession(JSON.stringify(saved));
+  assert.equal(hasPreviousProgress(reopened, revised), true);
+  assert.deepEqual(getCreateProgress(reopened, revised), { stepId: "intro", checked: [], selections: {} });
+  assert.deepEqual(getCreateProgress(reopened, textGuide), { stepId: "files", checked: ["intro"], selections: { common: false } });
+});
+
 test("opt-in creation storage retains prior data while OFF and protects conflicting revisions", () => {
   const storage = memoryStorage();
   const original = { ...newCreateSession(), personalization: matching };
