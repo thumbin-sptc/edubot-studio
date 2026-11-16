@@ -144,6 +144,9 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
                   </li>
                 ))}
               </ul>
+              <div className="prompt-actions">
+                <Link href="/prompts" className="action">프롬프트 라이브러리 이용하기</Link>
+              </div>
             </section>
           )}
           <nav className="prompt-step-actions" aria-label="이전 및 다음 제작 단계">
