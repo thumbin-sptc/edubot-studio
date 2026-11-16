@@ -8,9 +8,12 @@ export const metadata: Metadata = { title };
 
 export default async function PromptsPage() {
   const prompts = await getPublishedPromptSummaries();
+  const description = prompts.length
+    ? "현재 원고 판본을 바탕으로 구성했습니다. 원고가 개정되면 내용이 달라질 수 있습니다."
+    : "검수를 마친 교재 프롬프트를 확인하는 공간입니다.";
 
   return (
-    <PageIntro title={title} description="검수를 마친 교재 프롬프트를 확인하는 공간입니다.">
+    <PageIntro title={title} description={description}>
       {prompts.length === 0 ? (
         <StatusPanel>현재 공개된 프롬프트가 없습니다. 검수를 마친 자료부터 이곳에 공개할 예정입니다.</StatusPanel>
       ) : (

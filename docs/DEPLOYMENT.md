@@ -14,13 +14,14 @@
 | --- | --- |
 | 루트 | 홈에서 두 기능 시작 화면으로 이동 |
 | `create/` | 플랫폼 3종 × PC·모바일 웹 조합 모두 준비 중 |
-| `prompts/` | 공개 프롬프트 0건 |
+| `prompts/` | 공개 프롬프트 29건(특수학급 15건, 특수학교 14건) |
 | `data/` | 새 브라우저 프로필에서 자동 저장 OFF, 저장본 없음 |
 | `help/` | 이용 안내와 개인정보 보호 안내 |
-| `prompts/SC-001/`, `prompts/SS-001/`, `create/chatgpt/desktop-web/` | HTTP 404 |
+| `prompts/SC-001/`, `prompts/SS-001/` | HTTP 200, 승인된 판본의 작성 마법사 |
+| `prompts/DD-001/`, `create/chatgpt/desktop-web/` | HTTP 404 |
 | `content/prompts/SC-001.json`, `content/prompt-inventory.json`, `tests/fixtures/synthetic-create.mjs` | HTTP 404 |
 
-PC와 모바일에서 메뉴 이동, 직접 접속, 새로고침, 뒤로 가기, 스타일·폰트 로딩과 저장 기본값을 확인합니다. 공개 프롬프트와 제작 가이드는 현재 각각 0건입니다. 상세 마법사, 이미지·영상·자막, 개별 다운로드·ZIP은 격리된 합성 빌드에서 확인합니다. 첫 실제 공개 자료는 [콘텐츠 공개 체크리스트](CONTENT-RELEASE.md)에 따라 등록한 후 운영 주소에서 확인합니다.
+PC와 모바일에서 메뉴 이동, 직접 접속, 새로고침, 뒤로 가기, 스타일·폰트 로딩과 저장 기본값을 확인합니다. 공개 프롬프트 작성 마법사는 합성 입력으로 운영 주소에서 확인합니다. 공개 제작 가이드는 0건이며, 이미지·영상·자막, 개별 다운로드·ZIP은 격리된 합성 빌드에서 확인합니다. 공개 자료 등록은 [콘텐츠 공개 체크리스트](CONTENT-RELEASE.md)를 따릅니다.
 
 ## 정적 호스팅에서 처리하는 항목
 

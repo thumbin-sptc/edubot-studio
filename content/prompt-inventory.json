@@ -2,11 +2,10 @@
   "version": "0.2",
   "sources": {
     "특수학급": {
-      "pdfFile": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pageCount": 63
+      "docxFile": "03_특수학급.docx"
     },
     "특수학교": {
-      "pdfFile": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "pdfFile": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pageCount": 42
     },
     "도담데이": {
@@ -19,8 +18,6 @@
       "id": "SC-001",
       "title": "교사철학 작성하기",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 7,
       "section": "교육철학 및 교육 방향 설계",
       "category": "교육과정 설계",
       "schoolLevel": "공통",
@@ -28,14 +25,13 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-002"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-002",
       "title": "특수학급 교육목표 및 구현중점",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 8,
       "section": "교육과정 운영 방향 설계 / 교육목표 및 구현중점",
       "category": "교육과정 설계",
       "schoolLevel": "공통",
@@ -43,27 +39,25 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-003"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-003",
       "title": "구현중점별 사업 세부 추진 계획",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 9,
       "section": "교육과정 운영 방향 설계 / 구현중점별 사업 세부 추진 계획",
       "category": "교육과정 설계",
       "schoolLevel": "공통",
       "promptType": "structured-writing",
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": []
+      "suggestedNextIds": [],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-004",
       "title": "월별 수학과 교육과정 운영 계획",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 11,
       "section": "연간 교육과정 운영 계획 / 다학년 수학과 교육과정 재구성",
       "category": "교육과정 재구성",
       "schoolLevel": "초등",
@@ -71,14 +65,13 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-006"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-005",
       "title": "사회정서교육 특색교육활동 운영 계획",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 14,
       "section": "연간 교육과정 운영 계획 / 사회정서교육",
       "category": "특색교육활동",
       "schoolLevel": "초등",
@@ -86,14 +79,13 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-007"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-006",
       "title": "다학년 수학과 교수·학습 과정안",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 20,
       "section": "교수·학습 과정안 설계 / 다학년 수학과",
       "category": "수업 설계",
       "schoolLevel": "초등",
@@ -101,27 +93,25 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-008"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-007",
       "title": "사회정서교육 연계 교수·학습 과정안",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 24,
       "section": "교수·학습 과정안 설계 / 사회정서교육",
       "category": "수업 설계",
       "schoolLevel": "초등",
       "promptType": "structured-writing",
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": []
+      "suggestedNextIds": [],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-008",
       "title": "수학과 평가계획 재구성안",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 27,
       "section": "교과별 평가 계획 / 수학과 평가계획 분석 및 재구성",
       "category": "평가 설계",
       "schoolLevel": "초등",
@@ -129,27 +119,25 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-009"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-009",
       "title": "학생별 평가방법 및 평가기준",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 32,
       "section": "교과별 평가 계획 / 학생별 평가방법 및 평가기준 설계",
       "category": "평가 설계",
       "schoolLevel": "초등",
       "promptType": "structured-writing",
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": []
+      "suggestedNextIds": [],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-010",
       "title": "월별 수학과 교육과정 운영 계획",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 36,
       "section": "연간 교육과정 운영 계획 / 다학년 수학과 교육과정 재구성",
       "category": "교육과정 재구성",
       "schoolLevel": "중등",
@@ -157,14 +145,13 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-012"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-011",
       "title": "진로·직업 연계 특색교육활동 운영 계획",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 40,
       "section": "연간 교육과정 운영 계획 / 진로·직업 연계 주제중심활동",
       "category": "특색교육활동",
       "schoolLevel": "중등",
@@ -172,14 +159,13 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-013"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-012",
       "title": "다학년 수학과 교수·학습 과정안",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 45,
       "section": "교수·학습 과정안 설계 / 다학년 수학과",
       "category": "수업 설계",
       "schoolLevel": "중등",
@@ -187,27 +173,25 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-014"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-013",
       "title": "진로·직업 연계 교수·학습 과정안",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 48,
       "section": "교수·학습 과정안 설계 / 진로·직업 연계 주제중심활동",
       "category": "수업 설계",
       "schoolLevel": "중등",
       "promptType": "structured-writing",
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": []
+      "suggestedNextIds": [],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-014",
       "title": "수학과 평가계획 재구성안",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 52,
       "section": "교과별 평가 계획 / 수학과 평가계획 분석 및 재구성",
       "category": "평가 설계",
       "schoolLevel": "중등",
@@ -215,26 +199,26 @@
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SC-015"
-      ]
+      ],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SC-015",
       "title": "학생별 평가방법 및 평가기준",
       "source": "특수학급",
-      "sourcePdf": "TalkFile_[특수학급] 교육과정 재구성 예시파일 제출본 (11.12) (1).pdf(1).pdf",
-      "pdfPage": 58,
       "section": "교과별 평가 계획 / 학생별 평가방법 및 평가기준 설계",
       "category": "평가 설계",
       "schoolLevel": "중등",
       "promptType": "structured-writing",
       "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": []
+      "suggestedNextIds": [],
+      "sourceDocx": "03_특수학급.docx"
     },
     {
       "id": "SS-001",
       "title": "교사철학 작성하기",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 5,
       "section": "교육철학 및 교육 방향 설계",
       "category": "교육과정 설계",
@@ -249,7 +233,7 @@
       "id": "SS-002",
       "title": "학급 경영 목표 및 중점",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 5,
       "section": "교육과정 운영 방향 설계",
       "category": "교육과정 설계",
@@ -262,7 +246,7 @@
       "id": "SS-003",
       "title": "사회 교과 연간 교육과정 운영 계획",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 7,
       "section": "초등 / 연간 교육과정 운영 계획 / 사회",
       "category": "교육과정 재구성",
@@ -277,7 +261,7 @@
       "id": "SS-004",
       "title": "일상생활 활동 교육과정 운영 계획",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 11,
       "section": "초등 / 연간 교육과정 운영 계획 / 일상생활 활동",
       "category": "교육과정 재구성",
@@ -292,7 +276,7 @@
       "id": "SS-005",
       "title": "사회 교과 교수·학습 과정안",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 12,
       "section": "초등 / 교수학습 과정안 / 사회",
       "category": "수업 설계",
@@ -307,7 +291,7 @@
       "id": "SS-006",
       "title": "일상생활 활동 교수·학습 과정안",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 15,
       "section": "초등 / 교수학습 과정안 / 일상생활 활동",
       "category": "수업 설계",
@@ -322,7 +306,7 @@
       "id": "SS-007",
       "title": "사회 교육과정 평가 계획",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 17,
       "section": "초등 / 운영 평가 / 사회",
       "category": "평가 설계",
@@ -335,7 +319,7 @@
       "id": "SS-008",
       "title": "일상생활 활동 교육과정 평가 계획",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 19,
       "section": "초등 / 운영 평가 / 일상생활 활동",
       "category": "평가 설계",
@@ -348,7 +332,7 @@
       "id": "SS-009",
       "title": "사회 교과 연간 교육과정 운영 계획",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 22,
       "section": "중등 / 연간 교육과정 운영 계획 / 사회",
       "category": "교육과정 재구성",
@@ -363,7 +347,7 @@
       "id": "SS-010",
       "title": "일상생활 활동 교육과정 운영 계획",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 24,
       "section": "중등 / 연간 교육과정 운영 계획 / 일상생활 활동",
       "category": "교육과정 재구성",
@@ -378,7 +362,7 @@
       "id": "SS-011",
       "title": "사회 교과 교수·학습 과정안",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 27,
       "section": "중등 / 교수학습 과정안 / 사회",
       "category": "수업 설계",
@@ -393,7 +377,7 @@
       "id": "SS-012",
       "title": "일상생활 활동 교수·학습 과정안",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 29,
       "section": "중등 / 교수학습 과정안 / 일상생활 활동",
       "category": "수업 설계",
@@ -408,7 +392,7 @@
       "id": "SS-013",
       "title": "사회 교육과정 평가 계획",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 31,
       "section": "중등 / 운영 평가 / 사회",
       "category": "평가 설계",
@@ -421,7 +405,7 @@
       "id": "SS-014",
       "title": "일상생활 활동 교육과정 평가 계획",
       "source": "특수학교",
-      "sourcePdf": "TalkFile_[특수학교] 교육과정 재구성 예시파일 제출본 (10.22).pdf(1).pdf",
+      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
       "pdfPage": 33,
       "section": "중등 / 운영 평가 / 일상생활 활동",
       "category": "평가 설계",

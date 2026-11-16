@@ -1,0 +1,111 @@
+{
+  "id": "SS-002",
+  "version": "0.1.0",
+  "title": "학급 경영 목표 및 중점",
+  "mode": "wizard",
+  "sourceOriginalText": "[역할]\n너는 특수학교 교사교육과정 설계 전문가이자 특수교육 교육과정 컨설턴트이다.\n교사의 교육철학과 학생에 대한 관점을 바탕으로 학생의 성장 방향과 학급 운영 철학이 드러나는 「교육과정 운영 방향 설정」을\n작성한다.\n\n[작성 목적]\n제시된 교육철학, 학생상, 교육 방향 및 지도 내용을 바탕으로 교사교육과정에 포함될 「학급 경영 목표 및 중점」을 작성한다.\n작성 결과물은 교사의 교육철학이 학급 운영 목표와 실천 내용으로 연결되고 학생을 바라보는 관점, 교육과정 운영 방향, 학생의\n성장을 지원하는 교사의 역할이 드러나는 교사교육과정 문서가 되도록 작성한다.\n\n[작성 방향]\n- 학생을 장애 특성이나 제한점 중심이 아닌 강점과 가능성을 가진 성장의 주체로 바라보는 관점을 반영한다.\n- 학생의 특성, 흥미, 교육적 요구를 고려한 개별화교육과 교육과정 재구성 방향을 제시한다.\n- 학생의 행동을 통제의 대상이 아닌 의사표현과 지원 요구로 이해하는 긍정적 행동 지원 관점을 반영한다.\n\n[교사철학]\n학생을 자신의 삶을 살아가는 주체로 바라보고, 학생의 강점과 교육적 요구를 바탕으로 성취기준을 삶과 연결하여 재구성한\n교육과정과 수업을 통해 의미 있는 경험과 성장을 지원하며, 평가에서도 성취기준의 단순한 달성보다 학생의 삶 속 변화와 성\n장을 중요하게 바라본다.\n\n[학생상]\n학생은 자신의 강점과 가능성을 가진 존재이며 각자의 속도와 방식으로 성장하는 배움의 주체이다. 학생들은 다양한 경험을 통해\n자신의 생각과 요구를 표현하고, 타인과 관계를 형성한다. 학생들은 일상생활 속에서 필요한 자립 역량을 기르고 지역사회 구성원으로서\n자신의 역할을 수행하며 민주시민으로 성장한다.\n[교육방향 및 지도 내용]\n학생 개개인의 특성과 교육적 요구를 반영한 개별화 교육을 실천하고, 학생의 삶과 연결된 의미 있는 배움이 이루어지도록 교육과정을 운\n영한다. 또한 긍정적 행동 지원을 통해 안전하고 존중받는 환경에서 자신의 가능성을 실현할 수 있도록 지원한다.\n\n[출력]\n- 교사철학, 학생상, 교육방향 및 지도 내용을 바탕으로 「학급 경영 목표」와 「학급 경영 중점」의 형식으로 작성한다.\n- 개별화교육, 교육과정 재구성, 긍정적 행동 지원 등 특수교육 전문성이 자연스럽게 나타나도록 한다.",
+  "templateText": "[역할]\n너는 특수학교 교사교육과정 설계 전문가이자 특수교육 교육과정 컨설턴트이다.\n교사의 교육철학과 학생에 대한 관점을 바탕으로 학생의 성장 방향과 학급 운영 철학이 드러나는 「교육과정 운영 방향 설정」을\n작성한다.\n\n[작성 목적]\n제시된 교육철학, 학생상, 교육 방향 및 지도 내용을 바탕으로 교사교육과정에 포함될 「학급 경영 목표 및 중점」을 작성한다.\n작성 결과물은 교사의 교육철학이 학급 운영 목표와 실천 내용으로 연결되고 학생을 바라보는 관점, 교육과정 운영 방향, 학생의\n성장을 지원하는 교사의 역할이 드러나는 교사교육과정 문서가 되도록 작성한다.\n\n[작성 방향]\n- 학생을 장애 특성이나 제한점 중심이 아닌 강점과 가능성을 가진 성장의 주체로 바라보는 관점을 반영한다.\n- 학생의 특성, 흥미, 교육적 요구를 고려한 개별화교육과 교육과정 재구성 방향을 제시한다.\n- 학생의 행동을 통제의 대상이 아닌 의사표현과 지원 요구로 이해하는 긍정적 행동 지원 관점을 반영한다.\n\n[교사철학]\n{{teacherPhilosophy}}\n\n[학생상]\n{{studentVision}}\n[교육방향 및 지도 내용]\n{{educationDirection}}\n\n[출력]\n- 교사철학, 학생상, 교육방향 및 지도 내용을 바탕으로 「학급 경영 목표」와 「학급 경영 중점」의 형식으로 작성한다.\n- 개별화교육, 교육과정 재구성, 긍정적 행동 지원 등 특수교육 전문성이 자연스럽게 나타나도록 한다.",
+  "relatedPromptIds": [],
+  "previousResultImports": [
+    {
+      "fieldId": "teacherPhilosophy",
+      "sourcePromptIds": [
+        "SS-001"
+      ]
+    }
+  ],
+  "publicationStatus": "published",
+  "source": {
+    "document": "특수학교",
+    "section": "교육과정 운영 방향 설계",
+    "pdfPage": 5,
+    "sourceType": "pdf",
+    "originalHasEditorialAnnotation": true
+  },
+  "display": {
+    "category": "교육과정 설계",
+    "schoolEnvironment": "특수학교",
+    "schoolLevel": "공통"
+  },
+  "fields": [
+    {
+      "id": "studentVision",
+      "label": "어떤 모습으로 성장하는 학생을 바라고 있나요?",
+      "kind": "long-text",
+      "required": true,
+      "helpText": "강점, 의사 표현, 관계, 자립 등 학급 전체의 성장 모습을 적어 주세요.",
+      "placeholderToken": "{{studentVision}}"
+    },
+    {
+      "id": "teacherPhilosophy",
+      "label": "이번 계획에 반영할 교사철학은 무엇인가요?",
+      "kind": "long-text",
+      "required": true,
+      "helpText": "직접 작성한 철학을 입력하거나 SS-001에서 작성한 교사철학을 이어서 사용하세요.",
+      "placeholderToken": "{{teacherPhilosophy}}"
+    },
+    {
+      "id": "educationDirection",
+      "label": "어떤 방향으로 학급을 운영하고 지도할 계획인가요?",
+      "kind": "long-text",
+      "required": true,
+      "helpText": "개별화교육, 삶과 연결되는 배움, 긍정적 행동 지원의 실천 방향을 적어 주세요.",
+      "placeholderToken": "{{educationDirection}}"
+    }
+  ],
+  "steps": [
+    {
+      "id": "input-teacherPhilosophy",
+      "title": "교사철학 적용",
+      "kind": "input",
+      "fieldIds": [
+        "teacherPhilosophy"
+      ]
+    },
+    {
+      "id": "input-studentVision",
+      "title": "기대하는 학생상",
+      "kind": "input",
+      "fieldIds": [
+        "studentVision"
+      ]
+    },
+    {
+      "id": "input-educationDirection",
+      "title": "교육방향과 지도 내용",
+      "kind": "input",
+      "fieldIds": [
+        "educationDirection"
+      ]
+    },
+    {
+      "id": "complete",
+      "title": "프롬프트 완성",
+      "kind": "generated-output"
+    }
+  ],
+  "publicationApproval": {
+    "recordId": "EDUBOT-C13-20261116-SS-002",
+    "sourceVersion": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf · SHA-256 e17cf4180aa45766a5f926f00297be038ebfba3aef77082ea69349a7f4c4f739",
+    "templateVersion": "0.1.0",
+    "approvedAt": "2026-11-16",
+    "licenseStatus": "approved",
+    "releaseApproved": true,
+    "sourceSha256": "85adc6f98cd63568d27c820b2938cf31dcf27c2a3f475437efbb2766821a0fac",
+    "templateSha256": "7c9e158062afc18aadae4d52c5e7ea6c8cbcfe841155b62684a3827d07d5da80",
+    "replacements": [
+      {
+        "token": "{{teacherPhilosophy}}",
+        "originalText": "학생을 자신의 삶을 살아가는 주체로 바라보고, 학생의 강점과 교육적 요구를 바탕으로 성취기준을 삶과 연결하여 재구성한\n교육과정과 수업을 통해 의미 있는 경험과 성장을 지원하며, 평가에서도 성취기준의 단순한 달성보다 학생의 삶 속 변화와 성\n장을 중요하게 바라본다."
+      },
+      {
+        "token": "{{studentVision}}",
+        "originalText": "학생은 자신의 강점과 가능성을 가진 존재이며 각자의 속도와 방식으로 성장하는 배움의 주체이다. 학생들은 다양한 경험을 통해\n자신의 생각과 요구를 표현하고, 타인과 관계를 형성한다. 학생들은 일상생활 속에서 필요한 자립 역량을 기르고 지역사회 구성원으로서\n자신의 역할을 수행하며 민주시민으로 성장한다."
+      },
+      {
+        "token": "{{educationDirection}}",
+        "originalText": "학생 개개인의 특성과 교육적 요구를 반영한 개별화 교육을 실천하고, 학생의 삶과 연결된 의미 있는 배움이 이루어지도록 교육과정을 운\n영한다. 또한 긍정적 행동 지원을 통해 안전하고 존중받는 환경에서 자신의 가능성을 실현할 수 있도록 지원한다."
+      }
+    ]
+  }
+}
