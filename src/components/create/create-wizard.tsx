@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { publicAssetUrl } from "@/lib/site-path";
+import { WizardStepList } from "@/components/wizard-step-list";
 import Link from "next/link";
 import { useId, useRef } from "react";
 import { updateCreateSession, useCreateSession } from "@/lib/create/browser-session";
@@ -38,8 +39,10 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
   return (
     <div className="shell create-wizard" data-create-wizard>
       <Link className="prompt-back" href="/create">← 플랫폼·기기 바꾸기</Link>
-      <h1>나만의 에듀봇 만들기</h1>
-      <p className="muted">{platforms[guide.platform]} · {devices[guide.device]} · 버전 {guide.version} · 확인일 {guide.verifiedAt}</p>
+      <header className="wizard-heading">
+        <h1>나만의 에듀봇 만들기</h1>
+        <p className="prompt-version status-chip">{platforms[guide.platform]} · {devices[guide.device]} · 버전 {guide.version} · 확인일 {guide.verifiedAt}</p>
+      </header>
       {!ready ? <p role="status">제작 안내를 불러오고 있습니다.</p> : (
         <>
           <CreateStorageControls />
@@ -52,7 +55,7 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
               <span>{step ? stepIndex + 1 : guide.steps.length} / {guide.steps.length}단계 · 직접 확인 {completedCount}개</span>
             </div>
             <progress id={progressId} value={step ? stepIndex + 1 : guide.steps.length} max={guide.steps.length} />
-            <ol>
+            <WizardStepList current={step?.id ?? null}>
               {guide.steps.map((target, index) => (
                 <li key={target.id}>
                   <button type="button" aria-current={target.id === step?.id ? "step" : undefined}
@@ -63,7 +66,7 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
                 </li>
               ))}
               <li><button type="button" aria-current={!step ? "step" : undefined} onClick={() => move(null)}>완료 후 점검</button></li>
-            </ol>
+            </WizardStepList>
           </nav>
           {step ? (
             <section className="create-stage info-panel">

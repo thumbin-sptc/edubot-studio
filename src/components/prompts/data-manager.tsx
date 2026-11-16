@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { changeBrowserPreference, removeBrowserDraft, useDraftStorage } from "@/lib/browser-drafts";
 import { forgetResult } from "@/lib/browser-results";
 import { removeBrowserCreateData, useCreateSession } from "@/lib/create/browser-session";
@@ -16,6 +16,7 @@ export function DataManager() {
   const [selected, setSelected] = useState<string | null>(null);
   const [deletion, setDeletion] = useState<Draft | "all" | "creation" | null>(null);
   const [message, setMessage] = useState<{ error: boolean; text: string } | null>(null);
+  const feedback = useRef<HTMLParagraphElement>(null);
 
   function toggleStorage() {
     const ok = changeBrowserPreference(!storage.enabled);
@@ -35,26 +36,26 @@ export function DataManager() {
       setMessage({ error: true, text: "삭제를 완료하지 못했습니다. 남은 저장 데이터를 확인하고 다시 시도해 주세요." });
     }
     setDeletion(null);
+    requestAnimationFrame(() => feedback.current?.focus());
   }
 
   if (!storage.ready || !creation.ready) return <p role="status">브라우저 저장 설정을 확인하고 있습니다.</p>;
 
   return (
-    <>
-      <section className="info-panel">
+    <div className="data-manager">
+      <section className="info-panel data-storage">
         <h2>자동 저장 설정</h2>
         <StorageToggle enabled={storage.enabled} available={storage.available} onToggle={toggleStorage} />
         <p>작성본과 제작 설정은 이 브라우저에 평문으로 저장됩니다. 학생 실명, 개인 식별자, 민감정보는 넣지 마세요. 공용 기기에서는 저장을 끄고, 브라우저를 초기화하거나 기기를 바꾸면 저장 데이터가 사라질 수 있습니다.</p>
-        <div className="prompt-actions">
-          <button className="action action-secondary" type="button"
-            disabled={!storage.available || (!storage.drafts.length && !storage.unreadable && creation.stored.raw === null)}
-            onClick={() => setDeletion("all")}>전체 삭제</button>
-        </div>
-        <p role={message?.error ? "alert" : "status"} className={message?.error ? "prompt-error" : undefined}>{message?.text}</p>
       </section>
+      <p ref={feedback} tabIndex={-1} role={message?.error ? "alert" : "status"}
+        className={`data-message${message?.error ? " prompt-error" : ""}`}>{message?.text}</p>
       <section className="info-panel">
-        <h2>저장된 작성본</h2>
-        {storage.available && !storage.drafts.length && <p>열람할 수 있는 저장본이 없습니다.</p>}
+        <div className="draft-list-heading">
+          <h2>저장된 작성본</h2>
+          {storage.available && <span className="status-chip">{storage.drafts.length}건</span>}
+        </div>
+        {storage.available && !storage.drafts.length && <p className="data-empty">열람할 수 있는 저장본이 없습니다.</p>}
         {storage.unreadable > 0 && <p>이 버전에서 열 수 없는 작성본 {storage.unreadable}개가 있습니다. 전체 삭제로 제거할 수 있습니다.</p>}
         {storage.drafts.length > 0 && (
           <ul className="draft-list">
@@ -63,17 +64,21 @@ export function DataManager() {
               const open = selected === key;
               return (
                 <li key={key}>
-                  <h3>{draft.promptTitle}</h3>
-                  <p>버전 {draft.templateVersion} · <time dateTime={draft.updatedAt}>
-                    {new Date(draft.updatedAt).toLocaleString("ko-KR")}
-                  </time></p>
-                  <div className="prompt-actions">
-                    <button className="action action-secondary" type="button" aria-expanded={open}
-                      aria-label={`${draft.promptTitle} 버전 ${draft.templateVersion} ${open ? "닫기" : "열람"}`}
-                      onClick={() => setSelected(open ? null : key)}>{open ? "닫기" : "열람"}</button>
-                    <button className="action action-secondary" type="button"
-                      aria-label={`${draft.promptTitle} 버전 ${draft.templateVersion} 삭제`}
-                      onClick={() => setDeletion(draft)}>삭제</button>
+                  <div className="draft-row">
+                    <div>
+                      <h3>{draft.promptTitle}</h3>
+                      <p>버전 {draft.templateVersion} · <time dateTime={draft.updatedAt}>
+                        {new Date(draft.updatedAt).toLocaleString("ko-KR")}
+                      </time></p>
+                    </div>
+                    <div className="prompt-actions">
+                      <button className="action action-secondary" type="button" aria-expanded={open}
+                        aria-label={`${draft.promptTitle} 버전 ${draft.templateVersion} ${open ? "닫기" : "열람"}`}
+                        onClick={() => setSelected(open ? null : key)}>{open ? "닫기" : "열람"}</button>
+                      <button className="action action-secondary action-delete" type="button"
+                        aria-label={`${draft.promptTitle} 버전 ${draft.templateVersion} 삭제`}
+                        onClick={() => setDeletion(draft)}>삭제</button>
+                    </div>
                   </div>
                   {open && <div className="draft-archive"><DraftArchive key={key} draft={draft} /></div>}
                 </li>
@@ -95,9 +100,18 @@ export function DataManager() {
           <p>{creation.stored.raw !== null ? "현재 버전에서 열 수 없는 제작 설정이 있습니다." : "저장된 제작 설정이 없습니다."}</p>
         )}
         <div className="prompt-actions">
-          <button className="action action-secondary" type="button" disabled={!creation.available || creation.stored.raw === null}
+          <button className="action action-secondary action-delete" type="button" disabled={!creation.available || creation.stored.raw === null}
             onClick={() => setDeletion("creation")}>제작 설정 삭제</button>
         </div>
+      </section>
+      <section className="info-panel data-danger">
+        <div>
+          <h2>저장 데이터 삭제</h2>
+          <p>이 브라우저의 프롬프트 작성본과 에듀봇 제작 설정을 한 번에 지울 수 있습니다.</p>
+        </div>
+        <button className="action action-secondary action-delete" type="button"
+          disabled={!storage.available || (!storage.drafts.length && !storage.unreadable && creation.stored.raw === null)}
+          onClick={() => setDeletion("all")}>전체 삭제</button>
       </section>
       {deletion && (
         <DecisionDialog
@@ -111,6 +125,6 @@ export function DataManager() {
           <button className="action action-danger" type="button" onClick={confirmDelete}>삭제 확인</button>
         </DecisionDialog>
       )}
-    </>
+    </div>
   );
 }

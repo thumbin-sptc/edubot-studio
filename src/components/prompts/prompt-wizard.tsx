@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { ShieldCheck } from "lucide-react";
+import { WizardStepList } from "@/components/wizard-step-list";
 import { useDraftStorage } from "@/lib/browser-drafts";
 import { useResultMemory } from "@/lib/browser-results";
 import {
@@ -36,12 +38,17 @@ export function PromptWizard({ template, related, imports }: WizardProps) {
   return (
     <section data-prompt-wizard className="shell subpage prompt-wizard">
       <Link className="prompt-back" href="/prompts">← 프롬프트 라이브러리</Link>
-      <h1>{template.title}</h1>
+      <header className="wizard-heading">
+        <h1>{template.title}</h1>
+        <p className="prompt-version status-chip">템플릿 버전 {template.version}</p>
+      </header>
       {template.summary && <p className="page-description">{template.summary}</p>}
-      <p className="prompt-version">템플릿 버전 {template.version}</p>
       <section className="info-panel prompt-privacy">
-        <h2>작성 전 개인정보 보호</h2>
-        <p>학생 이름은 가명으로 적고, 학번이나 건강 정보 등 학생을 식별할 수 있는 정보는 입력하지 마세요. 작성 내용은 이 앱의 서버로 전송하지 않습니다.</p>
+        <ShieldCheck aria-hidden="true" size={21} />
+        <div>
+          <h2>작성 전 개인정보 보호</h2>
+          <p>학생 이름은 가명으로 적고, 학번이나 건강 정보 등 학생을 식별할 수 있는 정보는 입력하지 마세요. 작성 내용은 이 앱의 서버로 전송하지 않습니다.</p>
+        </div>
       </section>
       {storage.ready
         ? <WizardSession key={key} template={template} related={related} imports={imports}
@@ -167,7 +174,7 @@ function WizardSession({ template, storage, initial, older, related, imports }: 
             <span>{stepIndex + 1} / {template.steps.length}단계</span>
           </div>
           <progress id="prompt-progress" value={stepIndex + 1} max={template.steps.length} />
-          <ol>
+          <WizardStepList current={step.id}>
             {template.steps.map((target, index) => (
               <li key={target.id}>
                 <button type="button" aria-current={target.id === step.id ? "step" : undefined}
@@ -177,7 +184,7 @@ function WizardSession({ template, storage, initial, older, related, imports }: 
                 </button>
               </li>
             ))}
-          </ol>
+          </WizardStepList>
         </nav>
       )}
       <section className="info-panel prompt-stage" aria-labelledby={stageId}>
@@ -244,7 +251,7 @@ function WizardSession({ template, storage, initial, older, related, imports }: 
                   onClick={() => setDecision({ type: "restore" })}>자동 생성본으로 복원</button>
               )}
             </div>
-            <div className="grid gap-3 mt-5">
+            <div className="wizard-followup">
               <ExternalAnswer answer={draft.externalAiResult} saving={storage.enabled}
                 onChange={(answer) => session.updateAnswer(answer)} related={related} />
             </div>

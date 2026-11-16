@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useState, type KeyboardEvent } from "react";
+import { Search } from "lucide-react";
 import { ActionLink } from "@/components/action-link";
 import {
   catalogFilters, catalogOptions, filterCatalog, groupCatalog, sortCatalog,
@@ -12,19 +13,27 @@ const views = [
   { id: "contents", label: "교재 목차별" },
 ] as const;
 
-function CatalogCards({ entries }: { entries: readonly PublishedPromptSummary[] }) {
+function CatalogCards({ entries, inSection = false }: { entries: readonly PublishedPromptSummary[]; inSection?: boolean }) {
+  const Title = inSection ? "h4" : "h3";
   return (
     <ul className="catalog-cards">
       {entries.map(({ id, title, summary, category, schoolEnvironment, schoolLevel, source, section, pdfPage, bookPage }) => {
         const tags = [...new Set([category, schoolEnvironment, schoolLevel].filter(Boolean))];
-        const location = [source, section, bookPage && `교재 ${bookPage}쪽`, pdfPage && `PDF ${pdfPage}쪽`].filter(Boolean);
+        const location = [source !== schoolEnvironment && source, section, bookPage && `교재 ${bookPage}쪽`, pdfPage && `PDF ${pdfPage}쪽`].filter(Boolean);
+        const actionLabel = [title, schoolEnvironment, schoolLevel, "작성하기"].filter(Boolean).join(" ");
         return (
           <li key={id} className="info-panel catalog-card">
-            <strong>{title}</strong>
-            {summary && <p>{summary}</p>}
-            {tags.length > 0 && <p className="catalog-tags">{tags.join(" · ")}</p>}
-            {location.length > 0 && <p className="catalog-location">수록 위치 · {location.join(" / ")}</p>}
-            <div className="catalog-card-action"><ActionLink href={`/prompts/${id}`}>{title} 작성하기</ActionLink></div>
+            <Title className="catalog-card-title">{title}</Title>
+            {summary && <p className="catalog-summary">{summary}</p>}
+            {tags.length > 0 && (
+              <ul className="catalog-tags" aria-label="분류">
+                {tags.map((tag) => <li key={tag}>{tag}</li>)}
+              </ul>
+            )}
+            {location.length > 0 && <p className="catalog-location">{location.join(" · ")}</p>}
+            <div className="catalog-card-action">
+              <ActionLink href={`/prompts/${id}`} ariaLabel={actionLabel}>작성하기</ActionLink>
+            </div>
           </li>
         );
       })}
@@ -41,7 +50,7 @@ function CatalogGroups({ entries, view }: { entries: PublishedPromptSummary[]; v
         groupCatalog(items, "section").map(([section, results]) => (
           <div className="catalog-section" key={section ?? "@unknown"}>
             {section && <h3>{section}</h3>}
-            <CatalogCards entries={results} />
+            <CatalogCards entries={results} inSection={Boolean(section)} />
           </div>
         ))
       )}
@@ -71,17 +80,14 @@ export function PromptCatalog({ entries }: { entries: readonly PublishedPromptSu
 
   return (
     <div className="catalog">
-      <div className="catalog-tabs" role="tablist" aria-label="프롬프트 탐색 방식">
-        {views.map(({ id: tab, label }) => (
-          <button key={tab} type="button" id={tabId(tab)} role="tab" aria-controls={panelId(tab)}
-            aria-selected={view === tab} tabIndex={view === tab ? 0 : -1}
-            onClick={() => setView(tab)} onKeyDown={selectTab}>{label}</button>
-        ))}
-      </div>
       <section className="info-panel catalog-search" aria-label="프롬프트 검색 및 필터">
         <label htmlFor={`${id}-search`}>프롬프트 검색</label>
-        <input id={`${id}-search`} type="search" className="prompt-input" value={search}
-          autoComplete="off" spellCheck={false} onChange={(event) => setSearch(event.target.value)} />
+        <div className="catalog-query">
+          <Search aria-hidden="true" size={20} />
+          <input id={`${id}-search`} type="search" className="prompt-input" value={search}
+            placeholder="예: 교사철학, 평가 계획" autoComplete="off" spellCheck={false}
+            onChange={(event) => setSearch(event.target.value)} />
+        </div>
         <div className="catalog-filters">
           {catalogFilters.map(({ field, label }) => {
             const options = catalogOptions(entries, field);
@@ -97,12 +103,21 @@ export function PromptCatalog({ entries }: { entries: readonly PublishedPromptSu
             );
           })}
         </div>
+      </section>
+      <div className="catalog-toolbar">
+        <div className="catalog-tabs" role="tablist" aria-label="프롬프트 탐색 방식">
+          {views.map(({ id: tab, label }) => (
+            <button key={tab} type="button" id={tabId(tab)} role="tab" aria-controls={panelId(tab)}
+              aria-selected={view === tab} tabIndex={view === tab ? 0 : -1}
+              onClick={() => setView(tab)} onKeyDown={selectTab}>{label}</button>
+          ))}
+        </div>
         <div className="catalog-search-footer">
-          <p role="status">{results.length}건{!active && " · 검색 및 필터 조건 없음"}</p>
+          <p role="status">{active ? "검색 결과" : "전체"} <strong>{results.length}건</strong></p>
           <button className="action action-secondary" type="button" disabled={!active}
             onClick={() => { setSearch(""); setFilters({}); }}>검색·필터 초기화</button>
         </div>
-      </section>
+      </div>
       {views.map(({ id: tab }) => (
         <div key={tab} role="tabpanel" id={panelId(tab)} aria-labelledby={tabId(tab)}
           hidden={tab !== view} tabIndex={0}>

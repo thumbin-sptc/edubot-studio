@@ -1,5 +1,6 @@
 .prompt-wizard {
-  padding-block: clamp(36px, 6vw, 72px);
+  max-width: 850px;
+  padding-block: clamp(18px, 3.8vw, 46px) clamp(46px, 6vw, 80px);
 }
 
 .prompt-back,
@@ -13,25 +14,59 @@
   display: inline-flex;
   min-height: 44px;
   align-items: center;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-weight: 650;
 }
 
+.wizard-heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+}
+
+.wizard-heading h1 {
+  text-wrap: pretty;
+}
+
 .prompt-version {
-  margin-top: 8px;
-  color: var(--color-muted);
-  font-size: 0.875rem;
+  margin: 0;
 }
 
 .prompt-privacy,
 .prompt-storage,
 .prompt-stage,
 .prompt-steps {
-  margin-top: 20px;
+  margin-top: 16px;
 }
 
 .prompt-privacy {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  padding: 13px clamp(12px, 2.5vw, 20px);
+  border-color: #c8dcf0;
   background: var(--color-sky);
+}
+
+.prompt-privacy svg {
+  margin-top: 1px;
+  color: var(--color-accent);
+}
+
+.prompt-privacy h2 {
+  font-size: 1rem;
+}
+
+.prompt-privacy p,
+.prompt-storage > p {
+  margin-top: 3px;
+  font-size: .875rem;
+}
+
+.prompt-storage {
+  padding: 8px clamp(12px, 2.5vw, 20px) 12px;
 }
 
 .storage-toggle label {
@@ -42,13 +77,47 @@
   font-weight: 700;
 }
 
-.storage-toggle input,
 .field-options input[type="checkbox"],
 .field-options input[type="radio"] {
   width: 18px;
   height: 18px;
   flex: none;
   accent-color: var(--color-accent);
+}
+
+.storage-toggle input {
+  width: 42px;
+  height: 24px;
+  flex: none;
+  appearance: none;
+  border: 1px solid var(--color-control);
+  border-radius: 99px;
+  background: #63768d;
+  cursor: pointer;
+}
+
+.storage-toggle input::before {
+  display: block;
+  width: 16px;
+  height: 16px;
+  margin: 3px;
+  border-radius: 50%;
+  background: var(--color-paper);
+  content: "";
+}
+
+.storage-toggle input:checked {
+  border-color: var(--color-accent);
+  background: var(--color-accent);
+}
+
+.storage-toggle input:checked::before {
+  margin-inline-start: 20px;
+}
+
+.storage-toggle input:disabled {
+  opacity: .62;
+  cursor: default;
 }
 
 .storage-toggle p,
@@ -73,6 +142,13 @@
 .step-progress {
   font-size: 0.875rem;
   font-weight: 700;
+}
+
+.prompt-steps {
+  padding: 12px 14px 8px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-panel);
+  background: var(--color-paper);
 }
 
 .prompt-steps progress {
@@ -102,7 +178,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 12px;
+  margin: 6px -4px 0;
+  padding: 4px;
 }
 
 .prompt-steps button {
@@ -115,8 +192,15 @@
   border: 1px solid var(--color-line);
   border-radius: 12px;
   background: var(--color-paper);
+  color: var(--color-muted);
   text-align: start;
   cursor: pointer;
+  line-height: 1.4;
+  font-size: .875rem;
+}
+
+.prompt-steps button:hover {
+  border-color: var(--color-control);
 }
 
 .prompt-steps button[aria-current="step"] {
@@ -136,15 +220,15 @@
 }
 
 .prompt-stage {
-  border-radius: 22px;
-  background: var(--color-paper);
+  padding: clamp(16px, 4vw, 32px);
 }
 
 .prompt-stage h2,
 .prompt-dialog h2 {
-  font-size: 1.375rem;
+  font-size: clamp(1.25rem, 3vw, 1.6rem);
   font-weight: 750;
   line-height: 1.4;
+  letter-spacing: -.035em;
 }
 
 .prompt-fields {
@@ -181,8 +265,8 @@
 }
 
 .field-notes summary {
-  min-height: 32px;
-  padding-block: 4px;
+  min-height: 44px;
+  padding-block: 8px;
   color: var(--color-accent);
   cursor: pointer;
 }
@@ -208,10 +292,11 @@
 
 .prompt-input {
   width: 100%;
+  min-width: 0;
   min-height: 44px;
   padding: 10px 12px;
-  border: 1px solid #75859b;
-  border-radius: 10px;
+  border: 1px solid var(--color-control);
+  border-radius: var(--radius-control);
   background: var(--color-paper);
   color: var(--color-ink);
 }
@@ -222,7 +307,8 @@ textarea.prompt-input {
 }
 
 .prompt-input[aria-invalid="true"] {
-  border-color: #9b2435;
+  border-color: var(--color-danger);
+  background: #fffafb;
 }
 
 .repeat-item {
@@ -233,6 +319,7 @@ textarea.prompt-input {
   padding: 12px;
   border: 1px solid var(--color-line);
   border-radius: 12px;
+  background: var(--color-panel);
 }
 
 .prompt-actions,
@@ -259,7 +346,16 @@ textarea.prompt-input {
 }
 
 .action-danger {
-  background: #9b2435;
+  background: var(--color-danger);
+}
+
+.action-delete:not(:disabled) {
+  border-color: #e2a5af;
+  color: var(--color-danger);
+}
+
+.action-delete:not(:disabled):hover {
+  background: var(--color-danger-bg);
 }
 
 .action-danger:hover {
@@ -275,14 +371,33 @@ textarea.prompt-input {
 
 .prompt-error,
 .info-panel .prompt-error {
-  color: #9b2435;
+  color: var(--color-danger);
   font-weight: 650;
+}
+
+.field-notes .prompt-error {
+  padding: 7px 10px;
+  border-inline-start: 3px solid var(--color-danger);
+  border-radius: 6px;
+  background: var(--color-danger-bg);
 }
 
 .prompt-output {
   display: grid;
   gap: 8px;
   margin-top: 16px;
+}
+
+.prompt-output textarea {
+  padding: clamp(12px, 2.6vw, 20px);
+  background: var(--color-panel);
+  line-height: 1.72;
+}
+
+.wizard-followup {
+  display: grid;
+  gap: 12px;
+  margin-top: 22px;
 }
 
 .prompt-copy {
@@ -293,6 +408,11 @@ textarea.prompt-input {
 
 .prompt-copy-status {
   min-height: 1.5em;
+}
+
+.prompt-copy-status:empty {
+  min-height: 0;
+  margin-top: 0;
 }
 
 .result-notice,
@@ -335,11 +455,69 @@ textarea.prompt-input {
   margin-top: 12px;
 }
 
+.data-manager {
+  display: grid;
+  gap: 14px;
+}
+
+.data-storage .storage-toggle {
+  margin: 10px 0;
+  padding: 5px 12px 10px;
+  border-radius: var(--radius-control);
+  background: var(--color-sky);
+}
+
+.data-message:empty {
+  margin-block: -7px;
+}
+
+.data-message:not(:empty) {
+  padding: 9px 12px;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-control);
+  background: var(--color-paper);
+}
+
+.data-empty {
+  padding: 12px;
+  border-radius: var(--radius-control);
+  background: var(--color-panel);
+}
+
+.data-danger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+}
+
 .draft-list > li {
   padding: 14px;
   border: 1px solid var(--color-line);
   border-radius: 12px;
-  background: var(--color-paper);
+  background: var(--color-panel);
+}
+
+.draft-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+}
+
+.draft-row p {
+  margin-top: 0;
+  font-size: .875rem;
+}
+
+.draft-row .prompt-actions {
+  margin-top: 0;
+}
+
+.draft-row .action {
+  min-width: 62px;
 }
 
 .draft-list h3,
@@ -360,7 +538,7 @@ textarea.prompt-input {
 
 @media (width < 48rem) {
   html:has([data-prompt-wizard]) {
-    scroll-padding-bottom: 12px;
+    scroll-padding-bottom: calc(82px + env(safe-area-inset-bottom));
   }
 
   body:has([data-prompt-wizard]) {
@@ -369,5 +547,35 @@ textarea.prompt-input {
 
   body:has([data-prompt-wizard]) .site-nav {
     display: none;
+  }
+
+  .prompt-steps ol {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: thin;
+  }
+
+  .prompt-steps ol > li {
+    flex: 0 0 auto;
+    max-width: 14rem;
+  }
+
+  .prompt-step-actions .action:last-child {
+    flex: 1 1 9rem;
+  }
+
+  .prompt-stage :is(input, select, textarea) {
+    font-size: 1rem;
+  }
+}
+
+@media (width < 48rem) and (height >= 34rem) {
+  :is(.prompt-wizard, .create-wizard) .prompt-step-actions {
+    position: sticky;
+    inset-block-end: 0;
+    z-index: 1;
+    padding: 8px 0 calc(8px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--color-line);
+    background: var(--color-canvas);
   }
 }

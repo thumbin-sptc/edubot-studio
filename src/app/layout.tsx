@@ -1,8 +1,8 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import Link from "next/link";
 import type { ReactNode } from "react";
-import { Navigation } from "@/components/navigation";
+import { Navigation, SkipLink } from "@/components/navigation";
 import "./globals.css";
 import "./prompts.css";
 import "./prompts/catalog.css";
@@ -12,14 +12,16 @@ export const metadata: Metadata = {
     default: "EDU-BOT Studio",
     template: "%s | EDU-BOT Studio",
   },
-  description: "중도중복장애교육연구회가 준비하는 특수교육 교사를 위한 무료 AI 활용 안내입니다.",
+  description: "중도중복장애교육연구회가 제공하는 특수교육 교사의 프롬프트 작성 및 에듀봇 제작 도구입니다.",
 };
+
+export const viewport: Viewport = { viewportFit: "cover", interactiveWidget: "resizes-content" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="ko">
       <body className={GeistSans.variable}>
-        <a href="#main-content" className="skip-link">본문으로 건너뛰기</a>
+        <SkipLink />
         <header className="site-header">
           <div className="shell header-inner">
             <Link href="/" className="wordmark">

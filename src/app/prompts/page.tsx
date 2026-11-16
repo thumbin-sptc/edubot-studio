@@ -13,7 +13,7 @@ export default async function PromptsPage() {
     : "검수를 마친 교재 프롬프트를 확인하는 공간입니다.";
 
   return (
-    <PageIntro title={title} description={description}>
+    <PageIntro title={title} description={description} className="catalog-page">
       {prompts.length === 0 ? (
         <StatusPanel>현재 공개된 프롬프트가 없습니다. 검수를 마친 자료부터 이곳에 공개할 예정입니다.</StatusPanel>
       ) : (

@@ -16,12 +16,12 @@ export function CreatePicker({ statuses }: { statuses: CreateStatus[] }) {
     <section className="info-panel create-picker" aria-label="플랫폼과 기기 선택">
       <fieldset>
         <legend>AI 플랫폼</legend>
-        <div className="create-options">
+        <div className="create-options create-platforms">
           {(Object.entries(platforms) as Array<[Platform, string]>).map(([key, label]) => (
             <label key={key}>
               <input type="radio" name="create-platform" checked={platform === key}
                 onChange={() => updateCreateSession((current) => ({ ...current, selection: { ...current.selection, platform: key } }))} />
-              {label}
+              <span>{label}</span>
             </label>
           ))}
         </div>
@@ -35,7 +35,7 @@ export function CreatePicker({ statuses }: { statuses: CreateStatus[] }) {
               <label key={key}>
                 <input type="radio" name="create-device" checked={device === key}
                   onChange={() => updateCreateSession((current) => ({ ...current, selection: { ...current.selection, device: key } }))} />
-                {label}
+                <span>{label}</span>
                 {platform && (
                   <span className={status === "published" ? "step-complete" : "create-badge"}>
                     {status === "published" ? "안내 보기" : status === "unsupported" ? "미지원" : "준비 중"}
