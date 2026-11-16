@@ -65,7 +65,7 @@ for (const asset of assets) {
     `Exported asset differs from approved file: ${asset}`);
 }
 
-const routePayload = /^__next\.[^/]+(?:\/[^/]+)*\.txt$/;
+const routePayload = /^__next\.[^/]+\.txt$/;
 const staticAsset = /^_next\/static\/.+\.(?:js|css|woff2)$/;
 const pagePrefixes = [...pages, ...frameworkPages].sort((a, b) => b.length - a.length);
 for (const file of files) {

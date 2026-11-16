@@ -26,7 +26,7 @@ PC와 모바일에서 메뉴 이동, 직접 접속, 새로고침, 뒤로 가기,
 
 - `basePath: "/edubot-studio"`는 Next.js 링크와 빌드 자산에 적용됩니다. 콘텐츠 경로는 기존 `/tutorials/…`, `/downloads/…` 형식으로 관리하고 브라우저에서 열 때만 배포 경로를 붙입니다. 이미지는 원본 정적 파일을 쓰며, ZIP은 브라우저에서 같은 출처의 파일을 받아 크기와 SHA-256을 확인한 뒤 생성합니다. [Next.js basePath](https://nextjs.org/docs/app/api-reference/config/next-config-js/basePath)
 - `trailingSlash: true`로 각 주소에 `index.html`을 만들어 직접 접근과 새로고침을 지원합니다. Pages의 정적 `404.html`이 미생성 주소를 처리합니다. 런타임 Node.js와 이미지 최적화 서버는 필요하지 않습니다. [Next.js 정적 내보내기](https://nextjs.org/docs/app/guides/static-exports)
-- 현재 Next.js 버전은 공개 상세 목록이 비어 있어도 동적 라우트마다 빌드용 매개변수를 요구합니다. `npm run build`의 후속 단계가 임시 상세 경로를 `out/`에서 제거합니다. 공개 경계 검사는 실제 산출물의 파일 목록, HTML, 라우팅 데이터, 번들과 승인 파일을 확인합니다.
+- 현재 Next.js 버전은 공개 상세 목록이 비어 있어도 동적 라우트마다 빌드용 매개변수를 요구합니다. `npm run build`의 후속 단계가 임시 상세 경로를 `out/`에서 제거합니다. Windows에서는 Next.js가 하위 폴더에 생성한 프리페치 파일명도 브라우저가 요청하는 점 구분 형식으로 맞춥니다. 공개 경계 검사는 실제 산출물의 파일 목록, HTML, 라우팅 데이터, 번들과 승인 파일을 확인합니다.
 - 브라우저 저장은 출처 단위입니다. 다른 도메인의 저장본은 GitHub Pages로 자동 이동하지 않습니다. 자동 저장은 이 주소에서도 기본 OFF입니다.
 
 ## 복구
