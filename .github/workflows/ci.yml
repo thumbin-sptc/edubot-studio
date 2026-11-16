@@ -3,6 +3,7 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   contents: read
@@ -27,5 +28,38 @@ jobs:
       - run: npm run lint
       - run: npm run typecheck
       - run: npm run build
-      - name: Check publication boundaries in the production build
+      - name: Check publication boundaries in the static export
         run: node scripts/check-public-build.mjs
+      - name: Upload the verified export
+        if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
+        with:
+          path: out
+
+  deploy:
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    needs: validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+    concurrency:
+      group: github-pages
+      cancel-in-progress: false
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check that the export is still current
+        id: current
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          sha=$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)
+          echo "deploy=$([[ $sha == "$GITHUB_SHA" ]] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+      - name: Deploy to GitHub Pages
+        if: steps.current.outputs.deploy == 'true'
+        id: deployment
+        uses: actions/deploy-pages@368f82528645a54fb793d4d04e342629a3f51346 # v5.0.1

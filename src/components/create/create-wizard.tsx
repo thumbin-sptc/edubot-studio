@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { publicAssetUrl } from "@/lib/site-path";
 import Link from "next/link";
 import { useId, useRef } from "react";
 import { updateCreateSession, useCreateSession } from "@/lib/create/browser-session";
@@ -73,7 +74,7 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
                   <p>{step.description}</p>
                   {step.mascot && (
                     <aside className="create-mascot">
-                      <Image src={step.mascot.path} alt="" width={48} height={48} unoptimized />
+                      <Image src={publicAssetUrl(step.mascot.path)} alt="" width={48} height={48} />
                       <p>{step.mascot.text}</p>
                     </aside>
                   )}

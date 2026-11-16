@@ -26,7 +26,7 @@ test("the downloaded ZIP contains exactly the selected names and original bytes"
       assert.equal(options.redirect, "error");
       assert.equal(options.credentials, "omit");
       requests.push(url.pathname);
-      return new Response(fixtures.get(url.pathname));
+      return new Response(fixtures.get(url.pathname.slice("/edubot-studio".length)));
     }), createKnowledgeZip);
   assert.equal(result.kind, "ready");
   assert.equal(result.zip.type, "application/zip");
@@ -34,7 +34,7 @@ test("the downloaded ZIP contains exactly the selected names and original bytes"
   assert.deepEqual(Object.keys(extracted).sort(), ["common.txt", "context.csv"]);
   assert.deepEqual(Buffer.from(extracted["common.txt"]), fixtures.get("/downloads/common.txt"));
   assert.deepEqual(Buffer.from(extracted["context.csv"]), fixtures.get("/downloads/context.csv"));
-  assert.deepEqual(requests, ["/downloads/common.txt", "/downloads/context.csv"]);
+  assert.deepEqual(requests, ["/edubot-studio/downloads/common.txt", "/edubot-studio/downloads/context.csv"]);
 });
 
 test("empty, over-limit, duplicate and unsafe selections do not fetch files", async () => {

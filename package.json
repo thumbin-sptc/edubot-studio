@@ -7,7 +7,8 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "postbuild": "node scripts/clean-static-export.mjs",
+    "start": "node scripts/serve-static-export.mjs",
     "lint": "eslint . --max-warnings=0",
     "typecheck": "next typegen && tsc --noEmit",
     "validate:content": "node --experimental-strip-types scripts/validate-content.mjs",

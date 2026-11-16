@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { emptyExportSegment } from "@/lib/site-path";
 import { CreateWizard } from "@/components/create/create-wizard";
 import { devices, isDevice, isPlatform, platforms } from "@/lib/create/model";
 import { getCreateEntries } from "@/lib/create/published";
@@ -8,7 +9,9 @@ type Props = { params: Promise<{ platform: string; device: string }> };
 export const dynamicParams = false;
 
 export function generateStaticParams() {
-  return getCreateEntries().flatMap(({ platform, device, support }) => support === "supported" ? [{ platform, device }] : []);
+  const paths = getCreateEntries().flatMap(({ platform, device, support }) => support === "supported" ? [{ platform, device }] : []);
+  // Static export requires params even when no guide is published. This pair resolves to 404.
+  return paths.length ? paths : [{ platform: emptyExportSegment, device: "desktop-web" }];
 }
 
 async function findGuide(params: Props["params"]) {

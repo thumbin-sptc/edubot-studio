@@ -4,7 +4,7 @@
 - 앱: Next.js App Router + React + TypeScript + Tailwind (최종 설치 버전은 개발 환경에서 확인)
 - 아이콘: Lucide 등 가벼운 구성 가능; 접근성 기본 컴포넌트 선호
 - 콘텐츠: GitHub 커밋에 포함된 JSON/TypeScript. CMS/Notion/DB 불필요
-- 배포: GitHub `main` → Vercel, 배포 전 CI 검사 권장
+- 배포: GitHub `main` → GitHub Actions CI → Next.js 정적 내보내기 → GitHub Pages (`/edubot-studio/`)
 
 ## 권장 페이지
 ```

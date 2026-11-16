@@ -1,6 +1,7 @@
 "use client";
 
 import { useId, useRef, useState } from "react";
+import { publicAssetUrl } from "@/lib/site-path";
 import { CopyPrompt } from "@/components/prompts/prompt-controls";
 import { buildSelectedBundle, composeInstruction, isRecommended, isSelected, type ZipBuilder } from "@/lib/create/engine";
 import { fetchKnowledgeBlob, requestZipDownload } from "@/lib/create/zip-client";
@@ -65,7 +66,7 @@ export function InstructionPanel({ instruction, personalization, onChange }: {
 }
 
 function DownloadLink({ file, onStart }: { file: Knowledge; onStart: (file: Knowledge) => void }) {
-  return <a className="action action-secondary" href={file.path} download
+  return <a className="action action-secondary" href={publicAssetUrl(file.path)} download
     onClick={() => onStart(file)}>{file.title} 다운로드</a>;
 }
 

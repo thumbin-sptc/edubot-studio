@@ -22,7 +22,7 @@
 5. **연결:** AI 출력 사용자가 붙여넣기, 후속 템플릿 추천, 지정 입력 위치에 불러오기.
 6. **저장·삭제:** opt-in `localStorage`, 삭제 및 저장 ON/OFF 구분, 저장 내용 개별/전체 삭제.
 7. **사용성:** 반응형·접근성, 최소 모션, 단계 진행 표시, 복사/다운로드/영상/저장 실패의 대체 경로, 개인정보 주의.
-8. **운영:** JSON/TypeScript 콘텐츠 파일, GitHub main → Vercel 자동 배포.
+8. **운영:** JSON/TypeScript 콘텐츠 파일, GitHub `main` → GitHub Actions 검증 → GitHub Pages 자동 배포.
 
 ## 범위 밖
 

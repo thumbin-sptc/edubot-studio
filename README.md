@@ -19,7 +19,7 @@ npm ci
 npm run dev
 ```
 
-개발 서버는 기본적으로 `http://localhost:3000`에서 열립니다. 운영 빌드와 공개 경계를 확인할 때는 아래 명령을 실행합니다.
+개발 서버는 기본적으로 `http://localhost:3000/edubot-studio/`에서 열립니다. 운영 빌드와 공개 경계를 확인할 때는 아래 명령을 실행합니다.
 
 ```bash
 npm ci
@@ -31,7 +31,7 @@ npm run build
 node scripts/check-public-build.mjs
 ```
 
-`npm run start`는 빌드 후 실행합니다. 테스트용 합성 템플릿과 가이드는 격리된 작업 공간에서만 활성화합니다.
+`npm run build`는 정적 파일을 `out/`에 생성합니다. 빌드 후 `npm run start`를 실행하면 `http://127.0.0.1:3000/edubot-studio/`에서 Pages와 같은 경로로 확인할 수 있습니다. 테스트용 합성 템플릿과 가이드는 격리된 작업 공간에서만 활성화합니다.
 
 ## 브라우저 데이터와 원고 관리
 
@@ -41,4 +41,4 @@ GitHub 저장소는 공개입니다. 앱에서 숨긴 초안도 GitHub의 파일
 
 ## 배포
 
-GitHub Pages는 저장소 문서를 게시합니다. Next.js 운영 앱은 Vercel 연결 후 별도로 배포합니다. 연결, 배포 URL 확인, 공개 경계 점검, 복구 절차는 [Vercel 배포 준비](docs/DEPLOYMENT.md)에 정리했습니다.
+운영 앱은 [GitHub Pages](https://thumbin-sptc.github.io/edubot-studio/)에서 제공합니다. GitHub Actions는 `main`의 검사와 정적 빌드가 통과하면 검증한 `out/`을 자동 게시합니다. 설정, 검수, 복구 절차는 [GitHub Pages 배포 가이드](docs/DEPLOYMENT.md)를 따릅니다.

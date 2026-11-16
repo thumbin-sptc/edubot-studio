@@ -16,7 +16,7 @@
 9. 프롬프트 작성에서는 가명 사용 안내, 개인정보 주의, 복사 전 외부 AI 이용 경고를 제공한다.
 10. Copied/Downloaded는 External uploaded/Configured와 다르다. 외부 완료는 자가 체크만 지원한다.
 11. Toss 스타일 방향성(화이트, 네이비/스카이블루, 절제된 연두), 접근성, 반응형, reduce-motion을 준수한다. 공식 캐릭터/로고 미제공 시 가짜 최종 캐릭터를 만들지 않는다.
-12. 노션은 사용하지 않는다. GitHub가 명세와 콘텐츠의 단일 원본이다. `main`이 Vercel 프로덕션 배포 대상으로 예정되므로 스키마·빌드 테스트를 우선한다.
+12. 노션은 사용하지 않는다. GitHub가 명세와 콘텐츠의 단일 원본이다. `main`의 CI를 통과한 Next.js 정적 내보내기(`out/`)를 GitHub Pages의 `/edubot-studio/`에 자동 게시한다.
 13. 사용자 피드백으로 결정된 29개 UX/운영 기준을 무단으로 변경하지 않는다. 새 판단이 필요하면 문서에 '미확정'으로 표시한다.
 
 ## 현재 개발 단계
@@ -25,4 +25,4 @@
 - 실제 자료를 받으면 `docs/CONTENT-RELEASE.md`에 따라 승인 범위를 확인하고 개별 등록한다. 운영 연결과 배포 확인은 `docs/DEPLOYMENT.md`를 따른다.
 
 ## 검사
-최소 `npm run validate:content` 및 `npm test` 를 통과시킨다. Next.js 설정 이후 `npm run typecheck`, `npm run lint`, `npm run build`도 구현·실행한다.
+최소 `npm run validate:content` 및 `npm test` 를 통과시킨다. `npm run typecheck`, `npm run lint`, `npm run build`를 실행한 뒤 `node scripts/check-public-build.mjs`로 게시할 산출물을 확인한다.

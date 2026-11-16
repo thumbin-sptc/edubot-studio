@@ -16,7 +16,7 @@ const secondaryLinks = [
 ];
 
 export function Navigation() {
-  const pathname = usePathname();
+  const pathname = usePathname().replace(/\/$/, "") || "/";
 
   return (
     <nav className="site-nav" aria-label="주 메뉴">

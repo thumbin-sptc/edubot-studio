@@ -1,3 +1,4 @@
+import { publicAssetUrl } from "../site-path.ts";
 import type { ZipBuilder } from "./engine.ts";
 import type { Knowledge } from "./model.ts";
 import { knowledgeFilename, uniqueZipNames, zipLimits } from "./zip-policy.ts";
@@ -20,7 +21,7 @@ export async function fetchKnowledgeBlob(file: Knowledge, origin: string, reques
       file.fileSize > zipLimits.bytes || !/^[a-f0-9]{64}$/.test(file.sha256)) {
     throw new Error("Invalid approved file metadata");
   }
-  const response = await request(new URL(file.path, origin), {
+  const response = await request(new URL(publicAssetUrl(file.path), origin), {
     mode: "same-origin",
     credentials: "omit",
     redirect: "error",
