@@ -13,7 +13,7 @@ import type { PublishedResultSource } from "@/lib/prompt-catalog";
 import { availableResults } from "@/lib/prompt-results";
 import type { PromptStep, WizardTemplate } from "@/lib/prompt-template";
 import { ExternalAnswer, PreviousAnswer } from "./ai-results";
-import { DraftOutput } from "./draft-output";
+import { DraftOutput, draftOutputId } from "./draft-output";
 import { DecisionDialog, StorageToggle } from "./prompt-controls";
 import { useWizardDraft } from "./use-wizard-draft";
 import { AttachmentField, fieldDomId, WizardField } from "./wizard-fields";
@@ -73,7 +73,9 @@ function WizardSession({ template, storage, initial, older, related, imports }: 
   const resultsStale = output !== null && (errors.size > 0 || generatePrompt(template, draft) !== draft.generatedOutput);
 
   useEffect(() => {
-    if (focus) document.getElementById(focus.id)?.focus();
+    const target = focus && document.getElementById(focus.id);
+    const field = target?.closest(".prompt-field");
+    (field?.querySelector<HTMLElement>("[data-error-focus]") ?? target)?.focus();
   }, [focus]);
 
   function stepFields(target: PromptStep): string[] {
@@ -269,7 +271,10 @@ function WizardSession({ template, storage, initial, older, related, imports }: 
           <button className="action" type="button" onClick={() => {
             setDecision(null);
             if (decision.type === "regenerate") complete(decision.output);
-            else update(restoreGeneratedOutput(draft));
+            else {
+              update(restoreGeneratedOutput(draft));
+              setFocus({ id: draftOutputId });
+            }
           }}>{decision.type === "restore" ? "복원 확인" : "다시 생성"}</button>
         </DecisionDialog>
       )}

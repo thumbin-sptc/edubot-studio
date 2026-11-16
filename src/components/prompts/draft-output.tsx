@@ -5,12 +5,14 @@ import { currentOutput, type Draft } from "@/lib/prompt-drafts";
 import { isChoiceValue } from "@/lib/prompt-engine";
 import { CopyPrompt } from "./prompt-controls";
 
+export const draftOutputId = "prompt-output";
+
 export function DraftOutput({ output, onChange }: { output: string; onChange?: (text: string) => void }) {
   const target = useRef<HTMLTextAreaElement>(null);
   return (
     <div className="prompt-output">
-      <label htmlFor="prompt-output">완성 프롬프트</label>
-      <textarea ref={target} id="prompt-output" className="prompt-input" rows={9} value={output}
+      <label htmlFor={draftOutputId}>완성 프롬프트</label>
+      <textarea ref={target} id={draftOutputId} className="prompt-input" rows={9} value={output}
         autoComplete="off" spellCheck={false}
         readOnly={!onChange} onChange={(event) => onChange?.(event.target.value)} />
       <CopyPrompt text={output} target={target} />

@@ -1,7 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
-import { emptyChoice, isChoiceValue, type ChoiceValue, type FieldValue } from "@/lib/prompt-engine";
+import { emptyChoice, isChoiceValue, validateFieldValue, type ChoiceValue, type FieldValue } from "@/lib/prompt-engine";
 import type { AttachmentMode, PromptAttachment, PromptField } from "@/lib/prompt-template";
 
 export function fieldDomId(id: string): string {
@@ -25,12 +25,12 @@ function FieldNotes({ id, helpText, privacySensitive, error, children }: {
   );
 }
 
-function TextControl({ id, kind, value, required, error, notes, onChange }: {
+function TextControl({ id, kind, value, required, invalid, notes, onChange }: {
   id: string;
   kind: "short-text" | "long-text" | "number";
   value: string;
   required: boolean;
-  error?: string;
+  invalid?: boolean;
   notes: string;
   onChange: (text: string) => void;
 }) {
@@ -41,8 +41,9 @@ function TextControl({ id, kind, value, required, error, notes, onChange }: {
     required,
     autoComplete: "off",
     spellCheck: false,
-    "aria-invalid": error ? true : undefined,
+    "aria-invalid": invalid || undefined,
     "aria-describedby": notes,
+    "data-error-focus": invalid || undefined,
   };
   return kind === "long-text"
     ? <textarea {...props} rows={4} onChange={(event) => onChange(event.target.value)} />
@@ -50,20 +51,24 @@ function TextControl({ id, kind, value, required, error, notes, onChange }: {
         onChange={(event) => onChange(event.target.value)} />;
 }
 
-function ChoiceControls({ id, field, value, onChange }: {
+function ChoiceControls({ id, field, value, error, onChange }: {
   id: string;
   field: Extract<PromptField, { options: unknown }>;
   value: ChoiceValue;
+  error?: string;
   onChange: (value: ChoiceValue) => void;
 }) {
   const single = field.kind === "single-select";
   const type = single ? "radio" : "checkbox";
   const selected = value.selected.filter((item) => field.options.some((option) => option.value === item));
+  const invalidOther = Boolean(error) && field.allowOther && value.useOther && !value.other.trim();
+  const invalidOptions = Boolean(error) && !invalidOther;
   return (
     <div className="field-options">
-      {field.options.map((option) => (
+      {field.options.map((option, index) => (
         <label key={option.value}>
           <input type={type} name={id} checked={selected.includes(option.value)}
+            data-error-focus={invalidOptions && index === 0 ? true : undefined}
             aria-describedby={`${id}-notes`} onChange={(event) => onChange({
               ...value,
               selected: single ? [option.value] : event.target.checked
@@ -83,7 +88,7 @@ function ChoiceControls({ id, field, value, onChange }: {
       {field.allowOther && value.useOther && (
         <div className="grid gap-1">
           <label htmlFor={`${id}-other`}>기타 내용</label>
-          <TextControl id={`${id}-other`} kind="short-text" value={value.other} required notes={`${id}-notes`}
+          <TextControl id={`${id}-other`} kind="short-text" value={value.other} required invalid={invalidOther} notes={`${id}-notes`}
             onChange={(other) => onChange({ ...value, other })} />
         </div>
       )}
@@ -98,6 +103,12 @@ function RepeatableControls({ id, field, value, error, onChange }: {
   error?: string;
   onChange: (value: string[]) => void;
 }) {
+  const minItems = Math.max(field.minItems, Number(field.required));
+  const overflow = error && field.maxItems !== null && value.length > field.maxItems ? field.maxItems : -1;
+  const invalidItem = error && overflow < 0 && value.length >= minItems
+    ? value.findIndex((item) => validateFieldValue({ ...field, minItems: 1, maxItems: null }, [item]))
+    : -1;
+
   function focusItem(itemId: string) {
     requestAnimationFrame(() => document.getElementById(itemId)?.focus());
   }
@@ -109,9 +120,11 @@ function RepeatableControls({ id, field, value, error, onChange }: {
         return (
           <div key={itemId} className="repeat-item">
             <label htmlFor={itemId}>{field.label} {index + 1}</label>
-            <TextControl id={itemId} kind={field.itemType} value={text} required error={error}
+            <TextControl id={itemId} kind={field.itemType} value={text} required invalid={index === invalidItem}
               notes={`${id}-notes`} onChange={(next) => onChange(value.map((item, i) => i === index ? next : item))} />
             <button className="action action-secondary" type="button" aria-label={`${field.label} ${index + 1} 항목 삭제`}
+              data-error-focus={index === overflow || undefined}
+              aria-describedby={index === overflow ? `${id}-notes` : undefined}
               onClick={() => {
                 onChange(value.filter((_, i) => i !== index));
                 focusItem(value.length > 1 ? `${id}-item-${Math.min(index, value.length - 2)}` : `${id}-add`);
@@ -121,6 +134,8 @@ function RepeatableControls({ id, field, value, error, onChange }: {
       })}
       <button className="action action-secondary" id={`${id}-add`} type="button"
         disabled={field.maxItems !== null && value.length >= field.maxItems}
+        data-error-focus={error && value.length < minItems ? true : undefined}
+        aria-describedby={`${id}-notes`}
         onClick={() => { onChange([...value, ""]); focusItem(`${id}-item-${value.length}`); }}>항목 추가</button>
     </div>
   );
@@ -160,7 +175,7 @@ export function WizardField({ field, value, error, onChange }: {
         <label htmlFor={id}>{label}</label>
         {notes}
         <TextControl id={id} kind={field.kind} value={typeof value === "string" ? value : ""}
-          required={field.required} error={error} notes={`${id}-notes`} onChange={onChange} />
+          required={field.required} invalid={Boolean(error)} notes={`${id}-notes`} onChange={onChange} />
       </div>
     );
   }
@@ -171,7 +186,7 @@ export function WizardField({ field, value, error, onChange }: {
       {notes}
       {field.kind === "repeatable"
         ? <RepeatableControls id={id} field={field} value={Array.isArray(value) ? value : []} error={error} onChange={onChange} />
-        : "options" in field && <ChoiceControls id={id} field={field} value={isChoiceValue(value) ? value : emptyChoice}
+        : "options" in field && <ChoiceControls id={id} field={field} value={isChoiceValue(value) ? value : emptyChoice} error={error}
             onChange={onChange} />}
     </fieldset>
   );
@@ -186,12 +201,14 @@ export function AttachmentField({ attachment, mode, text, error, onModeChange, o
   onTextChange: (text: string) => void;
 }) {
   const id = fieldDomId(attachment.id);
+  const invalidText = Boolean(error) && mode === "text-input" && attachment.allowedModes.includes(mode);
+  const invalidMode = Boolean(error) && !invalidText;
   return (
     <div className="prompt-field">
       <label htmlFor={id}>{attachment.label}{attachment.required && <span className="field-required">필수</span>}</label>
       <FieldNotes id={id} helpText={attachment.helpText} privacySensitive={attachment.privacySensitive} error={error} />
       <select id={id} className="prompt-input" value={mode ?? ""} required={attachment.required}
-        aria-describedby={`${id}-notes`} aria-invalid={error ? true : undefined}
+        aria-describedby={`${id}-notes`} aria-invalid={invalidMode || undefined} data-error-focus={invalidMode || undefined}
         onChange={(event) => {
           const value = event.target.value;
           if (value === "" || value === "external-file" || value === "text-input") onModeChange(value);
@@ -205,7 +222,7 @@ export function AttachmentField({ attachment, mode, text, error, onModeChange, o
       {mode === "text-input" && (
         <>
           <label htmlFor={`${id}-text`}>{attachment.label} 내용</label>
-          <TextControl id={`${id}-text`} kind="long-text" value={text} required error={error}
+          <TextControl id={`${id}-text`} kind="long-text" value={text} required invalid={invalidText}
             notes={`${id}-notes`} onChange={onTextChange} />
         </>
       )}
