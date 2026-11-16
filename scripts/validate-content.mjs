@@ -3,7 +3,8 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { inspectCreateContent } from '../src/lib/create/content.ts';
 import { indexInventory } from '../src/lib/prompt-catalog.ts';
-import { isRecord, parsePromptLinks, parsePromptTemplate, promptIdPattern } from '../src/lib/prompt-template.ts';
+import { parsePublishedPrompt } from '../src/lib/prompt-publication.ts';
+import { isRecord, parsePromptLinks, promptIdPattern } from '../src/lib/prompt-template.ts';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const read = (relative) => JSON.parse(fs.readFileSync(path.join(root, relative), 'utf8'));
@@ -28,7 +29,7 @@ export function validatePrompt(template, inventoryIds = null) {
   if (errors.length) return errors;
   if (template.publicationStatus === 'published') {
     try {
-      parsePromptTemplate(template);
+      parsePublishedPrompt(template, template.id);
     } catch (error) {
       fail(errors, error.message);
     }
@@ -70,7 +71,7 @@ export function validatePrompt(template, inventoryIds = null) {
 
 function validateProvisionalOriginal(template, errors) {
   // Only for two provisional teacher-philosophy prompts: confirm editing replaced the list and nothing else.
-  if (['SC-001','SS-001'].includes(template.id)) {
+  if (template.version === '0.1.0' && ['SC-001','SS-001'].includes(template.id)) {
     const beliefs = template.fields.find((f)=>f?.id==='educationalBeliefs')?.exampleItems;
     if (!Array.isArray(beliefs) || !beliefs.length) fail(errors,'missing original list of educationalBeliefs');
     else {

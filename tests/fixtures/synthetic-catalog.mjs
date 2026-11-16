@@ -1,36 +1,33 @@
-import { syntheticSimple, syntheticWizard } from "./synthetic-prompts.mjs";
+import { syntheticSimple, syntheticWizard, withSyntheticPublication, wizardReplacements } from "./synthetic-prompts.mjs";
 
-export const sourcePrompt = {
+export const sourcePrompt = withSyntheticPublication({
   ...syntheticSimple,
   id: "QA-SOURCE",
   title: "AI 수업 사례",
   summary: "교수 학습 탐색용 합성 요약",
-  publicationStatus: "published",
   version: "2.0.0",
-  sourceOriginalText: "QA_ONLY_SOURCE_ORIGINAL",
+  sourceOriginalText: "합성 원본 예시",
   templateText: "합성 원본 예시",
   relatedPromptIds: ["QA-TARGET", "QA-REVIEWED", "QA-DRAFT", "QA-INVENTORY"],
-};
+});
 
-export const targetPrompt = {
+export const targetPrompt = withSyntheticPublication({
   ...syntheticWizard,
   id: "QA-TARGET",
   title: "IEP 연결 실습",
   summary: "이전 답변 활용",
-  publicationStatus: "published",
   display: { category: "IEP", schoolEnvironment: "특수학교" },
   source: { document: "합성 교재 A", section: "2장", pdfPage: 12 },
   previousResultImports: [
     { fieldId: "details", sourcePromptIds: ["QA-SOURCE", "QA-DRAFT", "QA-REVIEWED", "QA-INVENTORY"] },
   ],
-};
+}, wizardReplacements);
 
-export const locationlessPrompt = {
+export const locationlessPrompt = withSyntheticPublication({
   ...syntheticSimple,
   id: "QA-LOCATIONLESS",
   title: "위치 없는 합성 프롬프트",
-  publicationStatus: "published",
-};
+});
 
 export const hiddenPrompts = [
   { ...syntheticSimple, id: "QA-DRAFT", title: "QA_ONLY_DRAFT_TITLE", sourceOriginalText: "QA_ONLY_DRAFT_BODY" },

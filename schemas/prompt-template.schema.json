@@ -159,5 +159,47 @@
       ]
     }
   },
+  "allOf": [
+    {
+      "if": {
+        "required": ["publicationStatus"],
+        "properties": { "publicationStatus": { "const": "published" } }
+      },
+      "then": {
+        "required": ["publicationApproval"],
+        "properties": {
+          "publicationApproval": {
+            "type": "object",
+            "required": [
+              "recordId", "sourceVersion", "templateVersion", "approvedAt",
+              "licenseStatus", "releaseApproved", "sourceSha256", "templateSha256", "replacements"
+            ],
+            "properties": {
+              "recordId": { "type": "string", "pattern": "\\S" },
+              "sourceVersion": { "type": "string", "pattern": "\\S" },
+              "templateVersion": { "type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$" },
+              "approvedAt": { "type": "string", "format": "date", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+              "licenseStatus": { "const": "approved" },
+              "releaseApproved": { "const": true },
+              "sourceSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              "templateSha256": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+              "replacements": {
+                "type": "array",
+                "description": "One entry per token occurrence, ordered from left to right. Restoring these literals must reproduce sourceOriginalText exactly.",
+                "items": {
+                  "type": "object",
+                  "required": ["token", "originalText"],
+                  "properties": {
+                    "token": { "type": "string", "pattern": "^\\{\\{[A-Za-z][A-Za-z0-9_-]*\\}\\}$" },
+                    "originalText": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
   "additionalProperties": true
 }

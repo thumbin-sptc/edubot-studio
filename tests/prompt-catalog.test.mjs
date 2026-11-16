@@ -4,7 +4,8 @@ import { promptLinkWarnings, validateInventory, validatePrompt } from "../script
 import {
   approvedResultSources, catalogOptions, filterCatalog, groupCatalog, indexInventory, publicPromptSummary, relatedPublicPrompts, sortCatalog,
 } from "../src/lib/prompt-catalog.ts";
-import { parsePublishedPrompt, parsePromptTemplate } from "../src/lib/prompt-template.ts";
+import { parsePublishedPrompt } from "../src/lib/prompt-publication.ts";
+import { parsePromptTemplate } from "../src/lib/prompt-template.ts";
 import { hiddenPrompts, locationlessPrompt, sourcePrompt, syntheticInventory, targetPrompt } from "./fixtures/synthetic-catalog.mjs";
 
 const templates = [sourcePrompt, targetPrompt, locationlessPrompt, ...hiddenPrompts];

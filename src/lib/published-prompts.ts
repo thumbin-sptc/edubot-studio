@@ -4,7 +4,8 @@ import { readdir, readFile } from "node:fs/promises";
 import { join } from "node:path";
 import { cache } from "react";
 import { approvedResultSources, indexInventory, publicPromptSummary, relatedPublicPrompts } from "./prompt-catalog";
-import { parsePublishedPrompt, promptIdPattern, type PublishedPrompt, type WizardTemplate } from "./prompt-template";
+import { parsePublishedPrompt } from "./prompt-publication";
+import { promptIdPattern, type PublishedPrompt, type WizardTemplate } from "./prompt-template";
 
 const promptDirectory = join(process.cwd(), "content", "prompts");
 const inventoryPath = join(process.cwd(), "content", "prompt-inventory.json");

@@ -15,6 +15,22 @@
 - [ ] 검수자가 합성 입력으로 실제 생성본·복사·편집·후속 답변 가져오기를 확인하고 PC·모바일 웹에서 화면과 키보드 동작을 점검한다. 배포 승인을 확인한 뒤 운영자가 명시적으로 `published`로 변경한다. CI는 상태를 변경하지 않는다.
 - [ ] 원문·치환·질문이 바뀌면 기존 ID를 유지하고 `version`을 올린다. 이전 작성본이 기존 버전으로 남는지 확인한다. 배포 권리를 회수하면 공개 상태와 관련 링크를 다시 검사한다.
 
+### 공개 승인 메타데이터
+
+`published` 템플릿에는 다음 `publicationApproval` 값을 기록합니다. `draft`와 `reviewed`는 이 값 없이 검수할 수 있습니다.
+
+| 필드 | 기록할 값 |
+| --- | --- |
+| `recordId` | 비공개 검수·권리·게시 결정 기록을 찾을 수 있는 식별자 |
+| `sourceVersion`, `templateVersion` | 확인한 교재 판본 식별자와 승인된 템플릿의 `version` |
+| `approvedAt`, `licenseStatus`, `releaseApproved` | 명시적 게시 승인 날짜(`YYYY-MM-DD`), 확인된 배포 권리(`approved`), 실제 게시 결정 후의 `true` |
+| `sourceSha256`, `templateSha256` | JSON에서 파싱한 `sourceOriginalText`와 `templateText` 각각의 UTF-8 SHA-256 소문자 16진수. 공백과 줄바꿈까지 포함 |
+| `replacements` | `templateText`의 왼쪽부터 토큰 출현마다 `{token, originalText}` 한 항목. `token`에는 중괄호까지, `originalText`에는 승인한 원래 구간 그대로 기록. 순수 삽입 위치는 빈 문자열, 토큰이 없는 복사형은 빈 배열 |
+
+CI와 공개용 빌드는 기록의 형식과 상태, 버전·해시 일치, 그리고 토큰별 원문 복원 결과를 확인합니다. 연구회가 실제 원문 대조, 입력 구간과 권리 검수, 게시 결정을 합니다. 기록 식별자만 공개 JSON에 적고 검수자의 개인정보나 권리 근거 문서는 비공개 기록에 보관합니다.
+
+원문·치환 위치·입력 질문이 바뀌면 ID를 유지하고 `version`을 올립니다. 새 버전으로 원문 대조, 응답 검수, 권리·게시 결정을 다시 확인한 뒤 승인 기록·해시·토큰 목록을 갱신합니다. [첫 후보 검수 기록](FIRST-CONTENT-REVIEW.md) · [등록에 필요한 자료](FIRST-CONTENT-INPUTS.md)
+
 ## 3. 에듀봇 제작 자료 승인
 
 - [ ] `content/instructions/<id>.json`에는 승인된 `coreInstruction`, `version`, UTF-8 원문의 SHA-256인 `sha256`, `licenseStatus: approved`, 실제 `verifiedAt`을 기록한다. JSON 문자열을 파싱한 값 그대로 해시하고, 개인화가 없어도 정확히 같은 원문이 복사되는지 확인한다.

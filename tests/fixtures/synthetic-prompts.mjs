@@ -1,9 +1,11 @@
+import { createHash } from "node:crypto";
+
 export const syntheticWizard = {
   id: "TEST-WIZARD",
   title: "합성 작성 예제",
   version: "1.0.0",
   publicationStatus: "draft",
-  sourceOriginalText: "엔진 검사용 합성 기준문. 교재와 무관합니다.",
+  sourceOriginalText: "제목: 합성 제목\n설명: 합성 설명\n수: 2\n색: 파랑\n모양: 세모\n목록:\n• 하나\n• 둘\n참고: ",
   templateText: "제목: {{heading}}\n설명: {{details}}\n수: {{count}}\n색: {{color}}\n모양: {{shapes}}\n목록:\n{{items}}\n참고: {{reference}}",
   steps: [
     { id: "basics", title: "기본 입력", fieldIds: ["heading", "details", "count"] },
@@ -58,5 +60,34 @@ export function validInputs() {
     },
     attachmentModes: { reference: "text-input" },
     attachmentTexts: { reference: "합성 텍스트" },
+  };
+}
+
+export const wizardReplacements = [
+  { token: "{{heading}}", originalText: "합성 제목" },
+  { token: "{{details}}", originalText: "합성 설명" },
+  { token: "{{count}}", originalText: "2" },
+  { token: "{{color}}", originalText: "파랑" },
+  { token: "{{shapes}}", originalText: "세모" },
+  { token: "{{items}}", originalText: "• 하나\n• 둘" },
+  { token: "{{reference}}", originalText: "" },
+];
+
+// Test fixtures only. Operating records require an actual approval decision.
+export function withSyntheticPublication(template, replacements = []) {
+  return {
+    ...template,
+    publicationStatus: "published",
+    publicationApproval: {
+      recordId: "QA_ONLY_SYNTHETIC_RECORD",
+      sourceVersion: "synthetic-revision-1",
+      templateVersion: template.version,
+      approvedAt: "2025-01-01",
+      licenseStatus: "approved",
+      releaseApproved: true,
+      sourceSha256: createHash("sha256").update(template.sourceOriginalText, "utf8").digest("hex"),
+      templateSha256: createHash("sha256").update(template.templateText, "utf8").digest("hex"),
+      replacements,
+    },
   };
 }

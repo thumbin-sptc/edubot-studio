@@ -1,15 +1,16 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 import { copyPromptText, generatePrompt, validatePromptInputs } from "../src/lib/prompt-engine.ts";
-import { parsePromptTemplate, parsePublishedPrompt } from "../src/lib/prompt-template.ts";
-import { syntheticSimple, syntheticWizard, validInputs } from "./fixtures/synthetic-prompts.mjs";
+import { parsePublishedPrompt } from "../src/lib/prompt-publication.ts";
+import { parsePromptTemplate } from "../src/lib/prompt-template.ts";
+import { syntheticSimple, syntheticWizard, validInputs, withSyntheticPublication, wizardReplacements } from "./fixtures/synthetic-prompts.mjs";
 
 test("the publication boundary admits only matching published templates", () => {
   for (const status of ["draft", "reviewed", "unknown", undefined]) {
     assert.equal(parsePublishedPrompt({ publicationStatus: status }, syntheticWizard.id), null);
   }
   assert.equal(parsePublishedPrompt(undefined, syntheticWizard.id), null);
-  const published = { ...syntheticWizard, publicationStatus: "published" };
+  const published = withSyntheticPublication(syntheticWizard, wizardReplacements);
   assert.equal(parsePublishedPrompt(published, syntheticWizard.id).publicationStatus, "published");
   assert.throws(() => parsePublishedPrompt(published, "OTHER"), /filename/);
 });

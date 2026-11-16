@@ -381,10 +381,3 @@ export function parsePromptTemplate(raw: unknown): PromptTemplate {
     ...parsePromptLinks(data, id, fields),
   };
 }
-
-export function parsePublishedPrompt(raw: unknown, expectedId: string): PublishedPrompt | null {
-  if (!isRecord(raw) || raw.publicationStatus !== "published") return null;
-  const template = parsePromptTemplate(raw);
-  if (template.id !== expectedId) throw new Error("Published prompt id does not match its filename");
-  return { ...template, publicationStatus: "published" };
-}
