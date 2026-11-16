@@ -111,7 +111,7 @@ function RepeatableControls({ id, field, value, error, onChange }: {
             <label htmlFor={itemId}>{field.label} {index + 1}</label>
             <TextControl id={itemId} kind={field.itemType} value={text} required error={error}
               notes={`${id}-notes`} onChange={(next) => onChange(value.map((item, i) => i === index ? next : item))} />
-            <button className="action action-secondary" type="button" aria-label={`${field.label} ${index + 1} 삭제`}
+            <button className="action action-secondary" type="button" aria-label={`${field.label} ${index + 1} 항목 삭제`}
               onClick={() => {
                 onChange(value.filter((_, i) => i !== index));
                 focusItem(value.length > 1 ? `${id}-item-${Math.min(index, value.length - 2)}` : `${id}-add`);
