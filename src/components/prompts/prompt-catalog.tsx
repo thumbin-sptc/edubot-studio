@@ -1,7 +1,7 @@
 "use client";
 
 import { useId, useState, type KeyboardEvent } from "react";
-import { Search } from "lucide-react";
+import { ChevronDown, Search } from "lucide-react";
 import { ActionLink } from "@/components/action-link";
 import {
   catalogFilters, catalogOptions, filterCatalog, groupCatalog, sortCatalog,
@@ -18,11 +18,12 @@ function CatalogCards({ entries, inSection = false }: { entries: readonly Publis
   return (
     <ul className="catalog-cards">
       {entries.map(({ id, title, summary, category, schoolEnvironment, schoolLevel, source, section, pdfPage, bookPage }) => {
-        const tags = [...new Set([category, schoolEnvironment, schoolLevel].filter(Boolean))];
+        const tags = [...new Set([category, schoolLevel].filter((tag) => tag && tag !== schoolEnvironment))];
         const location = [source !== schoolEnvironment && source, section, bookPage && `교재 ${bookPage}쪽`, pdfPage && `PDF ${pdfPage}쪽`].filter(Boolean);
         const actionLabel = [title, schoolEnvironment, schoolLevel, "작성하기"].filter(Boolean).join(" ");
         return (
           <li key={id} className="info-panel catalog-card">
+            {schoolEnvironment && <p className="catalog-environment">{schoolEnvironment}</p>}
             <Title className="catalog-card-title">{title}</Title>
             {summary && <p className="catalog-summary">{summary}</p>}
             {tags.length > 0 && (
@@ -63,8 +64,10 @@ export function PromptCatalog({ entries }: { entries: readonly PublishedPromptSu
   const [view, setView] = useState<CatalogView>("purpose");
   const [search, setSearch] = useState("");
   const [filters, setFilters] = useState<Partial<Record<CatalogFilter, string>>>({});
+  const [filtersExpanded, setFiltersExpanded] = useState(false);
   const results = filterCatalog(entries, search, filters);
-  const active = Boolean(search.trim() || Object.values(filters).some(Boolean));
+  const selectedFilters = catalogFilters.flatMap(({ field }) => filters[field] || []);
+  const active = Boolean(search.trim() || selectedFilters.length);
   const tabId = (tab: CatalogView) => `${id}-${tab}`;
   const panelId = (tab: CatalogView) => `${tabId(tab)}-panel`;
 
@@ -88,7 +91,14 @@ export function PromptCatalog({ entries }: { entries: readonly PublishedPromptSu
             placeholder="예: 교사철학, 평가 계획" autoComplete="off" spellCheck={false}
             onChange={(event) => setSearch(event.target.value)} />
         </div>
-        <div className="catalog-filters">
+        <div className="catalog-filter-toggle">
+          <button className="action action-secondary" type="button" aria-expanded={filtersExpanded}
+            aria-controls={`${id}-filters`} onClick={() => setFiltersExpanded(!filtersExpanded)}>
+            필터 <ChevronDown aria-hidden="true" size={16} />
+          </button>
+          {selectedFilters.length > 0 && <p>적용 중 · {selectedFilters.join(" · ")}</p>}
+        </div>
+        <div id={`${id}-filters`} className="catalog-filters" data-expanded={filtersExpanded || undefined}>
           {catalogFilters.map(({ field, label }) => {
             const options = catalogOptions(entries, field);
             return options.length > 0 && (

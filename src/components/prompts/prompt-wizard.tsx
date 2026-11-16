@@ -3,7 +3,6 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { ShieldCheck } from "lucide-react";
-import { WizardStepList } from "@/components/wizard-step-list";
 import { useDraftStorage } from "@/lib/browser-drafts";
 import { useResultMemory } from "@/lib/browser-results";
 import {
@@ -43,13 +42,10 @@ export function PromptWizard({ template, related, imports }: WizardProps) {
         <p className="prompt-version status-chip">템플릿 버전 {template.version}</p>
       </header>
       {template.summary && <p className="page-description">{template.summary}</p>}
-      <section className="info-panel prompt-privacy">
-        <ShieldCheck aria-hidden="true" size={21} />
-        <div>
-          <h2>작성 전 개인정보 보호</h2>
-          <p>학생 이름은 가명으로 적고, 학번이나 건강 정보 등 학생을 식별할 수 있는 정보는 입력하지 마세요. 작성 내용은 이 앱의 서버로 전송하지 않습니다.</p>
-        </div>
-      </section>
+      <p className="prompt-privacy">
+        <ShieldCheck aria-hidden="true" size={19} />
+        <span>학생 이름은 가명을 쓰고, 학번·건강 정보 등 식별 정보는 입력하지 마세요.</span>
+      </p>
       {storage.ready
         ? <WizardSession key={key} template={template} related={related} imports={imports}
             storage={storage} initial={initial} older={older} />
@@ -159,9 +155,15 @@ function WizardSession({ template, storage, initial, older, related, imports }: 
 
   return (
     <>
-      <section className="info-panel prompt-storage" aria-label="저장 설정">
-        <StorageToggle enabled={storage.enabled} available={storage.available} onToggle={session.toggle} />
-        <p>공용 기기에서는 자동 저장을 끄세요. <Link href="/data">저장본 열람·삭제</Link></p>
+      <section className="prompt-storage" aria-label="저장 설정">
+        <div className="prompt-storage-options">
+          <StorageToggle compact enabled={storage.enabled} available={storage.available} onToggle={session.toggle} />
+          <details>
+            <summary>개인정보·저장 안내</summary>
+            <p>작성 내용은 이 앱의 서버로 전송하지 않습니다. 자동 저장을 켜면 이 브라우저에 저장합니다. 꺼두면 새 입력은 현재 탭의 메모리에만 남고 기존 저장본은 유지됩니다.</p>
+            <p>공용 기기에서는 자동 저장을 끄세요. <Link href="/data">저장본 열람·삭제</Link></p>
+          </details>
+        </div>
         {session.message && <p role="alert" className="prompt-error">{session.message}</p>}
         {storage.enabled && session.paused && (
           <button className="action action-secondary" type="button" onClick={session.retry}>자동 저장 다시 시도</button>
@@ -174,7 +176,7 @@ function WizardSession({ template, storage, initial, older, related, imports }: 
             <span>{stepIndex + 1} / {template.steps.length}단계</span>
           </div>
           <progress id="prompt-progress" value={stepIndex + 1} max={template.steps.length} />
-          <WizardStepList current={step.id}>
+          <ol>
             {template.steps.map((target, index) => (
               <li key={target.id}>
                 <button type="button" aria-current={target.id === step.id ? "step" : undefined}
@@ -184,7 +186,7 @@ function WizardSession({ template, storage, initial, older, related, imports }: 
                 </button>
               </li>
             ))}
-          </WizardStepList>
+          </ol>
         </nav>
       )}
       <section className="info-panel prompt-stage" aria-labelledby={stageId}>

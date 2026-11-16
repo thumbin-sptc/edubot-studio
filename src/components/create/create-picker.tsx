@@ -47,8 +47,6 @@ export function CreatePicker({ statuses }: { statuses: CreateStatus[] }) {
         </div>
       </fieldset>
       <div className="create-selection" aria-live="polite">
-        {!platform && <p>이용할 AI 플랫폼을 선택해 주세요.</p>}
-        {platform && !device && <p>이용할 기기의 웹브라우저 환경을 선택해 주세요.</p>}
         {combination && selected?.status === "published" && (
           <Link href={createHref(combination)} className="action">제작 안내 시작</Link>
         )}
@@ -61,9 +59,6 @@ export function CreatePicker({ statuses }: { statuses: CreateStatus[] }) {
                 className="create-text-link">PC 웹 제작 안내 보기</Link>
             )}
           </>
-        )}
-        {combination && !selected && (
-          <p>{platforms[combination.platform]} {devices[combination.device]} 제작 안내는 준비 중입니다.</p>
         )}
       </div>
       <CreateStorageControls showPreference={false} />

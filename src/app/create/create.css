@@ -28,6 +28,10 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
+.create-platforms label > span {
+  white-space: nowrap;
+}
+
 .create-options label,
 .create-checkbox {
   display: inline-flex;
@@ -88,14 +92,15 @@
   font-weight: 700;
 }
 
-.create-selection .action {
-  margin-top: 6px;
-}
-
 .create-selection {
   padding: 12px 14px;
   border-radius: var(--radius-control);
   background: var(--color-panel);
+}
+
+.create-selection:empty {
+  position: absolute;
+  padding: 0;
 }
 
 .create-text-link {
@@ -239,9 +244,10 @@
   }
 }
 
-@media (width < 23rem) {
+@media (width < 48rem) {
   .create-platforms {
-    gap: 5px;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 5rem), 1fr));
+    gap: 6px;
   }
 
   .create-platforms label {
@@ -250,6 +256,5 @@
     padding: 8px 4px;
     gap: 5px;
     font-size: .875rem;
-    overflow-wrap: normal;
   }
 }

@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { publicAssetUrl } from "@/lib/site-path";
-import { WizardStepList } from "@/components/wizard-step-list";
 import Link from "next/link";
 import { useId, useRef } from "react";
 import { updateCreateSession, useCreateSession } from "@/lib/create/browser-session";
@@ -55,7 +54,7 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
               <span>{step ? stepIndex + 1 : guide.steps.length} / {guide.steps.length}단계 · 직접 확인 {completedCount}개</span>
             </div>
             <progress id={progressId} value={step ? stepIndex + 1 : guide.steps.length} max={guide.steps.length} />
-            <WizardStepList current={step?.id ?? null}>
+            <ol>
               {guide.steps.map((target, index) => (
                 <li key={target.id}>
                   <button type="button" aria-current={target.id === step?.id ? "step" : undefined}
@@ -66,7 +65,7 @@ export function CreateWizard({ guide, desktopAvailable }: { guide: PublishedGuid
                 </li>
               ))}
               <li><button type="button" aria-current={!step ? "step" : undefined} onClick={() => move(null)}>완료 후 점검</button></li>
-            </WizardStepList>
+            </ol>
           </nav>
           {step ? (
             <section className="create-stage info-panel">

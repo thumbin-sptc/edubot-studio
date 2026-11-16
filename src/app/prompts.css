@@ -1,6 +1,6 @@
 .prompt-wizard {
   max-width: 850px;
-  padding-block: clamp(18px, 3.8vw, 46px) clamp(46px, 6vw, 80px);
+  padding-block: clamp(14px, 2.5vw, 30px) clamp(46px, 6vw, 80px);
 }
 
 .prompt-back,
@@ -14,7 +14,7 @@
   display: inline-flex;
   min-height: 44px;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 6px;
   font-weight: 650;
 }
 
@@ -34,20 +34,23 @@
 }
 
 .prompt-privacy,
-.prompt-storage,
 .prompt-stage,
 .prompt-steps {
-  margin-top: 16px;
+  margin-top: 12px;
 }
 
 .prompt-privacy {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   align-items: start;
-  gap: 10px;
-  padding: 13px clamp(12px, 2.5vw, 20px);
-  border-color: #c8dcf0;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: var(--radius-control);
   background: var(--color-sky);
+  font-size: .875rem;
+  line-height: 1.5;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
 .prompt-privacy svg {
@@ -55,18 +58,41 @@
   color: var(--color-accent);
 }
 
-.prompt-privacy h2 {
-  font-size: 1rem;
+.prompt-storage {
+  padding-inline: 4px;
 }
 
-.prompt-privacy p,
-.prompt-storage > p {
-  margin-top: 3px;
+.prompt-storage-options,
+.storage-toggle-compact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0 10px;
+}
+
+.prompt-storage-options {
+  justify-content: space-between;
+}
+
+.prompt-storage-options details[open] {
+  flex-basis: 100%;
+}
+
+.prompt-storage-options summary {
+  min-height: 44px;
+  padding-block: 11px;
+  color: var(--color-accent);
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.prompt-storage-options details p {
+  color: var(--color-muted);
   font-size: .875rem;
 }
 
-.prompt-storage {
-  padding: 8px clamp(12px, 2.5vw, 20px) 12px;
+.prompt-storage-options details p + p {
+  margin-top: 4px;
 }
 
 .storage-toggle label {
@@ -145,15 +171,17 @@
 }
 
 .prompt-steps {
-  padding: 12px 14px 8px;
+  padding: 8px 12px 7px;
   border: 1px solid var(--color-line);
   border-radius: var(--radius-panel);
   background: var(--color-paper);
 }
 
 .prompt-steps progress {
+  display: block;
   width: 100%;
   height: 8px;
+  margin-top: 4px;
   border: 0;
   border-radius: 8px;
   overflow: hidden;
@@ -182,6 +210,12 @@
   padding: 4px;
 }
 
+.prompt-steps li,
+.prompt-steps button {
+  min-width: 0;
+  max-width: 100%;
+}
+
 .prompt-steps button {
   display: inline-flex;
   min-height: 44px;
@@ -197,6 +231,7 @@
   cursor: pointer;
   line-height: 1.4;
   font-size: .875rem;
+  overflow-wrap: anywhere;
 }
 
 .prompt-steps button:hover {
@@ -549,15 +584,8 @@ textarea.prompt-input {
     display: none;
   }
 
-  .prompt-steps ol {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: thin;
-  }
-
-  .prompt-steps ol > li {
-    flex: 0 0 auto;
-    max-width: 14rem;
+  .prompt-steps button {
+    padding-inline: 8px;
   }
 
   .prompt-step-actions .action:last-child {

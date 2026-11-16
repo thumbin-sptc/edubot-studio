@@ -42,23 +42,25 @@ export function DecisionDialog({ title, description, onCancel, children }: {
   );
 }
 
-export function StorageToggle({ enabled, available, onToggle }: {
+export function StorageToggle({ enabled, available, onToggle, compact = false }: {
   enabled: boolean;
   available: boolean;
   onToggle: () => void;
+  compact?: boolean;
 }) {
   const id = useId();
   return (
-    <div className="storage-toggle">
+    <div className={compact ? "storage-toggle storage-toggle-compact" : "storage-toggle"}>
       <label>
         <input type="checkbox" role="switch" checked={enabled} disabled={!available}
-          aria-describedby={id} onChange={onToggle} />
-        이 브라우저에 자동 저장
+          aria-label={compact ? "이 브라우저에 자동 저장" : undefined} aria-describedby={id} onChange={onToggle} />
+        {compact ? "자동 저장" : "이 브라우저에 자동 저장"}
       </label>
       <p className="muted" id={id} aria-live="polite">
-        {!available ? "이 브라우저에서는 저장소를 사용할 수 없습니다." : enabled
-          ? "저장 켜짐 · 작성본을 이 브라우저에 저장합니다."
-          : "저장 꺼짐 · 새 입력은 메모리에만 보관하며 기존 저장본은 유지합니다."}
+        {!available ? "이 브라우저에서는 저장소를 사용할 수 없습니다." : compact
+          ? (enabled ? "켜짐" : "꺼짐")
+          : (enabled ? "저장 켜짐 · 작성본을 이 브라우저에 저장합니다."
+            : "저장 꺼짐 · 새 입력은 메모리에만 보관하며 기존 저장본은 유지합니다.")}
       </p>
     </div>
   );

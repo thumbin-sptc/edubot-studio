@@ -13,7 +13,7 @@ export default async function HomePage() {
           <p className="association">중도중복장애교육연구회</p>
           <h1>특수교육을 위한 AI 작업 공간</h1>
           <p className="page-description">
-            교재 프롬프트를 완성하고, 수업에 맞는 에듀봇 제작 안내를 찾아보세요.
+            교재 프롬프트를 완성하고, 에듀봇 제작 안내의 공개 현황을 확인하세요.
           </p>
         </div>
         <div className="feature-grid">
@@ -21,9 +21,11 @@ export default async function HomePage() {
             icon={WandSparkles}
             status={guideCount ? `제작 안내 ${guideCount}건 공개` : "제작 안내 준비 중"}
             title="나만의 에듀봇 만들기"
-            description="ChatGPT, Claude, Gemini의 기기별 제작 안내를 확인하세요."
+            description={guideCount
+              ? "ChatGPT, Claude, Gemini의 기기별 제작 안내를 확인하세요."
+              : "ChatGPT, Claude, Gemini의 기기별 제작 안내를 준비하고 있습니다."}
             href="/create"
-            action="제작 안내 보기"
+            action={guideCount ? "제작 안내 보기" : "제작 안내 준비 현황 보기"}
           />
           <FeatureCard
             icon={BookOpen}
