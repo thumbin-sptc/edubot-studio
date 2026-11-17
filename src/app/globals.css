@@ -87,13 +87,19 @@ body {
   align-items: center;
   gap: 0.27em;
   white-space: nowrap;
-  font-size: 1.2rem;
+  font-size: clamp(1rem, 4.6vw, 1.2rem);
   font-weight: 780;
   letter-spacing: -0.045em;
 }
 
 .wordmark span {
   color: var(--color-accent);
+}
+
+.wordmark-symbol {
+  width: 1.875rem;
+  height: 1.875rem;
+  flex: none;
 }
 
 .site-nav {
@@ -386,8 +392,10 @@ h3,
   font-size: .875rem;
 }
 
-.footer-name {
-  font-weight: 730;
+.footer-wordmark {
+  width: 15rem;
+  max-width: 100%;
+  height: auto;
 }
 
 .footer-note {
