@@ -1,7 +1,7 @@
 import { publicAssetUrl } from "../site-path.ts";
 import type { ZipBuilder } from "./engine.ts";
 import type { Knowledge } from "./model.ts";
-import { knowledgeFilename, uniqueZipNames, zipLimits } from "./zip-policy.ts";
+import { knowledgePathBasename, uniqueZipNames, zipLimits } from "./zip-policy.ts";
 
 export const createKnowledgeZip: ZipBuilder = async (files) => {
   const names = files.map(({ name }) => name);
@@ -17,7 +17,7 @@ export const createKnowledgeZip: ZipBuilder = async (files) => {
 };
 
 export async function fetchKnowledgeBlob(file: Knowledge, origin: string, request = fetch): Promise<Blob> {
-  if (!knowledgeFilename(file.path) || !Number.isSafeInteger(file.fileSize) || file.fileSize < 1 ||
+  if (!knowledgePathBasename(file.path) || !Number.isSafeInteger(file.fileSize) || file.fileSize < 1 ||
       file.fileSize > zipLimits.bytes || !/^[a-f0-9]{64}$/.test(file.sha256)) {
     throw new Error("Invalid approved file metadata");
   }

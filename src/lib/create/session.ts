@@ -9,12 +9,13 @@ import {
 
 export const createPrefix = "edubot-studio:create:";
 export const createStorageKey = `${createPrefix}session`;
-const revisionPattern = /^(chatgpt|claude|gemini)\/(desktop-web|mobile-web)\/[A-Za-z][\w-]*@\d+\.\d+\.\d+\/[A-Za-z][\w-]*@\d+\.\d+\.\d+\/[a-f0-9]{64}$/;
+const revisionPattern = /^(chatgpt|claude|gemini)\/(desktop-web|mobile-web)\/[A-Za-z][\w-]*@\d+\.\d+\.\d+\/[A-Za-z][\w-]*@\d+\.\d+\.\d+\/[a-f0-9]{64}(?:\/audience-[A-Za-z0-9%-]+)?$/;
 
 export type CreateProgress = {
   stepId: string | null;
   checked: string[];
   selections: Record<string, boolean>;
+  personalization?: Personalization;
 };
 export type CreateSession = {
   schemaVersion: 1;
@@ -49,7 +50,10 @@ function parseProgress(raw: unknown): CreateProgress | null {
       !Object.entries(raw.selections).every(([id, selected]) => promptIdPattern.test(id) && typeof selected === "boolean")) {
     return null;
   }
-  return { stepId: raw.stepId, checked: raw.checked, selections: raw.selections as Record<string, boolean> };
+  const result = { stepId: raw.stepId, checked: raw.checked, selections: raw.selections as Record<string, boolean> };
+  if (raw.personalization === undefined) return result;
+  const personalization = parsePersonalization(raw.personalization);
+  return personalization ? { ...result, personalization } : null;
 }
 
 export function parseCreateSession(raw: string | null): CreateSession | null {
@@ -74,21 +78,24 @@ export function parseCreateSession(raw: string | null): CreateSession | null {
   }
 }
 
-export function getCreateProgress(session: CreateSession, guide: PublishedGuide): CreateProgress {
-  const progress = session.progress[guideRevision(guide)];
+export function getCreateProgress(session: CreateSession, guide: PublishedGuide, scope?: string): CreateProgress {
+  const progress = session.progress[guideRevision(guide, scope)];
   return progress && (progress.stepId === null || guide.steps.some(({ id }) => id === progress.stepId))
     ? progress : { stepId: guide.steps[0].id, checked: [], selections: {} };
 }
 
-export function updateCreateProgress(session: CreateSession, guide: PublishedGuide, progress: CreateProgress): CreateSession {
-  return { ...session, progress: { ...session.progress, [guideRevision(guide)]: progress } };
+export function updateCreateProgress(
+  session: CreateSession, guide: PublishedGuide, progress: CreateProgress, scope?: string,
+): CreateSession {
+  return { ...session, progress: { ...session.progress, [guideRevision(guide, scope)]: progress } };
 }
 
-export function hasPreviousProgress(session: CreateSession, guide: PublishedGuide): boolean {
+export function hasPreviousProgress(session: CreateSession, guide: PublishedGuide, scope?: string): boolean {
   const prefix = `${guide.platform}/${guide.device}/`;
-  const revision = guideRevision(guide);
+  const revision = guideRevision(guide, scope);
   return !Object.hasOwn(session.progress, revision) &&
-    Object.keys(session.progress).some((key) => key.startsWith(prefix));
+    Object.keys(session.progress).some((key) => key.startsWith(prefix) &&
+      (scope ? key.endsWith(`/audience-${scope}`) : !/\/audience-[^/]+$/.test(key)));
 }
 
 export function readCreateRecord(storage: Pick<Storage, "getItem">): CreateRecord {

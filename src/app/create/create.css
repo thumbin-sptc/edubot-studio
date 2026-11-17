@@ -113,6 +113,11 @@
   padding-block: clamp(20px, 4vw, 48px) clamp(46px, 6vw, 80px);
 }
 
+.create-wizard-text,
+.create-stage-text {
+  max-width: 52rem;
+}
+
 .create-wizard > .prompt-back {
   justify-self: start;
   margin: 0;
@@ -135,6 +140,50 @@
   display: grid;
   gap: 20px;
   margin-top: 16px;
+}
+
+.create-stage-text {
+  margin-top: 12px;
+}
+
+.create-text-columns,
+.create-stage-grid > div {
+  display: grid;
+  gap: 16px;
+  min-width: 0;
+  align-content: start;
+}
+
+.create-step-details {
+  align-content: start;
+}
+
+@media (width >= 56rem) {
+  .create-wizard-text,
+  .create-stage-text {
+    max-width: 72rem;
+  }
+
+  .create-text-columns {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+    align-items: start;
+    gap: 24px;
+  }
+}
+
+.create-step-instructions {
+  border-block: 1px solid var(--color-line);
+  padding-block: 14px;
+}
+
+.create-step-instructions ol {
+  display: grid;
+  gap: 10px;
+  margin-top: 8px;
+  padding-inline-start: 1.4em;
+  list-style: decimal;
+  word-break: keep-all;
+  overflow-wrap: anywhere;
 }
 
 .create-demo {
@@ -190,11 +239,30 @@
   gap: 8px;
 }
 
-.create-personalization summary {
+.create-personalization summary,
+.create-picker-download summary {
   min-height: 44px;
   padding-block: 8px;
   color: var(--color-accent);
   cursor: pointer;
+}
+
+.create-picker-download {
+  border-top: 1px solid var(--color-line);
+  padding-top: 6px;
+}
+
+.create-picker-download > div,
+.create-completion-note {
+  padding: 12px 14px;
+  border-radius: var(--radius-control);
+  background: var(--color-panel);
+}
+
+.create-completion-note {
+  display: grid;
+  gap: 6px;
+  margin-top: 12px;
 }
 
 .create-personalization label {
@@ -219,9 +287,36 @@
   background: var(--color-paper);
 }
 
-.create-file-list a[download],
 .create-file-list button.action-secondary {
   margin-top: 8px;
+}
+
+.create-file-role {
+  width: fit-content;
+  margin-bottom: 8px;
+}
+
+.create-download-links,
+.create-file-details > div {
+  display: grid;
+  min-width: 0;
+  gap: 6px;
+}
+
+.create-download-title {
+  font-weight: 650;
+}
+
+.create-file-details {
+  color: var(--color-muted);
+  font-size: .875rem;
+}
+
+.create-file-details summary {
+  min-height: 44px;
+  padding-block: 10px;
+  color: var(--color-accent);
+  cursor: pointer;
 }
 
 @media (width >= 48rem) {
@@ -231,6 +326,13 @@
 }
 
 @media (width < 48rem) {
+  .create-wizard.create-wizard-text > .prompt-step-actions,
+  .create-stage:has(.create-stage-text) + .prompt-step-actions {
+    position: static;
+    padding: 0;
+    border-top: 0;
+  }
+
   html:has([data-create-wizard]) {
     scroll-padding-bottom: calc(82px + env(safe-area-inset-bottom));
   }

@@ -3,11 +3,11 @@ import { lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 import { isRecord, promptIdPattern, versionPattern } from "../prompt-template.ts";
 import {
-  environments, isDevice, isPlatform, schoolLevels,
+  environments, guideAssetPaths, isDevice, isPlatform, schoolLevels,
   type CompletionCheck, type CreateAction, type CreateMedia, type CreateStep, type Instruction,
   type Knowledge, type Platform, type PublishedCreateEntry, type VerifiedNote,
 } from "./model.ts";
-import { knowledgeFilename, uniqueZipNames } from "./zip-policy.ts";
+import { isOriginalFilename, knowledgePathBasename, sameFilenameExtension, uniqueZipNames } from "./zip-policy.ts";
 
 const imageExtensions = [".png", ".jpg", ".jpeg", ".webp"];
 const downloadExtensions = [".pdf", ".txt", ".md", ".csv", ".docx", ".xlsx", ".pptx"];
@@ -40,12 +40,12 @@ function version(value: unknown): string {
   return result;
 }
 
-function verifiedAt(value: unknown): string {
-  const date = text(value, "verifiedAt");
+function verifiedAt(value: unknown, field = "verifiedAt"): string {
+  const date = text(value, field);
   const timestamp = Date.parse(date);
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(timestamp) ||
       new Date(timestamp).toISOString().slice(0, 10) !== date || timestamp > Date.now()) {
-    throw new Error("Invalid verification date");
+    throw new Error(`Invalid verification date (${field})`);
   }
   return date;
 }
@@ -121,6 +121,12 @@ function recommendationValues(value: unknown, allowed: readonly string[], name: 
 
 function parseKnowledge(root: string, raw: Record<string, unknown>): Knowledge {
   const verification = verifyRights(raw);
+  const path = text(raw.path, "asset path");
+  const internalName = knowledgePathBasename(path);
+  if (!internalName) throw new Error("Invalid downloads asset path");
+  const originalFilename = raw.originalFilename === undefined ? internalName : raw.originalFilename;
+  if (!isOriginalFilename(originalFilename)) throw new Error("Invalid originalFilename");
+  if (!sameFilenameExtension(originalFilename, internalName)) throw new Error("Knowledge filename extension mismatch");
   const file = asset(root, raw.path, "downloads", downloadExtensions);
   if (raw.fileSize !== file.size) throw new Error("Knowledge file size mismatch");
   const sha256 = createHash("sha256").update(readFileSync(file.diskPath)).digest("hex");
@@ -140,6 +146,7 @@ function parseKnowledge(root: string, raw: Record<string, unknown>): Knowledge {
     title: text(raw.title, "knowledge title"),
     description: text(raw.description, "knowledge description"),
     path: file.path,
+    originalFilename,
     fileSize: file.size,
     sha256,
     fileVersion: version(raw.fileVersion),
@@ -176,21 +183,65 @@ function parseAction(raw: unknown): CreateAction {
   return { kind: action.kind, url: url.href, label: text(action.label, "external link label"), verifiedAt: verifiedAt(action.verifiedAt) };
 }
 
+function normalizedText(value: string): string {
+  return value.normalize("NFKC").replace(/\s+/gu, " ").trim().toLowerCase();
+}
+
+function requiredGuideText(raw: unknown, field: string): string {
+  const value = text(raw, field);
+  const normalized = normalizedText(value);
+  if (!/[\p{L}\p{N}]/u.test(normalized) || /^(?:todo|tbd|미정|준비 중|검증 대기)[.!?]*$/u.test(normalized)) {
+    throw new Error(`Incomplete ${field}`);
+  }
+  return value;
+}
+
 function parseStep(root: string, raw: unknown, mobile: boolean): CreateStep {
   const step = record(raw, "step");
+  if (step.format !== undefined && step.format !== "media" && step.format !== "text-only") {
+    throw new Error("Unknown step format");
+  }
+  const isText = step.format === "text-only";
+  const requiredText = isText ? requiredGuideText : text;
+  const fieldPrefix = isText ? "text-only " : "";
   const mascot = step.mascot === undefined ? undefined : record(step.mascot, "official mascot");
   if (mascot) verifyRights(mascot);
   if (!mobile && step.desktopAlternative !== undefined) throw new Error("PC alternative is only for mobile steps");
-  return {
+  const base = {
     id: id(step.id),
-    title: text(step.title, "step title"),
-    description: text(step.description, "step description"),
-    media: parseMedia(root, step.media),
-    actions: array(step.actions, "step actions").map(parseAction),
-    checkLabel: text(step.checkLabel, "self-check label"),
+    title: requiredText(step.title, fieldPrefix + "step title"),
+    description: requiredText(step.description, fieldPrefix + "step description"),
+    actions: array(step.actions, fieldPrefix + "step actions").map(parseAction),
+    checkLabel: requiredText(step.checkLabel, fieldPrefix + "self-check label"),
     desktopAlternative: step.desktopAlternative === undefined ? undefined : text(step.desktopAlternative, "PC alternative"),
     mascot: mascot && { path: asset(root, mascot.path, "tutorials", imageExtensions).path, text: text(mascot.text, "mascot guidance") },
   };
+  if (!isText) return { ...base, format: "media", media: parseMedia(root, step.media) };
+
+  if (Object.hasOwn(step, "media")) throw new Error("Text-only step must not declare media");
+  if (!base.actions.length) throw new Error("Text-only step requires an action");
+  const instructions = array(step.instructions, "text-only instructions")
+    .map((value) => requiredGuideText(value, "text-only instruction"));
+  unique(instructions.map(normalizedText), "text-only instructions");
+  if (instructions.length < 2) throw new Error("Text-only step requires at least two ordered instructions");
+  return { ...base, format: "text-only", instructions };
+}
+
+function verifyTextGuideRelease(raw: Record<string, unknown>, steps: CreateStep[], checkedAt: string) {
+  const verification = record(raw.verification, "text-only hands-on verification");
+  if (verification.method !== "hands-on") throw new Error("Text-only guide requires hands-on verification");
+  id(verification.recordId);
+  const stepIds = array(verification.stepIds, "verified step IDs").map(id);
+  unique(stepIds, "verified step IDs");
+  if (stepIds.length !== steps.length || steps.some(({ id }) => !stepIds.includes(id))) {
+    throw new Error("Hands-on verification must cover every step");
+  }
+  const approval = record(raw.publicationApproval, "text-only publication approval");
+  if (approval.releaseApproved !== true) throw new Error("Text-only guide requires separate release approval");
+  id(approval.recordId);
+  if (verifiedAt(approval.approvedAt, "approvedAt") < checkedAt) {
+    throw new Error("Release approval predates hands-on verification");
+  }
 }
 
 function parseChecks(raw: unknown, steps: CreateStep[]): CompletionCheck[] {
@@ -227,7 +278,7 @@ function parseGuide(root: string, raw: Record<string, unknown>, instructions: Ma
     return file;
   });
   unique(resources.map((file) => file.id), "knowledge ids");
-  if (!uniqueZipNames(resources.map((file) => knowledgeFilename(file.path) ?? ""))) {
+  if (!uniqueZipNames(resources.map((file) => file.originalFilename))) {
     throw new Error("Invalid or duplicate knowledge filenames");
   }
   if (!resources.some((file) => file.category === "common")) throw new Error("Guide requires approved common knowledge");
@@ -237,6 +288,7 @@ function parseGuide(root: string, raw: Record<string, unknown>, instructions: Ma
   if (!actions.some((action) => action.kind === "instruction") || !actions.some((action) => action.kind === "knowledge")) {
     throw new Error("Guide requires instruction and knowledge steps");
   }
+  if (steps.some(({ format }) => format === "text-only")) verifyTextGuideRelease(raw, steps, entry.verifiedAt);
   return { ...entry, support: raw.support, instruction, resources, steps, checks: parseChecks(raw.checks, steps) };
 }
 
@@ -287,12 +339,7 @@ export function inspectCreateContent(root: string) {
   });
   for (const entry of published) {
     if (entry.support !== "supported") continue;
-    for (const file of entry.resources) approvedAssets.add(file.path);
-    for (const { media, mascot } of entry.steps) {
-      for (const path of [media.path, media.stillPath, media.captionsPath, mascot?.path]) {
-        if (path) approvedAssets.add(path);
-      }
-    }
+    for (const path of guideAssetPaths(entry)) approvedAssets.add(path);
   }
   verifyPublicInventory(root, approvedAssets, errors);
   return { entries: published, errors };

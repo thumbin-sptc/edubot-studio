@@ -2,7 +2,7 @@ import {
   personalizationFields,
   type CompletionCheck, type CompletionKind, type Knowledge, type Personalization, type PublishedGuide,
 } from "./model.ts";
-import { knowledgeFilename, uniqueZipNames, zipLimits } from "./zip-policy.ts";
+import { knowledgePathBasename, sameFilenameExtension, uniqueZipNames, zipLimits } from "./zip-policy.ts";
 
 export const completionLabels: Record<CompletionKind, string> = {
   role: "에듀봇 역할 확인",
@@ -38,9 +38,10 @@ export function isSelected(file: Knowledge, input: Personalization, overrides: R
   return Object.hasOwn(overrides, file.id) ? overrides[file.id] : file.category === "common" || isRecommended(file, input);
 }
 
-export function guideRevision(guide: PublishedGuide) {
+export function guideRevision(guide: PublishedGuide, scope?: string) {
   const { platform, device, id, version, instruction } = guide;
-  return `${platform}/${device}/${id}@${version}/${instruction.id}@${instruction.version}/${instruction.sha256}`;
+  const revision = `${platform}/${device}/${id}@${version}/${instruction.id}@${instruction.version}/${instruction.sha256}`;
+  return scope ? `${revision}/audience-${scope}` : revision;
 }
 
 export type ZipBuilder = (files: Array<{ name: string; data: Blob }>) => Promise<Blob>;
@@ -57,9 +58,14 @@ export async function buildSelectedBundle(
   if (selected.length > zipLimits.files || selected.reduce((bytes, file) => bytes + file.fileSize, 0) > zipLimits.bytes) {
     return { kind: "limit" as const, alternatives: selected };
   }
-  const names = selected.map(({ path }) => knowledgeFilename(path) ?? "");
+  const names = selected.map(({ originalFilename }) => originalFilename);
   try {
-    if (!uniqueZipNames(names)) throw new Error("Unsafe or duplicate ZIP filenames");
+    if (!uniqueZipNames(names) || selected.some(({ path, originalFilename }) => {
+      const internalName = knowledgePathBasename(path);
+      return !internalName || !sameFilenameExtension(originalFilename, internalName);
+    })) {
+      throw new Error("Unsafe or duplicate ZIP filenames");
+    }
     const files = [];
     for (const [index, file] of selected.entries()) {
       files.push({ name: names[index], data: await load(file.path, file) });

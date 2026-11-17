@@ -13,12 +13,13 @@ const guide = {
   instruction: { id: "test-core", version: "1.0.0", sha256: "a".repeat(64), coreInstruction: core },
   steps: [{ id: "intro" }, { id: "files" }],
 };
-const common = { id: "common", category: "common", path: "/downloads/qa-common.txt" };
+const common = { id: "common", category: "common", path: "/downloads/qa-common.txt", originalFilename: "qa-common.txt" };
 const contextual = {
   id: "contextual", category: "optional", path: "/downloads/qa-context.txt",
+  originalFilename: "가상 조건 자료 (초등).txt",
   recommendedFor: { schoolLevels: ["초등학교"], environments: ["특수학급"] },
 };
-const optional = { id: "optional", category: "optional", path: "/downloads/qa-optional.txt" };
+const optional = { id: "optional", category: "optional", path: "/downloads/qa-optional.txt", originalFilename: "qa-optional.txt" };
 const matching = { schoolLevel: "초등학교", environment: "특수학급" };
 
 function memoryStorage() {
@@ -62,7 +63,7 @@ test("ZIP boundary supplies only selected approved files and exposes individual 
   const loaded = [];
   const load = async (path) => { loaded.push(path); return new Blob(["synthetic file"]); };
   const zip = async (files) => {
-    assert.deepEqual(files.map(({ name }) => name), ["qa-context.txt", "qa-optional.txt"]);
+    assert.deepEqual(files.map(({ name }) => name), ["가상 조건 자료 (초등).txt", "qa-optional.txt"]);
     return new Blob(["synthetic ZIP adapter output"], { type: "application/zip" });
   };
   const success = await buildSelectedBundle(resources, matching, { common: false, optional: true }, load, zip);
@@ -92,6 +93,21 @@ test("steps can advance without checking, and progress is independent by combina
     assert.equal(getCreateProgress(started, guide).stepId, "files");
     assert.deepEqual(started.personalization, matching);
   }
+});
+
+test("adding approved media with a version bump keeps the text guide's saved step and checks", () => {
+  const textGuide = { ...guide, steps: guide.steps.map(step => ({ ...step, format: "text-only" })) };
+  const revised = {
+    ...textGuide, version: "1.1.0",
+    steps: textGuide.steps.map(step => ({ ...step, format: "media" })),
+  };
+  const saved = updateCreateProgress(newCreateSession(), textGuide, {
+    stepId: "files", checked: ["intro"], selections: { common: false },
+  });
+  const reopened = parseCreateSession(JSON.stringify(saved));
+  assert.equal(hasPreviousProgress(reopened, revised), true);
+  assert.deepEqual(getCreateProgress(reopened, revised), { stepId: "intro", checked: [], selections: {} });
+  assert.deepEqual(getCreateProgress(reopened, textGuide), { stepId: "files", checked: ["intro"], selections: { common: false } });
 });
 
 test("opt-in creation storage retains prior data while OFF and protects conflicting revisions", () => {

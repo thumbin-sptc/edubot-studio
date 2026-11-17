@@ -22,6 +22,7 @@ export type Knowledge = {
   title: string;
   description: string;
   path: string;
+  originalFilename: string;
   category: "common" | "optional";
   recommendedFor?: { schoolLevels?: string[]; environments?: string[] };
   verifiedAt: string;
@@ -40,16 +41,19 @@ export type CreateMedia = {
 export type CreateAction =
   | { kind: "instruction" | "knowledge" }
   | { kind: "external-link"; label: string; url: string; verifiedAt: string };
-export type CreateStep = {
+type CreateStepBase = {
   id: string;
   title: string;
   description: string;
-  media: CreateMedia;
   actions: CreateAction[];
   checkLabel: string;
   desktopAlternative?: string;
   mascot?: { path: string; text: string };
 };
+export type CreateStep = CreateStepBase & (
+  | { format: "media"; media: CreateMedia }
+  | { format: "text-only"; instructions: string[] }
+);
 export type CompletionKind = "role" | "knowledge" | "personalization";
 export type CompletionCheck = { kind: CompletionKind; prompt: string; criteria: string; stepId: string };
 type Entry = Combination & { id: string; version: string; verifiedAt: string };
@@ -62,6 +66,16 @@ export type PublishedGuide = Entry & {
   checks: CompletionCheck[];
 };
 export type PublishedCreateEntry = UnsupportedEntry | PublishedGuide;
+
+export function guideAssetPaths({ resources, steps }: PublishedGuide): string[] {
+  return [
+    ...resources.map(({ path }) => path),
+    ...steps.flatMap((step) => [
+      step.mascot?.path,
+      ...(step.format === "media" ? [step.media.path, step.media.stillPath, step.media.captionsPath] : []),
+    ]).filter((path): path is string => path !== undefined),
+  ];
+}
 export type CreateStatus = Combination & (
   | { status: "published" }
   | { status: "unsupported"; reason: string; verifiedAt: string }

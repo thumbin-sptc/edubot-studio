@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readdir, readFile } from "node:fs/promises";
 import { extname, join } from "node:path";
 import { inspectCreateContent } from "../src/lib/create/content.ts";
+import { guideAssetPaths } from "../src/lib/create/model.ts";
 import { siteBasePath } from "../src/lib/site-path.ts";
 
 async function templates(folder) {
@@ -24,8 +25,8 @@ async function listExport(directory, prefix = "") {
   }))).flat();
 }
 
-const [prompts, guides, instructions] = await Promise.all(
-  ["prompts", "create", "instructions"].map((folder) => templates(`content/${folder}`)),
+const [prompts, guides, instructions, knowledge] = await Promise.all(
+  ["prompts", "create", "instructions", "knowledge"].map((folder) => templates(`content/${folder}`)),
 );
 const { entries, errors } = inspectCreateContent(process.cwd());
 assert.deepEqual(errors, [], "Validate approved asset inventory before publishing");
@@ -38,8 +39,16 @@ const markers = [
     .flatMap((prompt) => [prompt.title, prompt.sourceOriginalText, prompt.templateText]),
   ...instructions.filter((instruction) => instruction.publicationStatus !== "published")
     .map((instruction) => instruction.coreInstruction),
+  ...knowledge.filter((file) => file.publicationStatus !== "published")
+    .flatMap(({ title, description, originalFilename, path }) => [title, description, originalFilename, path]),
   ...guides.filter((guide) => guide.publicationStatus !== "published")
-    .flatMap((guide) => (guide.steps ?? []).flatMap((step) => [step.title, step.description])),
+    .flatMap((guide) => [
+      ...(Array.isArray(guide.steps) ? guide.steps.flatMap((step) => [
+        step?.title, step?.description, step?.checkLabel,
+        ...(Array.isArray(step?.instructions) ? step.instructions : []),
+      ]) : []),
+      ...(Array.isArray(guide.checks) ? guide.checks.flatMap((check) => [check?.prompt, check?.criteria]) : []),
+    ]),
 ].filter((value) => typeof value === "string" && value.length >= 8 &&
   !publishedText.includes(JSON.stringify(value).slice(1, -1)));
 
@@ -47,11 +56,7 @@ const pages = ["", "prompts/", "create/", "data/", "help/",
   ...publishedPrompts.map(({ id }) => `prompts/${id}/`),
   ...publishedGuides.map(({ platform, device }) => `create/${platform}/${device}/`)];
 const frameworkPages = ["404/", "_not-found/"];
-const assets = new Set(publishedGuides.flatMap(({ resources, steps }) => [
-  ...resources.map(({ path }) => path.slice(1)),
-  ...steps.flatMap(({ media, mascot }) => [media.path, media.stillPath, media.captionsPath, mascot?.path]
-    .filter(Boolean).map((path) => path.slice(1))),
-]));
+const assets = new Set(publishedGuides.flatMap(guideAssetPaths).map((path) => path.slice(1)));
 const files = new Set(await listExport("out"));
 assert.ok(files.has("404.html"), "GitHub Pages requires a root 404.html for missing URLs");
 for (const page of pages) {
