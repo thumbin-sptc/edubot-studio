@@ -5,7 +5,9 @@ import {
   resolveAudience, sourceFamilies, targetSurfaces,
   type AudienceCandidate, type AudienceReleaseCheck, type AudienceSelection, type buildAudienceBundle,
 } from "@/lib/create/audience";
-import { devices, environments, schoolLevels, type PublishedGuide } from "@/lib/create/model";
+import { devices, environments, firstMaterialsAudience, sameMaterialsAudience, schoolLevels,
+  type PublishedGuide, type PublishedMaterials } from "@/lib/create/model";
+import { CreateMaterialCards } from "./create-materials";
 import { KnowledgeDownloadHelp, KnowledgeDownloadLinks } from "./knowledge-download";
 
 const fields = {
@@ -53,11 +55,12 @@ const bundleMessages = {
 } satisfies Record<BundleOutcome, string>;
 
 export function AudienceGuidePicker({
-  candidates, approvedGuides, initialSelection, onBundle, onStart,
+  candidates, approvedGuides, initialSelection, materials = [], onBundle, onStart,
 }: {
   candidates: readonly AudienceCandidate[];
   approvedGuides: readonly PublishedGuide[];
   initialSelection: AudienceSelection;
+  materials?: readonly PublishedMaterials[];
   onBundle: (selection: AudienceSelection, selectedResourceIds: string[]) => Promise<BundleOutcome>;
   onStart?: (selection: AudienceSelection) => void;
 }) {
@@ -78,6 +81,8 @@ export function AudienceGuidePicker({
     targetSurfaces[selection.platform], devices[selection.device]].join(" · ");
   const ready = result.kind === "ready" ? result : undefined;
   const illustrated = ready?.journey.guide.illustratedJourney;
+  const showMaterials = sameMaterialsAudience(firstMaterialsAudience, selection) ||
+    materials.some((entry) => sameMaterialsAudience(entry, selection));
 
   async function download() {
     if (busy || result.kind !== "ready") return;
@@ -113,6 +118,7 @@ export function AudienceGuidePicker({
           <button className="action" type="button" disabled={busy} onClick={() => onStart(selection)}>제작 안내 시작</button>
         </div>
       )}
+      {showMaterials && !ready?.journey.guide.steps.some(({ format }) => format === "media") && <p>예시 영상 준비 중</p>}
       <fieldset disabled={busy}>
         <legend>제작 대상과 사용 환경</legend>
         <div className="grid gap-3 pt-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -137,6 +143,12 @@ export function AudienceGuidePicker({
           })}
         </div>
       </fieldset>
+      {showMaterials && (
+        <section className="grid min-w-0 gap-3">
+          <h2>기본 지침과 지식파일</h2>
+          <CreateMaterialCards selection={selection} materials={materials} />
+        </section>
+      )}
       {result.kind === "blocked" && result.pendingChecks.length > 0 && (
         <ul aria-label="공개 검수 대기 항목" className="space-y-2">
           {result.pendingChecks.map((check) => <li key={check}>{checkLabels[check]}</li>)}

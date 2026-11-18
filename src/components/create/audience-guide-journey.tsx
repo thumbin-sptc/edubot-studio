@@ -2,15 +2,16 @@
 
 import { useRef, useState } from "react";
 import { buildAudienceBundle, resolveAudience, type AudienceCandidate, type AudienceSelection } from "@/lib/create/audience";
-import type { PublishedGuide } from "@/lib/create/model";
+import type { PublishedGuide, PublishedMaterials } from "@/lib/create/model";
 import { createKnowledgeZip, fetchKnowledgeBlob, requestZipDownload } from "@/lib/create/zip-client";
 import { AudienceGuidePicker } from "./audience-guide-picker";
 import { CreateWizard } from "./create-wizard";
 
-export function AudienceGuideJourney({ candidates, approvedGuides, initialSelection }: {
+export function AudienceGuideJourney({ candidates, approvedGuides, initialSelection, materials = [] }: {
   candidates: readonly AudienceCandidate[];
   approvedGuides: readonly PublishedGuide[];
   initialSelection: AudienceSelection;
+  materials?: readonly PublishedMaterials[];
 }) {
   const [selection, setSelection] = useState(initialSelection);
   const [open, setOpen] = useState(false);
@@ -32,7 +33,7 @@ export function AudienceGuideJourney({ candidates, approvedGuides, initialSelect
         <h1 ref={heading} tabIndex={-1}>나만의 에듀봇을 만들어 볼까요?</h1>
         <p className="page-description">학교급과 사용할 AI를 고르면 제작 안내를 확인할 수 있어요.</p>
       </header>
-      <AudienceGuidePicker candidates={candidates} approvedGuides={approvedGuides} initialSelection={selection}
+      <AudienceGuidePicker candidates={candidates} approvedGuides={approvedGuides} initialSelection={selection} materials={materials}
         onStart={(target) => {
           setSelection(target);
           setOpen(true);

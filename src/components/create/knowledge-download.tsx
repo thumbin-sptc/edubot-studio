@@ -14,7 +14,7 @@ export function KnowledgeDownloadHelp() {
 }
 
 export function KnowledgeDownloadLinks({ file, onStart, details }: {
-  file: Knowledge;
+  file: Pick<Knowledge, "title" | "path" | "originalFilename">;
   onStart?: (name: string) => void;
   details?: ReactNode;
 }) {

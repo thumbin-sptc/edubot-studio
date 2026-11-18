@@ -56,6 +56,20 @@ export type GuideAudience = {
   environment: (typeof environments)[number];
   sourceFamily: (typeof sourceFamilies)[number];
 };
+export type MaterialsAudience = Combination & GuideAudience;
+export type PublishedMaterials = MaterialsAudience & {
+  instruction?: Pick<Instruction, "version" | "coreInstruction">;
+  files: Pick<Knowledge, "id" | "title" | "path" | "originalFilename" | "description">[];
+};
+
+export const firstMaterialsAudience: MaterialsAudience = {
+  platform: "chatgpt", device: "desktop-web", schoolLevel: "초등학교", environment: "특수학급", sourceFamily: "GPTs",
+};
+
+export function sameMaterialsAudience(left: MaterialsAudience, right: MaterialsAudience) {
+  return left.platform === right.platform && left.device === right.device &&
+    left.schoolLevel === right.schoolLevel && left.environment === right.environment && left.sourceFamily === right.sourceFamily;
+}
 export type IllustratedJourney = {
   audience: GuideAudience;
   requiredIds: string[];
@@ -101,7 +115,7 @@ export function guideAssetPaths({ resources, steps, illustratedJourney }: Publis
   ];
 }
 export type CreateStatus = Combination & (
-  | { status: "published" }
+  | { status: "published"; hasExampleVideo: boolean }
   | { status: "unsupported"; reason: string; verifiedAt: string }
 );
 

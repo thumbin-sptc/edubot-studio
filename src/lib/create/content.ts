@@ -3,9 +3,9 @@ import { lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 import { isRecord, promptIdPattern, versionPattern } from "../prompt-template.ts";
 import {
-  environments, guideAssetPaths, isDevice, isPlatform, schoolLevels, sourceFamilies,
-  type CompletionCheck, type CreateAction, type CreateMedia, type CreateStep, type IllustratedJourney,
-  type Instruction, type Knowledge, type Platform, type PublishedCreateEntry, type ScreenExample, type VerifiedNote,
+  environments, guideAssetPaths, isDevice, isPlatform, sameMaterialsAudience, schoolLevels, sourceFamilies,
+  type CompletionCheck, type CreateAction, type CreateMedia, type CreateStep, type GuideAudience, type IllustratedJourney,
+  type Instruction, type Knowledge, type Platform, type PublishedCreateEntry, type PublishedMaterials, type ScreenExample, type VerifiedNote,
 } from "./model.ts";
 import { isOriginalFilename, knowledgePathBasename, sameFilenameExtension, uniqueZipNames } from "./zip-policy.ts";
 
@@ -297,14 +297,19 @@ function parseChecks(raw: unknown, steps: CreateStep[]): CompletionCheck[] {
   return checks;
 }
 
-function parseIllustratedJourney(root: string, raw: Record<string, unknown>, platform: Platform,
-  instruction: Instruction, resources: Knowledge[], steps: CreateStep[], checkedAt: string): IllustratedJourney {
-  const journey = record(raw.illustratedJourney, "illustrated journey");
-  const { schoolLevel, environment, sourceFamily } = record(journey.audience, "illustrated journey audience");
+function parseAudience(raw: unknown): GuideAudience {
+  const { schoolLevel, environment, sourceFamily } = record(raw, "creation audience");
   const selectedLevel = schoolLevels.find((level) => level === schoolLevel);
   const selectedEnvironment = environments.find((value) => value === environment);
   const selectedFamily = sourceFamilies.find((family) => family === sourceFamily);
-  if (!selectedLevel || !selectedEnvironment || !selectedFamily) throw new Error("Invalid illustrated journey audience");
+  if (!selectedLevel || !selectedEnvironment || !selectedFamily) throw new Error("Invalid creation audience");
+  return { schoolLevel: selectedLevel, environment: selectedEnvironment, sourceFamily: selectedFamily };
+}
+
+function parseIllustratedJourney(root: string, raw: Record<string, unknown>, platform: Platform,
+  instruction: Instruction, resources: Knowledge[], steps: CreateStep[], checkedAt: string): IllustratedJourney {
+  const journey = record(raw.illustratedJourney, "illustrated journey");
+  const audience = parseAudience(journey.audience);
   const requiredIds = array(journey.requiredIds, "required files").map(id);
   const recommendedIds = array(journey.recommendedIds, "recommended files").map(id);
   unique([...requiredIds, ...recommendedIds], "illustrated journey file classifications");
@@ -328,10 +333,7 @@ function parseIllustratedJourney(root: string, raw: Record<string, unknown>, pla
   if (record(raw.verification, "illustrated journey verification").completionChecked !== true) {
     throw new Error("Illustrated journey requires hands-on completion checks");
   }
-  return {
-    audience: { schoolLevel: selectedLevel, environment: selectedEnvironment, sourceFamily: selectedFamily },
-    requiredIds, recommendedIds, help, completionExample,
-  };
+  return { audience, requiredIds, recommendedIds, help, completionExample };
 }
 
 function parseGuide(root: string, raw: Record<string, unknown>, instructions: Map<string, Instruction>,
@@ -369,6 +371,36 @@ function parseGuide(root: string, raw: Record<string, unknown>, instructions: Ma
   return { ...entry, support: raw.support, instruction, resources, steps, checks: parseChecks(raw.checks, steps), illustratedJourney };
 }
 
+function approvedMaterial<T extends Instruction | Knowledge>(
+  raw: unknown, available: ReadonlyMap<string, T>, platform: Platform, label: string,
+): T {
+  const binding = record(raw, label);
+  id(binding.rightsRecordId);
+  const material = available.get(id(binding.id));
+  if (!material || binding.sha256 !== material.sha256 || !material.externalAiUse?.includes(platform)) {
+    throw new Error(`Independent access requires approved ${label} with matching SHA-256 and AI use rights`);
+  }
+  return material;
+}
+
+function parseMaterials(raw: Record<string, unknown>, instructions: ReadonlyMap<string, Instruction>,
+  knowledge: ReadonlyMap<string, Knowledge>): PublishedMaterials {
+  const { platform, device } = raw;
+  if (!isPlatform(platform) || !isDevice(device)) throw new Error("Unknown materials platform or web device");
+  const audience = parseAudience(raw.audience);
+  const instruction = raw.instruction === undefined ? undefined
+    : approvedMaterial(raw.instruction, instructions, platform, "instruction");
+  const files = raw.knowledge === undefined ? [] : array(raw.knowledge, "materials knowledge files")
+    .map((item) => approvedMaterial(item, knowledge, platform, "knowledge file"));
+  if (!instruction && !files.length) throw new Error("Published materials require at least one approved item");
+  unique(files.map((file) => file.id), "materials knowledge IDs");
+  return {
+    platform, device, ...audience,
+    instruction: instruction && { version: instruction.version, coreInstruction: instruction.coreInstruction },
+    files: files.map(({ id, title, path, originalFilename, description }) => ({ id, title, path, originalFilename, description })),
+  };
+}
+
 function verifyPublicInventory(root: string, approved: Set<string>, errors: string[]) {
   function walk(path: string) {
     for (const entry of list(join(root, "public", path.slice(1)))) {
@@ -387,6 +419,7 @@ export function inspectCreateContent(root: string) {
   const knowledge = new Map<string, Knowledge>();
   const knowledgePaths = new Set<string>();
   const entries: PublishedCreateEntry[] = [];
+  const materials: PublishedMaterials[] = [];
   function inspect(folder: string, parse: (raw: Record<string, unknown>) => void) {
     for (const { raw, file } of publishedRecords(root, folder, errors)) {
       try {
@@ -407,6 +440,12 @@ export function inspectCreateContent(root: string) {
     knowledgePaths.add(path);
     knowledge.set(file.id, file);
   });
+  inspect("create-materials", (raw) => {
+    const selection = parseMaterials(raw, instructions, knowledge);
+    if (materials.some((item) => sameMaterialsAudience(item, selection))) throw new Error("Duplicate creation materials audience");
+    materials.push(selection);
+    for (const file of selection.files) approvedAssets.add(file.path);
+  });
   inspect("create", (raw) => entries.push(parseGuide(root, raw, instructions, knowledge)));
   const combinations = entries.map(({ platform, device }) => `${platform}/${device}`);
   const published = entries.filter((_, index) => {
@@ -419,5 +458,5 @@ export function inspectCreateContent(root: string) {
     for (const path of guideAssetPaths(entry)) approvedAssets.add(path);
   }
   verifyPublicInventory(root, approvedAssets, errors);
-  return { entries: published, errors };
+  return { entries: published, materials, errors };
 }

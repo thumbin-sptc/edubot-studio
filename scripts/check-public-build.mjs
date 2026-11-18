@@ -28,19 +28,18 @@ async function listExport(directory, prefix = "") {
 const [prompts, guides, instructions, knowledge] = await Promise.all(
   ["prompts", "create", "instructions", "knowledge"].map((folder) => templates(`content/${folder}`)),
 );
-const { entries, errors } = inspectCreateContent(process.cwd());
+const { entries, materials, errors } = inspectCreateContent(process.cwd());
 assert.deepEqual(errors, [], "Validate approved asset inventory before publishing");
 const publishedPrompts = prompts.filter((prompt) => prompt.publicationStatus === "published");
 const publishedGuides = entries.filter((guide) => guide.support === "supported");
-const publishedText = JSON.stringify([...publishedPrompts, ...publishedGuides,
-  ...instructions.filter((instruction) => instruction.publicationStatus === "published")]);
+const publishedText = JSON.stringify([...publishedPrompts, ...publishedGuides, ...materials]);
+const approvedPaths = new Set([...publishedGuides.flatMap(guideAssetPaths), ...materials.flatMap(({ files }) => files.map(({ path }) => path))]);
 const screenMarkers = (screen) => [screen?.path, screen?.alt, screen?.focusText, screen?.captureId, screen?.sha256];
 const markers = [
   ...prompts.filter((prompt) => prompt.publicationStatus !== "published")
     .flatMap((prompt) => [prompt.title, prompt.sourceOriginalText, prompt.templateText]),
-  ...instructions.filter((instruction) => instruction.publicationStatus !== "published")
-    .map((instruction) => instruction.coreInstruction),
-  ...knowledge.filter((file) => file.publicationStatus !== "published")
+  ...instructions.map((instruction) => instruction.coreInstruction),
+  ...knowledge.filter((file) => file.publicationStatus !== "published" || !approvedPaths.has(file.path))
     .flatMap(({ title, description, originalFilename, path }) => [title, description, originalFilename, path]),
   ...guides.filter((guide) => guide.publicationStatus !== "published")
     .flatMap((guide) => [
@@ -59,7 +58,7 @@ const pages = ["", "prompts/", "create/", "data/", "help/",
   ...publishedPrompts.map(({ id }) => `prompts/${id}/`),
   ...publishedGuides.map(({ platform, device }) => `create/${platform}/${device}/`)];
 const frameworkPages = ["404/", "_not-found/"];
-const assets = new Set(publishedGuides.flatMap(guideAssetPaths).map((path) => path.slice(1)));
+const assets = new Set([...approvedPaths].map((path) => path.slice(1)));
 const files = new Set(await listExport("out"));
 assert.ok(files.has("404.html"), "GitHub Pages requires a root 404.html for missing URLs");
 for (const page of pages) {
@@ -98,4 +97,4 @@ for (const file of files) {
       `Missing local URL in ${file}: ${url}`);
   }
 }
-console.log(`Pages export publication checks passed (${publishedPrompts.length} public prompts, ${publishedGuides.length} public guides).`);
+console.log(`Pages export publication checks passed (${publishedPrompts.length} public prompts, ${publishedGuides.length} public guides, ${materials.length} independent materials collections).`);
