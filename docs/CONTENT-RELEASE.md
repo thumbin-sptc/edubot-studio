@@ -40,6 +40,12 @@ CI와 공개용 빌드는 기록의 형식과 상태, 버전·해시 일치, 그
 - [ ] 확인된 조합만 개별적으로 `published`로 전환한다. 미검수 조합은 준비 중으로 둔다. 실제로 미지원임이 확인된 조합에는 확인일과 근거를 기록한다.
 - [ ] 경로, 파일 또는 지침을 바꾸면 연결과 실파일, 해시·크기·버전을 다시 검수한다. 이전 가이드 진행 기록을 보존하도록 가이드 버전도 변경하고, 회수한 파일은 공개 디렉터리에서도 제거한다.
 
+### 기본 지침과 지식파일 개별 공개
+
+- 제작 가이드와 별도로 공개하려면 `content/create-materials/<id>.json`에 `publicationStatus: "published"`, `platform`, `device`, `audience`의 `schoolLevel`, `environment`, `sourceFamily`를 기록한다. 승인 범위가 확정된 항목만 선택적으로 등록한다.
+- `instruction`은 한 개, `knowledge`는 파일별 배열이다. 각 항목에 승인된 콘텐츠의 `id`, 판본의 `sha256`, 비공개 증빙을 가리키는 `rightsRecordId`를 기록한다. 웹 재배포 권리와 해당 AI의 입력·첨부 권리 모두를 확인한다. 원문과 실파일 레코드는 각각 `publicationStatus: "published"`, `licenseStatus: "approved"`, 확인일과 해당 플랫폼을 포함한 `externalAiUse`가 필요하다.
+- 이 경로는 승인된 지침 원문과 허용한 개별 파일만 제공한다. 예시 영상이나 실제 로그인 검수 기록은 제작 가이드의 공개 판정에만 사용하며, 각각의 게시 상태를 기록한다. 권리 증빙과 원고는 비공개 작업 영역에 보관한다.
+
 ### 실제 예시 화면을 제공하는 가이드
 
 - 초등 특수학급 GPTs의 ChatGPT Projects PC 가이드는 `illustratedJourney`를 사용한다. `audience`에 학교급·교육 환경·지침 원본 계열을 기록하고 `requiredIds`, `recommendedIds`, 검증한 HTTPS 도움말 동작 `help`를 선언한다. 공통 자료는 필수에 포함한다. 권리 미확인 권장·선택 파일은 가이드의 `knowledgeIds`에서 제외한다.

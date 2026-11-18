@@ -16,7 +16,7 @@ function testRoot(t) {
 }
 
 test("an empty creation catalog is valid and exposes no combination", (t) => {
-  assert.deepEqual(inspectCreateContent(testRoot(t)), { entries: [], errors: [] });
+  assert.deepEqual(inspectCreateContent(testRoot(t)), { entries: [], materials: [], errors: [] });
 });
 
 test("all six combinations have independent step sequences and approved assets", (t) => {

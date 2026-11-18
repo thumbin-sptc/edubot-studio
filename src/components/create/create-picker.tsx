@@ -2,15 +2,19 @@
 
 import Link from "next/link";
 import { updateCreateSession, useCreateSession } from "@/lib/create/browser-session";
-import { createHref, devices, platforms, type CreateStatus, type Device, type Platform } from "@/lib/create/model";
+import { createHref, devices, firstMaterialsAudience, platforms, type CreateStatus, type Device, type Platform,
+  type PublishedMaterials } from "@/lib/create/model";
+import { CreateMaterialsPanel } from "./create-materials";
 import { CreateStorageControls } from "./create-storage-controls";
 
-export function CreatePicker({ statuses }: { statuses: CreateStatus[] }) {
+export function CreatePicker({ statuses, materials }: { statuses: CreateStatus[]; materials: readonly PublishedMaterials[] }) {
   const { session } = useCreateSession();
   const { platform, device } = session.selection;
   const combination = platform && device ? { platform, device } : undefined;
   const selected = statuses.find((entry) => entry.platform === platform && entry.device === device);
   const desktop = statuses.some((entry) => entry.platform === platform && entry.device === "desktop-web" && entry.status === "published");
+  const showMaterials = combination && ((platform === firstMaterialsAudience.platform && device === firstMaterialsAudience.device)
+    || materials.some((entry) => entry.platform === platform && entry.device === device));
 
   return (
     <section className="info-panel create-picker" aria-label="플랫폼과 기기 선택">
@@ -50,12 +54,16 @@ export function CreatePicker({ statuses }: { statuses: CreateStatus[] }) {
         {combination && !selected && (
           <div className="space-y-2">
             <p><strong>{platforms[combination.platform]} · {devices[combination.device]} · 준비 중</strong></p>
-            <p>실제 조작과 자료 이용 권리를 확인한 뒤 제작 안내를 공개해요.</p>
+            <p>실제 로그인 후 조작 검수를 마친 제작 가이드가 아직 없어요.</p>
+            <p>예시 영상 준비 중</p>
             <Link href="/prompts" className="create-text-link">프롬프트 라이브러리 둘러보기</Link>
           </div>
         )}
         {combination && selected?.status === "published" && (
-          <Link href={createHref(combination)} className="action">제작 안내 시작</Link>
+          <div className="space-y-2">
+            {!selected.hasExampleVideo && <p>예시 영상 준비 중</p>}
+            <Link href={createHref(combination)} className="action">제작 안내 시작</Link>
+          </div>
         )}
         {combination && selected?.status === "unsupported" && (
           <>
@@ -68,6 +76,9 @@ export function CreatePicker({ statuses }: { statuses: CreateStatus[] }) {
           </>
         )}
       </div>
+      {combination && showMaterials && (
+        <CreateMaterialsPanel key={`${platform}-${device}`} combination={combination} materials={materials} />
+      )}
       <CreateStorageControls showPreference={false} />
     </section>
   );
