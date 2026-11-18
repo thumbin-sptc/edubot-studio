@@ -74,6 +74,10 @@ export function AudienceGuidePicker({
   const selected = choices.filter(({ id }) => isPicked(id));
   const alternatives = result.kind === "ready" && (outcome === "failed" || outcome === "limit")
     ? [...result.required, ...selected] : [];
+  const summary = [selection.schoolLevel, selection.environment, `${selection.sourceFamily} 원본`,
+    targetSurfaces[selection.platform], devices[selection.device]].join(" · ");
+  const ready = result.kind === "ready" ? result : undefined;
+  const illustrated = ready?.journey.guide.illustratedJourney;
 
   async function download() {
     if (busy || result.kind !== "ready") return;
@@ -90,6 +94,25 @@ export function AudienceGuidePicker({
 
   return (
     <section className="info-panel create-picker" aria-label="학교급별 제작 자료">
+      <div className="create-selection" role="status">
+        <strong>{summary}</strong>
+        <p>
+          {ready && "제작 안내를 시작할 수 있어요."}
+          {result.kind === "blocked" && "준비 중 · 지침과 자료를 확인하고 있어요."}
+          {result.kind === "unavailable" && "준비 중 · 이 조합에 연결된 지침이 없어요."}
+          {result.kind === "unsupported" && "미지원 · 이 AI와 기기 조합에서는 사용할 수 없어요."}
+          {result.kind === "conflict" && "준비 중 · 지침을 사용할 수 있는 범위를 확인하고 있어요."}
+        </p>
+      </div>
+      {ready && illustrated && (
+        <p>단계마다 예시 화면을 보며 따라 할 수 있어요. PC 브라우저에서 {targetSurfaces[selection.platform]}를 열고
+          {ready.required.length ? ` 안내에 나오는 필수 파일 ${ready.required.length}개를 준비해 주세요.` : " 안내를 시작해 보세요."}</p>
+      )}
+      {ready && onStart && (
+        <div>
+          <button className="action" type="button" disabled={busy} onClick={() => onStart(selection)}>제작 안내 시작</button>
+        </div>
+      )}
       <fieldset disabled={busy}>
         <legend>제작 대상과 사용 환경</legend>
         <div className="grid gap-3 pt-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -114,13 +137,6 @@ export function AudienceGuidePicker({
           })}
         </div>
       </fieldset>
-      <p className="create-selection" role="status">
-        {result.kind === "ready" && `지침 ${result.instruction.version} · 자료를 선택할 수 있습니다.`}
-        {result.kind === "blocked" && "준비 중 · 지침과 자료의 검수가 필요합니다."}
-        {result.kind === "unavailable" && "준비 중 · 이 조합에 연결된 지침이 없습니다."}
-        {result.kind === "unsupported" && "미지원 · 이 AI와 기기 조합에서는 사용할 수 없습니다."}
-        {result.kind === "conflict" && "준비 중 · 지침 연결 범위를 확인하고 있습니다."}
-      </p>
       {result.kind === "blocked" && result.pendingChecks.length > 0 && (
         <ul aria-label="공개 검수 대기 항목" className="space-y-2">
           {result.pendingChecks.map((check) => <li key={check}>{checkLabels[check]}</li>)}
@@ -135,11 +151,6 @@ export function AudienceGuidePicker({
       )}
       {result.kind === "ready" && (
         <div className="space-y-3">
-          {onStart && (
-            <button className="action" type="button" disabled={busy} onClick={() => onStart(selection)}>
-              제작 안내 시작
-            </button>
-          )}
           <details className="create-picker-download" open={onStart ? undefined : true}>
             <summary>지금 자료만 받기 (선택)</summary>
             <div className="space-y-3">

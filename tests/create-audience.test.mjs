@@ -136,14 +136,16 @@ test("platform, operation checks, rights and release approval are independent ZI
   }
 });
 
-test("missing, ambiguous or pending dependencies block release; explicitly inapplicable dependencies do not", () => {
+test("missing required or unclassified files block release while unapproved optional files are excluded", () => {
   for (const status of ["missing", "ambiguous", "not-required"]) {
     const match = { status };
-    for (const reference of [required, recommended]) {
-      const result = resolveAudience(withReferences({ ...reference, match }), selection, guide);
-      assert.equal(result.kind, "blocked");
-      assert.equal(result.references[0].status, status === "not-required" ? "ambiguous" : status);
-    }
+    const result = resolveAudience(withReferences({ ...required, match }), selection, guide);
+    assert.equal(result.kind, "blocked");
+    assert.equal(result.references[0].status, status === "not-required" ? "ambiguous" : status);
+    const available = resolveAudience(withReferences(required, { ...recommended, match }), selection, guide);
+    assert.equal(available.kind, "ready");
+    assert.deepEqual(available.required, [base]);
+    assert.deepEqual(available.recommended, []);
   }
   const pending = resolveAudience(withReferences({ ...required, applicability: "scope-pending" }), selection, guide);
   assert.equal(pending.references[0].status, "scope-pending");

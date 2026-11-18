@@ -3,9 +3,9 @@ import { lstatSync, readFileSync, readdirSync, realpathSync } from "node:fs";
 import { extname, join, relative } from "node:path";
 import { isRecord, promptIdPattern, versionPattern } from "../prompt-template.ts";
 import {
-  environments, guideAssetPaths, isDevice, isPlatform, schoolLevels,
-  type CompletionCheck, type CreateAction, type CreateMedia, type CreateStep, type Instruction,
-  type Knowledge, type Platform, type PublishedCreateEntry, type VerifiedNote,
+  environments, guideAssetPaths, isDevice, isPlatform, schoolLevels, sourceFamilies,
+  type CompletionCheck, type CreateAction, type CreateMedia, type CreateStep, type IllustratedJourney,
+  type Instruction, type Knowledge, type Platform, type PublishedCreateEntry, type ScreenExample, type VerifiedNote,
 } from "./model.ts";
 import { isOriginalFilename, knowledgePathBasename, sameFilenameExtension, uniqueZipNames } from "./zip-policy.ts";
 
@@ -59,6 +59,16 @@ function unique(values: string[], name: string) {
   if (new Set(values).size !== values.length) throw new Error(`Duplicate ${name}`);
 }
 
+function externalAiUse(value: unknown): Platform[] | undefined {
+  if (value === undefined) return undefined;
+  const platforms = array(value, "approved AI use").map((platform) => {
+    if (!isPlatform(platform)) throw new Error("Invalid approved AI platform");
+    return platform;
+  });
+  unique(platforms, "approved AI platform");
+  return platforms;
+}
+
 function list(path: string) {
   try {
     return readdirSync(path, { withFileTypes: true });
@@ -107,7 +117,7 @@ function parseInstruction(raw: Record<string, unknown>): Instruction {
   const coreInstruction = text(raw.coreInstruction, "coreInstruction");
   const sha256 = createHash("sha256").update(coreInstruction, "utf8").digest("hex");
   if (raw.sha256 !== sha256) throw new Error("Instruction hash mismatch");
-  return { id: id(raw.id), version: version(raw.version), sha256, coreInstruction };
+  return { id: id(raw.id), version: version(raw.version), sha256, coreInstruction, externalAiUse: externalAiUse(raw.externalAiUse) };
 }
 
 function recommendationValues(value: unknown, allowed: readonly string[], name: string): string[] | undefined {
@@ -157,6 +167,7 @@ function parseKnowledge(root: string, raw: Record<string, unknown>): Knowledge {
       environments: recommendationValues(rules.environments, environments, "school environments"),
     },
     platformNotes,
+    externalAiUse: externalAiUse(raw.externalAiUse),
   };
 }
 
@@ -196,6 +207,29 @@ function requiredGuideText(raw: unknown, field: string): string {
   return value;
 }
 
+function parseScreenExample(root: string, raw: unknown): ScreenExample {
+  const example = record(raw, "screen example");
+  const verified = verifyRights(example);
+  if (example.source !== "hands-on" || example.privacyChecked !== true) {
+    throw new Error("Screen example requires a hands-on capture and privacy review");
+  }
+  const file = asset(root, example.path, "tutorials", [".png", ".jpg", ".jpeg"]);
+  const bytes = readFileSync(file.diskPath);
+  if (createHash("sha256").update(bytes).digest("hex") !== example.sha256) {
+    throw new Error("Screen example hash mismatch");
+  }
+  const png = bytes.subarray(0, 8).equals(Buffer.from("89504e470d0a1a0a", "hex"));
+  const jpeg = bytes.subarray(0, 3).equals(Buffer.from("ffd8ff", "hex"));
+  if (extname(file.path) === ".png" ? !png || bytes.includes(Buffer.from("acTL")) : !jpeg) {
+    throw new Error("Screen example must be a still PNG or JPEG");
+  }
+  return {
+    captureId: id(example.captureId), path: file.path, verifiedAt: verified,
+    alt: requiredGuideText(example.alt, "screen example alt text"),
+    focusText: requiredGuideText(example.focusText, "screen example focus text"),
+  };
+}
+
 function parseStep(root: string, raw: unknown, mobile: boolean): CreateStep {
   const step = record(raw, "step");
   if (step.format !== undefined && step.format !== "media" && step.format !== "text-only") {
@@ -216,7 +250,10 @@ function parseStep(root: string, raw: unknown, mobile: boolean): CreateStep {
     desktopAlternative: step.desktopAlternative === undefined ? undefined : text(step.desktopAlternative, "PC alternative"),
     mascot: mascot && { path: asset(root, mascot.path, "tutorials", imageExtensions).path, text: text(mascot.text, "mascot guidance") },
   };
-  if (!isText) return { ...base, format: "media", media: parseMedia(root, step.media) };
+  if (!isText) {
+    if (step.example !== undefined) throw new Error("Screen examples require ordered text instructions");
+    return { ...base, format: "media", media: parseMedia(root, step.media) };
+  }
 
   if (Object.hasOwn(step, "media")) throw new Error("Text-only step must not declare media");
   if (!base.actions.length) throw new Error("Text-only step requires an action");
@@ -224,7 +261,8 @@ function parseStep(root: string, raw: unknown, mobile: boolean): CreateStep {
     .map((value) => requiredGuideText(value, "text-only instruction"));
   unique(instructions.map(normalizedText), "text-only instructions");
   if (instructions.length < 2) throw new Error("Text-only step requires at least two ordered instructions");
-  return { ...base, format: "text-only", instructions };
+  const example = step.example === undefined ? undefined : parseScreenExample(root, step.example);
+  return { ...base, format: "text-only", instructions, example };
 }
 
 function verifyTextGuideRelease(raw: Record<string, unknown>, steps: CreateStep[], checkedAt: string) {
@@ -259,6 +297,43 @@ function parseChecks(raw: unknown, steps: CreateStep[]): CompletionCheck[] {
   return checks;
 }
 
+function parseIllustratedJourney(root: string, raw: Record<string, unknown>, platform: Platform,
+  instruction: Instruction, resources: Knowledge[], steps: CreateStep[], checkedAt: string): IllustratedJourney {
+  const journey = record(raw.illustratedJourney, "illustrated journey");
+  const { schoolLevel, environment, sourceFamily } = record(journey.audience, "illustrated journey audience");
+  const selectedLevel = schoolLevels.find((level) => level === schoolLevel);
+  const selectedEnvironment = environments.find((value) => value === environment);
+  const selectedFamily = sourceFamilies.find((family) => family === sourceFamily);
+  if (!selectedLevel || !selectedEnvironment || !selectedFamily) throw new Error("Invalid illustrated journey audience");
+  const requiredIds = array(journey.requiredIds, "required files").map(id);
+  const recommendedIds = array(journey.recommendedIds, "recommended files").map(id);
+  unique([...requiredIds, ...recommendedIds], "illustrated journey file classifications");
+  if (!requiredIds.length || ![...requiredIds, ...recommendedIds].every((key) => resources.some((file) => file.id === key)) ||
+      resources.some((file) => file.category === "common" && !requiredIds.includes(file.id))) {
+    throw new Error("Illustrated journey requires approved common files and valid file classifications");
+  }
+  if (!instruction.externalAiUse?.includes(platform) || resources.some((file) => !file.externalAiUse?.includes(platform))) {
+    throw new Error("Illustrated journey requires separate external AI use rights for its instruction and files");
+  }
+  const help = parseAction(journey.help);
+  if (help.kind !== "external-link") throw new Error("Illustrated journey requires an external help link");
+  const completionExample = parseScreenExample(root, journey.completionExample);
+  const examples = steps.map((step) => step.format === "text-only" && step.example);
+  if (examples.some((example) => !example)) throw new Error("Every illustrated step requires a verified screen example");
+  const captures = [...examples.filter((example): example is ScreenExample => Boolean(example)), completionExample];
+  unique(captures.map(({ captureId }) => captureId), "screen capture IDs");
+  if (captures.some((capture) => capture.verifiedAt > checkedAt)) {
+    throw new Error("Screen example verification cannot postdate guide verification");
+  }
+  if (record(raw.verification, "illustrated journey verification").completionChecked !== true) {
+    throw new Error("Illustrated journey requires hands-on completion checks");
+  }
+  return {
+    audience: { schoolLevel: selectedLevel, environment: selectedEnvironment, sourceFamily: selectedFamily },
+    requiredIds, recommendedIds, help, completionExample,
+  };
+}
+
 function parseGuide(root: string, raw: Record<string, unknown>, instructions: Map<string, Instruction>,
   knowledge: Map<string, Knowledge>): PublishedCreateEntry {
   if (!isPlatform(raw.platform) || !isDevice(raw.device)) throw new Error("Unknown platform or web device");
@@ -289,7 +364,9 @@ function parseGuide(root: string, raw: Record<string, unknown>, instructions: Ma
     throw new Error("Guide requires instruction and knowledge steps");
   }
   if (steps.some(({ format }) => format === "text-only")) verifyTextGuideRelease(raw, steps, entry.verifiedAt);
-  return { ...entry, support: raw.support, instruction, resources, steps, checks: parseChecks(raw.checks, steps) };
+  const illustratedJourney = raw.illustratedJourney === undefined ? undefined
+    : parseIllustratedJourney(root, raw, raw.platform, instruction, resources, steps, entry.verifiedAt);
+  return { ...entry, support: raw.support, instruction, resources, steps, checks: parseChecks(raw.checks, steps), illustratedJourney };
 }
 
 function verifyPublicInventory(root: string, approved: Set<string>, errors: string[]) {

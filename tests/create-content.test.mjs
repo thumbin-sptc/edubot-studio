@@ -7,7 +7,7 @@ import { test } from "node:test";
 import { fileURLToPath } from "node:url";
 import { inspectCreateContent } from "../src/lib/create/content.ts";
 import { guideAssetPaths } from "../src/lib/create/model.ts";
-import { syntheticGuides, syntheticTextGuide, writeCreateFixtures, writeFixture } from "./fixtures/synthetic-create.mjs";
+import { syntheticGuides, syntheticIllustratedGuide, syntheticTextGuide, writeCreateFixtures, writeFixture } from "./fixtures/synthetic-create.mjs";
 
 function testRoot(t) {
   const root = mkdtempSync(join(tmpdir(), "edubot-create-"));
@@ -52,6 +52,45 @@ test("approved text-only stages have ordered instructions and only approved down
   assert.deepEqual(entries[0].resources.map(({ originalFilename }) => originalFilename),
     ["가상 공통 자료 (검수).txt", "qa-context.txt", "qa-optional.txt"]);
   assert.ok(!JSON.stringify(entries).includes("QA-SYNTHETIC-APPROVAL"));
+});
+
+test("illustrated publication requires verified, private-data-reviewed stills and separate external AI rights", (t) => {
+  const valid = testRoot(t);
+  const { guide, assets } = syntheticIllustratedGuide();
+  writeCreateFixtures(valid, [guide], assets);
+  const parsed = inspectCreateContent(valid);
+  assert.deepEqual(parsed.errors, []);
+  assert.deepEqual(guideAssetPaths(parsed.entries[0]).filter((path) => path.startsWith("/tutorials/")), Object.keys(assets));
+  const cases = [
+    [(entry) => { delete entry.steps[0].example; }, /Every illustrated step/],
+    [(entry) => { delete entry.illustratedJourney.completionExample; }, /Invalid screen example/],
+    [(entry) => { entry.illustratedJourney.completionExample.privacyChecked = false; }, /privacy review/],
+    [(entry) => { entry.steps[0].example.source = "mockup"; }, /hands-on capture/],
+    [(entry) => { entry.steps[0].example.sha256 = "x"; }, /hash mismatch/],
+    [(entry) => { entry.steps[0].example.alt = "TODO"; }, /Incomplete screen example alt/],
+    [(entry) => { entry.steps[0].example.captureId = entry.steps[1].example.captureId; }, /Duplicate screen capture IDs/],
+    [(entry) => { entry.steps[0].example.verifiedAt = "2025-01-02"; }, /postdate guide verification/],
+    [(entry) => { entry.illustratedJourney.requiredIds = ["test-optional"]; }, /approved common files/],
+    [(entry) => { delete entry.verification.completionChecked; }, /hands-on completion checks/],
+  ];
+  for (const [mutate, message] of cases) {
+    const fresh = syntheticIllustratedGuide();
+    mutate(fresh.guide);
+    const root = testRoot(t);
+    writeCreateFixtures(root, [fresh.guide], fresh.assets);
+    const result = inspectCreateContent(root);
+    assert.equal(result.entries.length, 0);
+    assert.match(result.errors.join("\n"), message);
+  }
+  for (const path of ["content/instructions/test-core.json", "content/knowledge/test-common.json"]) {
+    const root = testRoot(t);
+    writeCreateFixtures(root, [guide], assets);
+    const raw = JSON.parse(readFileSync(join(root, path), "utf8"));
+    writeFixture(root, path, { ...raw, externalAiUse: ["claude"] });
+    const result = inspectCreateContent(root);
+    assert.equal(result.entries.length, 0);
+    assert.match(result.errors.join("\n"), /separate external AI use rights/);
+  }
 });
 
 test("filename metadata cannot loosen the ASCII asset path or create ambiguous ZIP entries", (t) => {
@@ -157,13 +196,15 @@ test("draft and reviewed text-only guides cannot leak instructions or unapproved
   writeCreateFixtures(root, [guide]);
   const marker = "CODEX-19-PRIVATE-INSTRUCTIONS";
   const privateName = "CODEX-23 가상 비공개 자료 (초안).txt";
+  const privateScreen = "QA32-PRIVATE-EXAMPLE-FOCUS";
   writeFixture(root, "content/knowledge/private-test.json", {
     id: "private-test", publicationStatus: "reviewed", originalFilename: privateName, path: "/downloads/private-test.txt",
   });
   for (const [index, publicationStatus] of ["draft", "reviewed"].entries()) {
     const { id, steps, platform, device } = syntheticTextGuide(syntheticGuides()[index + 2]);
     steps[0].instructions = [marker];
-    writeFixture(root, `content/create/${id}.json`, { id, publicationStatus, steps, platform, device });
+    const illustratedJourney = { completionExample: { focusText: privateScreen } };
+    writeFixture(root, `content/create/${id}.json`, { id, publicationStatus, steps, platform, device, illustratedJourney });
   }
   const { entries, errors } = inspectCreateContent(root);
   assert.deepEqual(errors, []);
@@ -182,7 +223,7 @@ test("draft and reviewed text-only guides cannot leak instructions or unapproved
   assert.equal(passed.status, 0, passed.stderr);
   assert.match(passed.stdout, /1 public guides/);
   for (const path of ["create/index.html", "create/__next._full.txt", "_next/static/chunks/guide.js"]) {
-    for (const secret of [marker, privateName, "/downloads/private-test.txt"]) {
+    for (const secret of [marker, privateName, "/downloads/private-test.txt", privateScreen]) {
       writeFixture(root, "out/" + path, Buffer.from(secret));
       const leaked = exportCheck();
       assert.equal(leaked.status, 1);

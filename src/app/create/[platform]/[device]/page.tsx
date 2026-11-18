@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { emptyExportSegment } from "@/lib/site-path";
 import { CreateWizard } from "@/components/create/create-wizard";
+import { illustratedAudienceOption, resolveAudience } from "@/lib/create/audience";
 import { devices, isDevice, isPlatform, platforms } from "@/lib/create/model";
 import { getCreateEntries } from "@/lib/create/published";
 
@@ -32,5 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function CreateGuidePage({ params }: Props) {
   const { guide, desktopAvailable } = await findGuide(params);
-  return <CreateWizard guide={guide} desktopAvailable={desktopAvailable} />;
+  const option = illustratedAudienceOption(guide);
+  const audience = option && resolveAudience([option.candidate], option.selection, guide);
+  if (audience && audience.kind !== "ready") notFound();
+  return <CreateWizard guide={audience ? audience.journey.guide : guide}
+    desktopAvailable={desktopAvailable} audience={audience?.journey} />;
 }

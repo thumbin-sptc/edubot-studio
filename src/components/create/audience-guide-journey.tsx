@@ -29,7 +29,8 @@ export function AudienceGuideJourney({ candidates, approvedGuides, initialSelect
   return (
     <div className="shell create-wizard">
       <header className="wizard-heading">
-        <h1 ref={heading} tabIndex={-1}>학교급별 제작 자료 선택</h1>
+        <h1 ref={heading} tabIndex={-1}>나만의 에듀봇을 만들어 볼까요?</h1>
+        <p className="page-description">학교급과 사용할 AI를 고르면 제작 안내를 확인할 수 있어요.</p>
       </header>
       <AudienceGuidePicker candidates={candidates} approvedGuides={approvedGuides} initialSelection={selection}
         onStart={(target) => {

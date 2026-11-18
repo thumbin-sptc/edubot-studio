@@ -5,6 +5,7 @@ export type Device = keyof typeof devices;
 
 export const schoolLevels = ["유치원", "초등학교", "중학교", "고등학교", "전공과"] as const;
 export const environments = ["특수학급", "특수학교"] as const;
+export const sourceFamilies = ["GEMS", "GPTs"] as const;
 export const personalizationFields = {
   schoolLevel: "학교급",
   environment: "교육 환경",
@@ -16,7 +17,7 @@ export const personalizationFields = {
 export type Personalization = Partial<Record<keyof typeof personalizationFields, string>>;
 export type Combination = { platform: Platform; device: Device };
 export type VerifiedNote = { text: string; verifiedAt: string };
-export type Instruction = { id: string; version: string; sha256: string; coreInstruction: string };
+export type Instruction = { id: string; version: string; sha256: string; coreInstruction: string; externalAiUse?: Platform[] };
 export type Knowledge = {
   id: string;
   title: string;
@@ -30,6 +31,7 @@ export type Knowledge = {
   sha256: string;
   fileVersion: string;
   platformNotes?: Partial<Record<Platform, VerifiedNote>>;
+  externalAiUse?: Platform[];
 };
 export type CreateMedia = {
   kind: "video" | "gif";
@@ -38,9 +40,29 @@ export type CreateMedia = {
   stillPath?: string;
   captionsPath?: string;
 };
+export type ExternalAction = { kind: "external-link"; label: string; url: string; verifiedAt: string };
 export type CreateAction =
   | { kind: "instruction" | "knowledge" }
-  | { kind: "external-link"; label: string; url: string; verifiedAt: string };
+  | ExternalAction;
+export type ScreenExample = {
+  captureId: string;
+  path: string;
+  verifiedAt: string;
+  alt: string;
+  focusText: string;
+};
+export type GuideAudience = {
+  schoolLevel: (typeof schoolLevels)[number];
+  environment: (typeof environments)[number];
+  sourceFamily: (typeof sourceFamilies)[number];
+};
+export type IllustratedJourney = {
+  audience: GuideAudience;
+  requiredIds: string[];
+  recommendedIds: string[];
+  help: ExternalAction;
+  completionExample?: ScreenExample;
+};
 type CreateStepBase = {
   id: string;
   title: string;
@@ -52,7 +74,7 @@ type CreateStepBase = {
 };
 export type CreateStep = CreateStepBase & (
   | { format: "media"; media: CreateMedia }
-  | { format: "text-only"; instructions: string[] }
+  | { format: "text-only"; instructions: string[]; example?: ScreenExample }
 );
 export type CompletionKind = "role" | "knowledge" | "personalization";
 export type CompletionCheck = { kind: CompletionKind; prompt: string; criteria: string; stepId: string };
@@ -64,16 +86,18 @@ export type PublishedGuide = Entry & {
   resources: Knowledge[];
   steps: CreateStep[];
   checks: CompletionCheck[];
+  illustratedJourney?: IllustratedJourney;
 };
 export type PublishedCreateEntry = UnsupportedEntry | PublishedGuide;
 
-export function guideAssetPaths({ resources, steps }: PublishedGuide): string[] {
+export function guideAssetPaths({ resources, steps, illustratedJourney }: PublishedGuide): string[] {
   return [
     ...resources.map(({ path }) => path),
     ...steps.flatMap((step) => [
       step.mascot?.path,
-      ...(step.format === "media" ? [step.media.path, step.media.stillPath, step.media.captionsPath] : []),
+      ...(step.format === "media" ? [step.media.path, step.media.stillPath, step.media.captionsPath] : [step.example?.path]),
     ]).filter((path): path is string => path !== undefined),
+    ...(illustratedJourney?.completionExample ? [illustratedJourney.completionExample.path] : []),
   ];
 }
 export type CreateStatus = Combination & (

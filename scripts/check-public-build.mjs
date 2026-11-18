@@ -34,6 +34,7 @@ const publishedPrompts = prompts.filter((prompt) => prompt.publicationStatus ===
 const publishedGuides = entries.filter((guide) => guide.support === "supported");
 const publishedText = JSON.stringify([...publishedPrompts, ...publishedGuides,
   ...instructions.filter((instruction) => instruction.publicationStatus === "published")]);
+const screenMarkers = (screen) => [screen?.path, screen?.alt, screen?.focusText, screen?.captureId, screen?.sha256];
 const markers = [
   ...prompts.filter((prompt) => prompt.publicationStatus !== "published")
     .flatMap((prompt) => [prompt.title, prompt.sourceOriginalText, prompt.templateText]),
@@ -43,9 +44,11 @@ const markers = [
     .flatMap(({ title, description, originalFilename, path }) => [title, description, originalFilename, path]),
   ...guides.filter((guide) => guide.publicationStatus !== "published")
     .flatMap((guide) => [
+      ...screenMarkers(guide.illustratedJourney?.completionExample),
       ...(Array.isArray(guide.steps) ? guide.steps.flatMap((step) => [
         step?.title, step?.description, step?.checkLabel,
         ...(Array.isArray(step?.instructions) ? step.instructions : []),
+        ...screenMarkers(step?.example),
       ]) : []),
       ...(Array.isArray(guide.checks) ? guide.checks.flatMap((check) => [check?.prompt, check?.criteria]) : []),
     ]),
