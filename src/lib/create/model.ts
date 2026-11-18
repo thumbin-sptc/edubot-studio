@@ -58,7 +58,7 @@ export type GuideAudience = {
 };
 export type MaterialsAudience = Combination & GuideAudience;
 export type PublishedMaterials = MaterialsAudience & {
-  instruction?: Pick<Instruction, "version" | "coreInstruction">;
+  instruction?: Pick<Instruction, "version" | "coreInstruction" | "sha256">;
   files: Pick<Knowledge, "id" | "title" | "path" | "originalFilename" | "description">[];
 };
 

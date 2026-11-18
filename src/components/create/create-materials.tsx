@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { targetSurfaces } from "@/lib/create/audience";
 import {
   environments, firstMaterialsAudience, sameMaterialsAudience, schoolLevels, sourceFamilies,
   type Combination, type GuideAudience, type MaterialsAudience, type PublishedMaterials,
@@ -11,7 +12,7 @@ import { KnowledgeDownloadHelp, KnowledgeDownloadLinks } from "./knowledge-downl
 const fields = {
   schoolLevel: { label: "학교급", options: schoolLevels },
   environment: { label: "교육 환경", options: environments },
-  sourceFamily: { label: "지침 원본 계열", options: sourceFamilies },
+  sourceFamily: { label: "원본 지침 계열", options: sourceFamilies },
 };
 
 export function CreateMaterialCards({ selection, materials }: {
@@ -21,7 +22,7 @@ export function CreateMaterialCards({ selection, materials }: {
   const selected = materials.find((entry) => sameMaterialsAudience(entry, selection));
   const first = sameMaterialsAudience(firstMaterialsAudience, selection);
   if (!first && !selected) {
-    return <p className="create-selection" role="status">선택한 조합에 등록된 기본 지침과 지식파일이 없어요.</p>;
+    return <p className="create-selection" role="status">이 조합은 아직 공개 상태를 제공하지 않아요.</p>;
   }
   const instruction = selected?.instruction;
   const files = selected?.files ?? [];
@@ -34,15 +35,16 @@ export function CreateMaterialCards({ selection, materials }: {
         {instruction && (
           <>
             <CreateCopy label="기본 지침 원문" text={instruction.coreInstruction}
-              buttonLabel="기본 지침 복사" successLabel="기본 지침 원문을 복사했어요." />
+              buttonLabel="지침 원문 복사" successLabel="기본 지침 원문을 복사했어요." />
+            <p className="muted">SHA-256 <code>{instruction.sha256}</code></p>
             <a className="create-text-link" download="edubot-instruction.txt"
               href={`data:text/plain;charset=utf-8,${encodeURIComponent(instruction.coreInstruction)}`}>원문 TXT 받기</a>
           </>
         )}
       </section>
       <section className="create-action">
-        <h3>지식파일</h3>
-        <p role="status">{files.length ? `다운로드 가능 ${files.length}개` : "공개할 수 있는 지식파일이 아직 없어요."}</p>
+        <h3>지식 파일</h3>
+        <p role="status">{files.length ? `다운로드 가능 ${files.length}개` : "파일별 권리 확인 대기"}</p>
         {files.length > 0 && (
           <>
             <ul className="create-file-list">
@@ -70,8 +72,7 @@ export function CreateMaterialsPanel({ combination, materials }: {
     : materials.find(({ platform, device }) => platform === combination.platform && device === combination.device) ?? firstMaterialsAudience);
   return (
     <section className="grid min-w-0 gap-3">
-      <h2>기본 지침과 지식파일</h2>
-      <p>학교급, 교육 환경, 지침 원본 계열을 골라 공개된 자료를 확인하세요.</p>
+      <h2>{targetSurfaces[combination.platform]} 제작 자료</h2>
       <fieldset>
         <legend className="sr-only">제작 자료 대상</legend>
         <div className="grid gap-3 sm:grid-cols-3">

@@ -43,6 +43,8 @@ export function syntheticGuides() {
         id: `test-${prefix}`, platform, device, version: "1.0.0", verifiedAt, publicationStatus,
         support: "supported", instructionId: "test-core", knowledgeIds: ["test-common", "test-context", "test-optional"],
         steps,
+        verification: { method: "hands-on", recordId: "QA-SYNTHETIC-VERIFICATION", stepIds: steps.map(({ id }) => id) },
+        publicationApproval: { releaseApproved: true, recordId: "QA-SYNTHETIC-APPROVAL", approvedAt: verifiedAt },
         checks: ["role", "knowledge", "personalization"].map((kind) => ({
           kind, prompt: `합성 ${kind} 점검 질문`, criteria: `합성 ${kind} 확인 기준`,
           stepId: kind === "knowledge" ? "files" : "instruction",
@@ -100,7 +102,7 @@ export function writeFixture(root, relativePath, value) {
 }
 
 export function writeCreateFixtures(root, guides = syntheticGuides(), extraAssets = {}) {
-  const externalAiUse = [...new Set(guides.filter((guide) => guide.illustratedJourney).map((guide) => guide.platform))];
+  const externalAiUse = [...new Set(guides.map((guide) => guide.platform))];
   writeFixture(root, "content/instructions/test-core.json", {
     id: "test-core", version: "1.0.0", coreInstruction: core,
     sha256: createHash("sha256").update(core).digest("hex"), publicationStatus, ...rights,

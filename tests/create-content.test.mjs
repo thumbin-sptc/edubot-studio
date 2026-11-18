@@ -35,6 +35,16 @@ test("all six combinations have independent step sequences and approved assets",
   }
 });
 
+test("media cannot publish a guide without a hands-on login verification record", (t) => {
+  const root = testRoot(t);
+  const [guide] = syntheticGuides();
+  delete guide.verification;
+  writeCreateFixtures(root, [guide]);
+  const { entries, errors } = inspectCreateContent(root);
+  assert.deepEqual(entries, []);
+  assert.match(errors.join("\n"), /hands-on verification/);
+});
+
 test("approved text-only stages have ordered instructions and only approved download assets", (t) => {
   const root = testRoot(t);
   const guide = syntheticTextGuide();
@@ -149,7 +159,7 @@ test("text-only publication requires hands-on coverage and a separate release de
     [(guide) => { guide.verification.stepIds.pop(); }, /cover every step/],
     [(guide) => { guide.verification.stepIds[1] = guide.verification.stepIds[0]; }, /Duplicate verified step IDs/],
     [(guide) => { guide.verification.stepIds[1] = "wrong"; }, /cover every step/],
-    [(guide) => { delete guide.publicationApproval; }, /text-only publication approval/],
+    [(guide) => { delete guide.publicationApproval; }, /Invalid publication approval/],
     [(guide) => { guide.publicationApproval.releaseApproved = false; }, /separate release approval/],
     [(guide) => { guide.publicationApproval.approvedAt = "2024-12-31"; }, /predates hands-on verification/],
     [(guide) => { guide.publicationApproval.approvedAt = "2025-02-30"; }, /approvedAt/],

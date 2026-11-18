@@ -18,25 +18,24 @@ export default function CreatePage() {
   const first = illustrated[0];
   const statuses = entries.filter((entry) => entry.support !== "supported" || !entry.illustratedJourney)
     .map(({ platform, device, ...entry }): CreateStatus => entry.support === "supported"
-    ? { platform, device, status: "published", hasExampleVideo: entry.steps.some(({ format }) => format === "media") }
+    ? { platform, device, status: "published",
+      hasExampleVideo: entry.steps.some((step) => step.format === "media" && step.media.kind === "video") }
     : { platform, device, status: "unsupported", reason: entry.reason, verifiedAt: entry.verifiedAt });
-  const hasPublishedGuide = statuses.some(({ status }) => status === "published");
-
   if (first) {
     return (
       <>
         <AudienceGuideJourney candidates={illustrated.map(({ candidate }) => candidate)}
           approvedGuides={illustrated.map(({ guide }) => guide)} initialSelection={first.selection} materials={materials} />
-        {statuses.length > 0 && <div className="shell pb-8"><CreatePicker statuses={statuses} materials={materials} /></div>}
+        {(statuses.length > 0 || materials.length > 0) && (
+          <div className="shell pb-8"><CreatePicker statuses={statuses} materials={materials} /></div>
+        )}
       </>
     );
   }
   return (
     <PageIntro
       title={title}
-      description={hasPublishedGuide
-        ? "이용할 AI 플랫폼과 기기를 선택해 제작 안내를 확인하세요."
-        : "플랫폼과 기기를 선택하면 제작 가이드 상태와 공개된 자료를 확인할 수 있어요."}
+      description="AI 플랫폼과 기기를 선택해 기본 지침, 지식 파일, 제작 가이드의 공개 상태를 확인하세요."
     >
       <CreatePicker statuses={statuses} materials={materials} />
     </PageIntro>

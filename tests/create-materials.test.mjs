@@ -19,7 +19,8 @@ const knowledge = { id: "qa-material-file", title: "가상 자료", description:
   originalFilename: "가상 자료 (검수).txt", fileSize: bytes.length, sha256: sha(bytes), fileVersion: "1.0.0", category: "common", ...rights };
 const { platform, device, ...audience } = firstMaterialsAudience;
 const binding = { id: "qa-materials", platform, device, audience, publicationStatus: "published" };
-const link = (item) => ({ id: item.id, sha256: item.sha256, rightsRecordId: "QA-SYNTHETIC-RECORD" });
+const link = (item) => ({ id: item.id, version: item.fileVersion ?? item.version,
+  sha256: item.sha256, rightsRecordId: "QA-SYNTHETIC-RECORD" });
 const writeBinding = (root, value) => writeFixture(root, "content/create-materials/" + value.id + ".json", value);
 
 function createRoot(t) {
@@ -51,6 +52,7 @@ test("independent instruction and file references require an approval record, th
     for (const [patch, reference] of [
       [{ publicationStatus: "reviewed" }, link(item)], [{ licenseStatus: "pending" }, link(item)],
       [{ externalAiUse: ["claude"] }, link(item)], [{}, { ...link(item), sha256: "0".repeat(64) }],
+      [{}, { ...link(item), version: "1.0.1" }],
       [{}, { ...link(item), rightsRecordId: undefined }],
     ]) {
       const root = createRoot(t);

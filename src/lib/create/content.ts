@@ -265,17 +265,17 @@ function parseStep(root: string, raw: unknown, mobile: boolean): CreateStep {
   return { ...base, format: "text-only", instructions, example };
 }
 
-function verifyTextGuideRelease(raw: Record<string, unknown>, steps: CreateStep[], checkedAt: string) {
-  const verification = record(raw.verification, "text-only hands-on verification");
-  if (verification.method !== "hands-on") throw new Error("Text-only guide requires hands-on verification");
+function verifyGuideRelease(raw: Record<string, unknown>, steps: CreateStep[], checkedAt: string) {
+  const verification = record(raw.verification, "hands-on verification");
+  if (verification.method !== "hands-on") throw new Error("Guide requires hands-on verification");
   id(verification.recordId);
   const stepIds = array(verification.stepIds, "verified step IDs").map(id);
   unique(stepIds, "verified step IDs");
   if (stepIds.length !== steps.length || steps.some(({ id }) => !stepIds.includes(id))) {
     throw new Error("Hands-on verification must cover every step");
   }
-  const approval = record(raw.publicationApproval, "text-only publication approval");
-  if (approval.releaseApproved !== true) throw new Error("Text-only guide requires separate release approval");
+  const approval = record(raw.publicationApproval, "publication approval");
+  if (approval.releaseApproved !== true) throw new Error("Guide requires separate release approval");
   id(approval.recordId);
   if (verifiedAt(approval.approvedAt, "approvedAt") < checkedAt) {
     throw new Error("Release approval predates hands-on verification");
@@ -306,8 +306,8 @@ function parseAudience(raw: unknown): GuideAudience {
   return { schoolLevel: selectedLevel, environment: selectedEnvironment, sourceFamily: selectedFamily };
 }
 
-function parseIllustratedJourney(root: string, raw: Record<string, unknown>, platform: Platform,
-  instruction: Instruction, resources: Knowledge[], steps: CreateStep[], checkedAt: string): IllustratedJourney {
+function parseIllustratedJourney(root: string, raw: Record<string, unknown>,
+  resources: Knowledge[], steps: CreateStep[], checkedAt: string): IllustratedJourney {
   const journey = record(raw.illustratedJourney, "illustrated journey");
   const audience = parseAudience(journey.audience);
   const requiredIds = array(journey.requiredIds, "required files").map(id);
@@ -316,9 +316,6 @@ function parseIllustratedJourney(root: string, raw: Record<string, unknown>, pla
   if (!requiredIds.length || ![...requiredIds, ...recommendedIds].every((key) => resources.some((file) => file.id === key)) ||
       resources.some((file) => file.category === "common" && !requiredIds.includes(file.id))) {
     throw new Error("Illustrated journey requires approved common files and valid file classifications");
-  }
-  if (!instruction.externalAiUse?.includes(platform) || resources.some((file) => !file.externalAiUse?.includes(platform))) {
-    throw new Error("Illustrated journey requires separate external AI use rights for its instruction and files");
   }
   const help = parseAction(journey.help);
   if (help.kind !== "external-link") throw new Error("Illustrated journey requires an external help link");
@@ -365,9 +362,13 @@ function parseGuide(root: string, raw: Record<string, unknown>, instructions: Ma
   if (!actions.some((action) => action.kind === "instruction") || !actions.some((action) => action.kind === "knowledge")) {
     throw new Error("Guide requires instruction and knowledge steps");
   }
-  if (steps.some(({ format }) => format === "text-only")) verifyTextGuideRelease(raw, steps, entry.verifiedAt);
+  verifyGuideRelease(raw, steps, entry.verifiedAt);
+  if (!instruction.externalAiUse?.includes(entry.platform) ||
+      resources.some((file) => !file.externalAiUse?.includes(entry.platform))) {
+    throw new Error("Guide requires separate external AI use rights for its instruction and files");
+  }
   const illustratedJourney = raw.illustratedJourney === undefined ? undefined
-    : parseIllustratedJourney(root, raw, raw.platform, instruction, resources, steps, entry.verifiedAt);
+    : parseIllustratedJourney(root, raw, resources, steps, entry.verifiedAt);
   return { ...entry, support: raw.support, instruction, resources, steps, checks: parseChecks(raw.checks, steps), illustratedJourney };
 }
 
@@ -375,16 +376,25 @@ function approvedMaterial<T extends Instruction | Knowledge>(
   raw: unknown, available: ReadonlyMap<string, T>, platform: Platform, label: string,
 ): T {
   const binding = record(raw, label);
+  if (Object.keys(binding).some((key) => !["id", "rightsRecordId", "sha256", "version"].includes(key))) {
+    throw new Error("Unexpected material reference field");
+  }
   id(binding.rightsRecordId);
   const material = available.get(id(binding.id));
-  if (!material || binding.sha256 !== material.sha256 || !material.externalAiUse?.includes(platform)) {
-    throw new Error(`Independent access requires approved ${label} with matching SHA-256 and AI use rights`);
+  const approvedVersion = material && ("fileVersion" in material ? material.fileVersion : material.version);
+  if (!material || binding.version !== approvedVersion ||
+      binding.sha256 !== material.sha256 || !material.externalAiUse?.includes(platform)) {
+    throw new Error(`Independent access requires approved ${label} with matching version, SHA-256 and AI use rights`);
   }
   return material;
 }
 
 function parseMaterials(raw: Record<string, unknown>, instructions: ReadonlyMap<string, Instruction>,
   knowledge: ReadonlyMap<string, Knowledge>): PublishedMaterials {
+  if (Object.keys(raw).some((key) => !["id", "publicationStatus", "platform", "device", "audience", "instruction", "knowledge"].includes(key)) ||
+      Object.keys(record(raw.audience, "creation audience")).some((key) => !["schoolLevel", "environment", "sourceFamily"].includes(key))) {
+    throw new Error("Unexpected material catalog field");
+  }
   const { platform, device } = raw;
   if (!isPlatform(platform) || !isDevice(device)) throw new Error("Unknown materials platform or web device");
   const audience = parseAudience(raw.audience);
@@ -396,7 +406,7 @@ function parseMaterials(raw: Record<string, unknown>, instructions: ReadonlyMap<
   unique(files.map((file) => file.id), "materials knowledge IDs");
   return {
     platform, device, ...audience,
-    instruction: instruction && { version: instruction.version, coreInstruction: instruction.coreInstruction },
+    instruction: instruction && { version: instruction.version, coreInstruction: instruction.coreInstruction, sha256: instruction.sha256 },
     files: files.map(({ id, title, path, originalFilename, description }) => ({ id, title, path, originalFilename, description })),
   };
 }

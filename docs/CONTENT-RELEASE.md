@@ -43,7 +43,8 @@ CI와 공개용 빌드는 기록의 형식과 상태, 버전·해시 일치, 그
 ### 기본 지침과 지식파일 개별 공개
 
 - 제작 가이드와 별도로 공개하려면 `content/create-materials/<id>.json`에 `publicationStatus: "published"`, `platform`, `device`, `audience`의 `schoolLevel`, `environment`, `sourceFamily`를 기록한다. 승인 범위가 확정된 항목만 선택적으로 등록한다.
-- `instruction`은 한 개, `knowledge`는 파일별 배열이다. 각 항목에 승인된 콘텐츠의 `id`, 판본의 `sha256`, 비공개 증빙을 가리키는 `rightsRecordId`를 기록한다. 웹 재배포 권리와 해당 AI의 입력·첨부 권리 모두를 확인한다. 원문과 실파일 레코드는 각각 `publicationStatus: "published"`, `licenseStatus: "approved"`, 확인일과 해당 플랫폼을 포함한 `externalAiUse`가 필요하다.
+- `instruction`은 한 개, `knowledge`는 파일별 배열이다. 각 항목에 승인된 콘텐츠의 `id`, 정확한 `version`과 `sha256`, 비공개 증빙을 가리키는 `rightsRecordId`를 기록한다. 웹 재배포 권리와 해당 AI의 입력·첨부 권리 모두를 확인한다. 원문과 실파일 레코드는 각각 `publicationStatus: "published"`, `licenseStatus: "approved"`, 확인일과 해당 플랫폼을 포함한 `externalAiUse`가 필요하다.
+- 제작 가이드는 형식에 관계없이 `verification.method: "hands-on"`인 실제 로그인 검수 기록과 모든 단계의 확인 목록, 검수 이후의 별도 `publicationApproval`을 요구한다. 기관 공식성 표기는 정확한 판본에 대한 출처와 권한 근거를 확인한다.
 - 이 경로는 승인된 지침 원문과 허용한 개별 파일만 제공한다. 예시 영상이나 실제 로그인 검수 기록은 제작 가이드의 공개 판정에만 사용하며, 각각의 게시 상태를 기록한다. 권리 증빙과 원고는 비공개 작업 영역에 보관한다.
 
 ### 실제 예시 화면을 제공하는 가이드

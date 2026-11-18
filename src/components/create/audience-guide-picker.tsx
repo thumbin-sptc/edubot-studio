@@ -118,7 +118,9 @@ export function AudienceGuidePicker({
           <button className="action" type="button" disabled={busy} onClick={() => onStart(selection)}>제작 안내 시작</button>
         </div>
       )}
-      {showMaterials && !ready?.journey.guide.steps.some(({ format }) => format === "media") && <p>예시 영상 준비 중</p>}
+      {showMaterials && !ready?.journey.guide.steps.some((step) => step.format === "media" && step.media.kind === "video") && (
+        <p>예시 영상 준비 중</p>
+      )}
       <fieldset disabled={busy}>
         <legend>제작 대상과 사용 환경</legend>
         <div className="grid gap-3 pt-3 sm:grid-cols-2 lg:grid-cols-3">

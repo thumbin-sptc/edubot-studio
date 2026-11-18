@@ -13,8 +13,8 @@ export function CreatePicker({ statuses, materials }: { statuses: CreateStatus[]
   const combination = platform && device ? { platform, device } : undefined;
   const selected = statuses.find((entry) => entry.platform === platform && entry.device === device);
   const desktop = statuses.some((entry) => entry.platform === platform && entry.device === "desktop-web" && entry.status === "published");
-  const showMaterials = combination && ((platform === firstMaterialsAudience.platform && device === firstMaterialsAudience.device)
-    || materials.some((entry) => entry.platform === platform && entry.device === device));
+  const hasMaterials = (key: Device) => (platform === firstMaterialsAudience.platform && key === firstMaterialsAudience.device)
+    || materials.some((entry) => entry.platform === platform && entry.device === key);
 
   return (
     <section className="info-panel create-picker" aria-label="플랫폼과 기기 선택">
@@ -42,7 +42,7 @@ export function CreatePicker({ statuses, materials }: { statuses: CreateStatus[]
                 <span>{label}</span>
                 {platform && (
                   <span className={status === "published" ? "step-complete" : "create-badge"}>
-                    {status === "published" ? "안내 보기" : status === "unsupported" ? "미지원" : "준비 중"}
+                    {hasMaterials(key) ? "자료 상태 보기" : status === "published" ? "안내 보기" : status === "unsupported" ? "미지원" : "준비 중"}
                   </span>
                 )}
               </label>
@@ -53,7 +53,7 @@ export function CreatePicker({ statuses, materials }: { statuses: CreateStatus[]
       <div className="create-selection" aria-live="polite">
         {combination && !selected && (
           <div className="space-y-2">
-            <p><strong>{platforms[combination.platform]} · {devices[combination.device]} · 준비 중</strong></p>
+            <p><strong>제작 가이드 준비 중</strong></p>
             <p>실제 로그인 후 조작 검수를 마친 제작 가이드가 아직 없어요.</p>
             <p>예시 영상 준비 중</p>
             <Link href="/prompts" className="create-text-link">프롬프트 라이브러리 둘러보기</Link>
@@ -76,7 +76,7 @@ export function CreatePicker({ statuses, materials }: { statuses: CreateStatus[]
           </>
         )}
       </div>
-      {combination && showMaterials && (
+      {combination && hasMaterials(combination.device) && (
         <CreateMaterialsPanel key={`${platform}-${device}`} combination={combination} materials={materials} />
       )}
       <CreateStorageControls showPreference={false} />
