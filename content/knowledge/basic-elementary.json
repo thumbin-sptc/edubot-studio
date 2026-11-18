@@ -1,0 +1,19 @@
+{
+  "id": "basic-elementary",
+  "title": "초등 기본 교육과정 성취기준",
+  "description": "기본 교육과정의 초등 성취기준입니다.",
+  "path": "/downloads/basic-elementary.txt",
+  "originalFilename": "2022 Basic Curriculum Achievement Standards_elementary school.txt",
+  "fileSize": 31297,
+  "sha256": "2d4908729eafa3f9e312b14f60915aa2e2b265ad8c285aa4efe8f0d73fb67993",
+  "fileVersion": "1.0.0",
+  "sourceVersion": "2022 개정 표기",
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-basic-elementary",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

@@ -1,0 +1,19 @@
+{
+  "id": "common-elementary",
+  "title": "초등 공통 교육과정 성취기준",
+  "description": "공통 교육과정의 초등 성취기준입니다.",
+  "path": "/downloads/common-elementary.txt",
+  "originalFilename": "2022 Common Curriculum Achievement Standards_elementary school.txt",
+  "fileSize": 78317,
+  "sha256": "279e3595c9d22e64b41484305d2f8cfe3178b700cb2ae7b125948256a1c6997d",
+  "fileVersion": "1.0.0",
+  "sourceVersion": "2022 개정 표기",
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-common-elementary",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

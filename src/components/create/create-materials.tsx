@@ -34,6 +34,7 @@ export function CreateMaterialCards({ selection, materials }: {
           : "웹 재배포와 이 AI에서의 사용 권리 확인 대기"}</p>
         {instruction && (
           <>
+            <p className="muted">EDU-BOT Studio 운영 · 중도중복장애교육연구회</p>
             <CreateCopy label="기본 지침 원문" text={instruction.coreInstruction}
               buttonLabel="지침 원문 복사" successLabel="기본 지침 원문을 복사했어요." />
             <p className="muted">SHA-256 <code>{instruction.sha256}</code></p>

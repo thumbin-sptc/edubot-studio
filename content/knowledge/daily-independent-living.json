@@ -1,0 +1,19 @@
+{
+  "id": "daily-independent-living",
+  "title": "일상생활 활동 · 자립생활",
+  "description": "자립생활 활동의 평가 항목을 찾을 때 사용해요.",
+  "path": "/downloads/daily-independent-living.xlsx",
+  "originalFilename": "Independent Living.xlsx",
+  "fileSize": 135883,
+  "sha256": "b3373899b4395fcd7a667fec454446862ebae82dd60769e1e7a849a134715b2a",
+  "fileVersion": "1.0.0",
+  "sourceVersion": null,
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-daily-independent-living",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

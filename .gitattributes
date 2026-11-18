@@ -1,0 +1,2 @@
+# Download bytes are hashed and must remain identical across Git checkouts.
+/public/downloads/** binary

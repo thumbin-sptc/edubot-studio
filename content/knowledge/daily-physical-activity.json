@@ -1,0 +1,19 @@
+{
+  "id": "daily-physical-activity",
+  "title": "일상생활 활동 · 신체활동",
+  "description": "신체활동의 평가 항목을 찾을 때 사용해요.",
+  "path": "/downloads/daily-physical-activity.xlsx",
+  "originalFilename": "Physical Activity.xlsx",
+  "fileSize": 108313,
+  "sha256": "f5f5fb4755572bc3e7ace6aff6efda92e2d4c8d647783249a15cc0f82cd1e117",
+  "fileVersion": "1.0.0",
+  "sourceVersion": null,
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-daily-physical-activity",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

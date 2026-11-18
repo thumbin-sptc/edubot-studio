@@ -1,0 +1,19 @@
+{
+  "id": "daily-theme-taxonomy",
+  "title": "대주제·소주제 분류표",
+  "description": "주제 중심 재구성의 대주제와 소주제를 확인할 때 사용해요.",
+  "path": "/downloads/daily-theme-taxonomy.pdf",
+  "originalFilename": "Main Theme-Subtheme.pdf",
+  "fileSize": 24860,
+  "sha256": "a9b724585fd51a61e181f7452422441337647825c2df492084726e7fad281898",
+  "fileVersion": "1.0.0",
+  "sourceVersion": null,
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-daily-theme-taxonomy",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

@@ -1,0 +1,85 @@
+{
+  "id": "chatgpt-pc-elementary-special-class",
+  "publicationStatus": "published",
+  "platform": "chatgpt",
+  "device": "desktop-web",
+  "audience": {
+    "schoolLevel": "초등학교",
+    "environment": "특수학급",
+    "sourceFamily": "GPTs"
+  },
+  "instruction": {
+    "id": "gpts-class-elementary",
+    "version": "1.0.0",
+    "sha256": "6056af9f9ffcb7fa45f049bc520ed006a016bd85b2f7efaf9e23b23f5bf2d686",
+    "rightsRecordId": "CODEX33-20261118-gpts-class-elementary"
+  },
+  "knowledge": [
+    {
+      "id": "common-elementary",
+      "version": "1.0.0",
+      "sha256": "279e3595c9d22e64b41484305d2f8cfe3178b700cb2ae7b125948256a1c6997d",
+      "rightsRecordId": "CODEX33-20261118-common-elementary"
+    },
+    {
+      "id": "basic-elementary",
+      "version": "1.0.0",
+      "sha256": "2d4908729eafa3f9e312b14f60915aa2e2b265ad8c285aa4efe8f0d73fb67993",
+      "rightsRecordId": "CODEX33-20261118-basic-elementary"
+    },
+    {
+      "id": "daily-communication",
+      "version": "1.0.0",
+      "sha256": "ed91c5af9abe83666d36935bfab86c796c80798de3ca01ce9354a825f6bcc8e7",
+      "rightsRecordId": "CODEX33-20261118-daily-communication"
+    },
+    {
+      "id": "daily-independent-living",
+      "version": "1.0.0",
+      "sha256": "b3373899b4395fcd7a667fec454446862ebae82dd60769e1e7a849a134715b2a",
+      "rightsRecordId": "CODEX33-20261118-daily-independent-living"
+    },
+    {
+      "id": "daily-leisure",
+      "version": "1.0.0",
+      "sha256": "dd2726ed9e6d326e7ae5c4755b7f3d6546896741b2805647f3005aa14fa291fb",
+      "rightsRecordId": "CODEX33-20261118-daily-leisure"
+    },
+    {
+      "id": "daily-physical-activity",
+      "version": "1.0.0",
+      "sha256": "f5f5fb4755572bc3e7ace6aff6efda92e2d4c8d647783249a15cc0f82cd1e117",
+      "rightsRecordId": "CODEX33-20261118-daily-physical-activity"
+    },
+    {
+      "id": "daily-domain-elements",
+      "version": "1.0.0",
+      "sha256": "09b23265b8bb87cecb60ddfa0ff2d837c0cfa30ecfa221627018919c1ceda31b",
+      "rightsRecordId": "CODEX33-20261118-daily-domain-elements"
+    },
+    {
+      "id": "daily-theme-taxonomy",
+      "version": "1.0.0",
+      "sha256": "a9b724585fd51a61e181f7452422441337647825c2df492084726e7fad281898",
+      "rightsRecordId": "CODEX33-20261118-daily-theme-taxonomy"
+    },
+    {
+      "id": "daily-theme-examples",
+      "version": "1.0.0",
+      "sha256": "160231cf0aa78e5de03b5bd3296c0ef53b3b1079bb6eef6706487ca33b1d5c0b",
+      "rightsRecordId": "CODEX33-20261118-daily-theme-examples"
+    },
+    {
+      "id": "behavior-intervention",
+      "version": "1.0.0",
+      "sha256": "5e3e60c0e8eff6555efc93925dcdfe12fd019156d35c6d8765ccc4b04b624ea6",
+      "rightsRecordId": "CODEX33-20261118-behavior-intervention"
+    },
+    {
+      "id": "elementary-class-knowledge",
+      "version": "1.0.0",
+      "sha256": "f98cc38e9343720ca29895285c66bae2669d6fa7f1ce203b29846356a67afa7a",
+      "rightsRecordId": "CODEX33-20261118-elementary-class-knowledge"
+    }
+  ]
+}
