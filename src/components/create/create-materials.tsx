@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import { targetSurfaces } from "@/lib/create/audience";
 import {
   environments, firstMaterialsAudience, sameMaterialsAudience, schoolLevels, sourceFamilies,
@@ -67,6 +67,7 @@ export function CreateMaterialsPanel({ combination, materials }: {
   combination: Combination;
   materials: readonly PublishedMaterials[];
 }) {
+  const fieldId = useId();
   const firstCombination = combination.platform === firstMaterialsAudience.platform && combination.device === firstMaterialsAudience.device;
   const [audience, setAudience] = useState<GuideAudience>(() => firstCombination ? firstMaterialsAudience
     : materials.find(({ platform, device }) => platform === combination.platform && device === combination.device) ?? firstMaterialsAudience);
@@ -77,13 +78,13 @@ export function CreateMaterialsPanel({ combination, materials }: {
         <legend className="sr-only">제작 자료 대상</legend>
         <div className="grid gap-3 sm:grid-cols-3">
           {(Object.keys(fields) as Array<keyof GuideAudience>).map((field) => (
-            <label className="grid min-w-0 gap-1" key={field}>
-              {fields[field].label}
-              <select className="prompt-input w-full min-w-0" value={audience[field]}
+            <div className="grid min-w-0 gap-1" key={field}>
+              <label htmlFor={`${fieldId}-${field}`}>{fields[field].label}</label>
+              <select id={`${fieldId}-${field}`} className="prompt-input w-full min-w-0" value={audience[field]}
                 onChange={(event) => setAudience({ ...audience, [field]: event.target.value })}>
                 {fields[field].options.map((option) => <option key={option}>{option}</option>)}
               </select>
-            </label>
+            </div>
           ))}
         </div>
       </fieldset>
