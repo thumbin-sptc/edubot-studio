@@ -1,0 +1,19 @@
+{
+  "id": "behavior-intervention",
+  "title": "교육부 장애학생 행동중재 가이드라인",
+  "description": "행동중재를 검토할 때 참고하는 교육부 자료입니다.",
+  "path": "/downloads/behavior-intervention.pdf",
+  "originalFilename": "교육부 장애학생 행동중재 가이드라인(보완).pdf",
+  "fileSize": 1780967,
+  "sha256": "5e3e60c0e8eff6555efc93925dcdfe12fd019156d35c6d8765ccc4b04b624ea6",
+  "fileVersion": "1.0.0",
+  "sourceVersion": "표지 2024.10.",
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-behavior-intervention",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

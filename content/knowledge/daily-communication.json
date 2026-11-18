@@ -1,0 +1,19 @@
+{
+  "id": "daily-communication",
+  "title": "일상생활 활동 · 의사소통",
+  "description": "의사소통 활동의 평가 항목을 찾을 때 사용해요.",
+  "path": "/downloads/daily-communication.xlsx",
+  "originalFilename": "Communication.xlsx",
+  "fileSize": 125028,
+  "sha256": "ed91c5af9abe83666d36935bfab86c796c80798de3ca01ce9354a825f6bcc8e7",
+  "fileVersion": "1.0.0",
+  "sourceVersion": null,
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-daily-communication",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

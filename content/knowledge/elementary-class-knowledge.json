@@ -1,0 +1,19 @@
+{
+  "id": "elementary-class-knowledge",
+  "title": "초등 특수학급 기초 지식",
+  "description": "기본 지침에서 항상 필요한 기초 자료예요.",
+  "path": "/downloads/elementary-class-knowledge.txt",
+  "originalFilename": "Knowledge about special education classes in Korea.txt",
+  "fileSize": 1423,
+  "sha256": "f98cc38e9343720ca29895285c66bae2669d6fa7f1ce203b29846356a67afa7a",
+  "fileVersion": "1.0.0",
+  "sourceVersion": null,
+  "category": "common",
+  "rightsRecordId": "CODEX33-20261118-elementary-class-knowledge",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

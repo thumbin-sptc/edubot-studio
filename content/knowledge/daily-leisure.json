@@ -1,0 +1,19 @@
+{
+  "id": "daily-leisure",
+  "title": "일상생활 활동 · 여가활동",
+  "description": "여가활동의 평가 항목을 찾을 때 사용해요.",
+  "path": "/downloads/daily-leisure.xlsx",
+  "originalFilename": "Leisure Activities.xlsx",
+  "fileSize": 104578,
+  "sha256": "dd2726ed9e6d326e7ae5c4755b7f3d6546896741b2805647f3005aa14fa291fb",
+  "fileVersion": "1.0.0",
+  "sourceVersion": null,
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-daily-leisure",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}

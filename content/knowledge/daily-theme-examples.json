@@ -1,0 +1,19 @@
+{
+  "id": "daily-theme-examples",
+  "title": "주제별 활동 예시",
+  "description": "주제와 연결한 활동 예시를 찾을 때 사용해요.",
+  "path": "/downloads/daily-theme-examples.xlsx",
+  "originalFilename": "★Theme-based Activity Examples.xlsx",
+  "fileSize": 112026,
+  "sha256": "160231cf0aa78e5de03b5bd3296c0ef53b3b1079bb6eef6706487ca33b1d5c0b",
+  "fileVersion": "1.0.0",
+  "sourceVersion": null,
+  "category": "optional",
+  "rightsRecordId": "CODEX33-20261118-daily-theme-examples",
+  "publicationStatus": "published",
+  "licenseStatus": "approved",
+  "externalAiUse": [
+    "chatgpt"
+  ],
+  "verifiedAt": "2026-11-18"
+}
