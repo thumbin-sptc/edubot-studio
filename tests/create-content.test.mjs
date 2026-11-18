@@ -229,9 +229,17 @@ test("draft and reviewed text-only guides cannot leak instructions or unapproved
     }
   }
   for (const path of guideAssetPaths(entries[0])) writeFixture(root, "out" + path, readFileSync(join(root, "public" + path)));
+  const wordmark = readFileSync(new URL("../src/assets/brand/wordmark.svg", import.meta.url));
+  const brandPath = "out/_next/static/media/wordmark.0123az-_x.svg";
+  writeFixture(root, brandPath, wordmark);
   const passed = exportCheck();
   assert.equal(passed.status, 0, passed.stderr);
   assert.match(passed.stdout, /1 public guides/);
+  writeFixture(root, brandPath, Buffer.from("<svg></svg>"));
+  const wrongBrand = exportCheck();
+  assert.equal(wrongBrand.status, 1);
+  assert.match(wrongBrand.stderr, /Exported brand asset differs/);
+  writeFixture(root, brandPath, wordmark);
   for (const path of ["create/index.html", "create/__next._full.txt", "_next/static/chunks/guide.js"]) {
     for (const secret of [marker, privateName, "/downloads/private-test.txt", privateScreen]) {
       writeFixture(root, "out/" + path, Buffer.from(secret));

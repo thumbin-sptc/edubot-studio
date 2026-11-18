@@ -74,8 +74,16 @@ for (const asset of assets) {
 
 const routePayload = /^__next\.[^/]+\.txt$/;
 const staticAsset = /^_next\/static\/.+\.(?:js|css|woff2)$/;
+const brandAsset = /^_next\/static\/media\/(?:(symbol)\.[\w-]+\.png|wordmark\.[\w-]+\.svg)$/;
 const pagePrefixes = [...pages, ...frameworkPages].sort((a, b) => b.length - a.length);
 for (const file of files) {
+  const brand = brandAsset.exec(file);
+  if (brand) {
+    const source = new URL(`../src/assets/brand/${brand[1] ? "symbol.png" : "wordmark.svg"}`, import.meta.url);
+    assert.ok((await readFile(join("out", file))).equals(await readFile(source)),
+      `Exported brand asset differs from approved file: ${file}`);
+    continue;
+  }
   const prefix = pagePrefixes.find((page) => file.startsWith(page));
   const filename = file.slice(prefix.length);
   const allowedRouteFile = ["index.html", "index.txt"].includes(filename) || routePayload.test(filename);
