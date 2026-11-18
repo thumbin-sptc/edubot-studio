@@ -59,6 +59,29 @@ test("both catalog views group the same public set and filter options exclude un
   assert.equal(filterCatalog(catalog, "", { category: "IEP", schoolEnvironment: "특수학급" }).length, 0);
 });
 
+test("explicit textbook order and search tags come from the approved template", () => {
+  const first = parsePublishedPrompt({
+    ...sourcePrompt,
+    display: { ...sourcePrompt.display, schoolEnvironment: "유치원", searchTags: ["놀이 설계", "합성 교재 용어"] },
+    source: { document: "합성 Z", section: "먼저 나오는 절", contentsOrder: { part: 1, chapter: 1, item: 2 } },
+  }, sourcePrompt.id);
+  const last = parsePublishedPrompt({
+    ...targetPrompt,
+    source: { document: "합성 A", section: "나중에 나오는 절", contentsOrder: { part: 2, chapter: 10, item: 1 } },
+  }, targetPrompt.id);
+  const entries = [publicPromptSummary(last), publicPromptSummary(first, {
+    bookPage: 99, searchTags: ["QA_ONLY_HIDDEN_TAG"], contentsOrder: { part: 9, chapter: 99, item: 1 },
+  })];
+  assert.deepEqual(sortCatalog(entries, "contents").map(({ id }) => id), [first.id, last.id]);
+  assert.deepEqual(groupCatalog(entries, "source").map(([name]) => name), ["합성 Z", "합성 A"]);
+  assert.deepEqual(groupCatalog(entries, "section").map(([name]) => name), ["먼저 나오는 절", "나중에 나오는 절"]);
+  assert.deepEqual(filterCatalog(entries, "유치원 놀이", {}).map(({ id }) => id), [first.id]);
+  assert.equal(filterCatalog(entries, "QA_ONLY_HIDDEN_TAG", {}).length, 0);
+  assert.equal(entries[1].bookPage, undefined);
+  assert.throws(() => parsePromptTemplate({ ...sourcePrompt, source: { contentsOrder: { part: 0, chapter: 1, item: 1 } } }),
+    /contentsOrder/);
+});
+
 test("recommendations and import permissions intersect with published sources independently", () => {
   const source = published.find(({ id }) => id === sourcePrompt.id);
   const target = published.find(({ id }) => id === targetPrompt.id);

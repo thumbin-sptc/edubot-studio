@@ -102,7 +102,7 @@ export function PromptCatalog({ entries }: { entries: readonly PublishedPromptSu
           {catalogFilters.map(({ field, label }) => {
             const options = catalogOptions(entries, field);
             return options.length > 0 && (
-              <label key={field}>
+              <label key={field} data-field={field}>
                 {label}
                 <select className="prompt-input" value={filters[field] ?? ""}
                   onChange={(event) => setFilters({ ...filters, [field]: event.target.value })}>

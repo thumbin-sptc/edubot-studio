@@ -33,8 +33,26 @@
       "type": "string",
       "minLength": 1
     },
+    "display": {
+      "type": "object",
+      "properties": {
+        "searchTags": { "type": "array", "items": { "type": "string", "minLength": 1 } }
+      }
+    },
     "source": {
-      "type": "object"
+      "type": "object",
+      "properties": {
+        "contentsOrder": {
+          "type": "object",
+          "required": ["part", "chapter", "item"],
+          "properties": {
+            "part": { "type": "integer", "minimum": 1 },
+            "chapter": { "type": "integer", "minimum": 1 },
+            "item": { "type": "integer", "minimum": 1 }
+          }
+        }
+      },
+      "dependentRequired": { "contentsOrder": ["document", "section"] }
     },
     "sourceOriginalText": {
       "type": "string",

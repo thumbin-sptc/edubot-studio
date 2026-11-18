@@ -18,7 +18,7 @@
 ```
 
 ## 콘텐츠 처리 경계
-1. `content/prompt-inventory.json`: 34개 공식 프롬프트 및 9개 활용 후보의 제목·분류·출처 목록. 배포/활성 여부와 다름.
+1. `content/prompt-inventory.json`은 현행 교재 프롬프트 51건과 구판·추가 후보 14건의 제목·분류·출처를 관리한다. 실제 공개 여부는 템플릿의 승인 기록으로 결정한다.
 2. `content/prompts/*.json`: 실제 질문과 치환 템플릿. `publicationStatus=published`만 공용 프롬프트 탐색·라우트에서 이용.
 3. `sourceOriginalText`는 변환·서버 입력 대상이 아니다. `templateText`의 선언된 `{{token}}`만 브라우저에서 치환.
 4. 나중에 원고를 수정하면 JSON 데이터와 버전만 갱신. UI 엔진은 콘텐츠 독립적으로 동작.

@@ -1,4 +1,4 @@
-import { isRecord, parseInventoryMetadata, type PromptCatalogMetadata, type PublishedPrompt } from "./prompt-template.ts";
+import { isRecord, parseInventoryMetadata, type ContentsOrder, type PromptCatalogMetadata, type PublishedPrompt } from "./prompt-template.ts";
 
 export type PublishedPromptSummary = Readonly<PromptCatalogMetadata & {
   id: string;
@@ -10,6 +10,7 @@ export type CatalogFilter = "category" | "schoolEnvironment" | "schoolLevel";
 export type PublishedResultSource = Readonly<Pick<PublishedPrompt, "id" | "title" | "version">>;
 
 const korean = new Intl.Collator("ko", { numeric: true });
+const textbookPurposes = ["교육과정 설계·운영", "수업·활동 설계", "평가", "개별화교육계획(IEP)"];
 export const catalogFilters: ReadonlyArray<{ field: CatalogFilter; label: string }> = [
   { field: "category", label: "활용 분야" },
   { field: "schoolEnvironment", label: "교육 환경" },
@@ -44,6 +45,8 @@ export function publicPromptSummary(template: PublishedPrompt, inventory?: Recor
     section: verified.section ?? (sameSource ? fallback.section : undefined),
     pdfPage: verified.pdfPage ?? (sameSource && sameSection ? fallback.pdfPage : undefined),
     bookPage: verified.bookPage ?? (sameSource && sameSection ? fallback.bookPage : undefined),
+    ...(verified.contentsOrder && { contentsOrder: verified.contentsOrder }),
+    ...(verified.searchTags && { searchTags: verified.searchTags }),
   };
 }
 
@@ -80,14 +83,28 @@ export function filterCatalog(
   filters: Partial<Record<CatalogFilter, string>>,
 ) {
   const query = searchable(search);
-  return entries.filter((entry) =>
-    catalogFilters.every(({ field }) => !filters[field] || filters[field] === entry[field]) &&
-    (!query || [entry.title, entry.summary, entry.category, entry.source, entry.section,
-      entry.schoolEnvironment, entry.schoolLevel,
+  const terms = search.trim().split(/\s+/u).map(searchable).filter(Boolean);
+  return entries.filter((entry) => {
+    if (!catalogFilters.every(({ field }) => !filters[field] || filters[field] === entry[field])) return false;
+    if (!query) return true;
+    const metadata = [entry.title, entry.summary, entry.category, entry.source, entry.section,
+      entry.schoolEnvironment, entry.schoolLevel, ...(entry.searchTags ?? []),
       entry.pdfPage ? `PDF ${entry.pdfPage}쪽` : undefined,
       entry.bookPage ? `교재 ${entry.bookPage}쪽` : undefined,
-    ].some((value) => value && searchable(value).includes(query))),
-  );
+    ].flatMap((value) => value ? [searchable(value)] : []);
+    return metadata.some((value) => value.includes(query)) ||
+      terms.every((term) => metadata.some((value) => value.includes(term)));
+  });
+}
+
+function byContentsOrder(left?: ContentsOrder, right?: ContentsOrder) {
+  if (!left || !right) return Number(Boolean(right)) - Number(Boolean(left));
+  return left.part - right.part || left.chapter - right.chapter || left.item - right.item;
+}
+
+function firstContentsOrder(entries: readonly PublishedPromptSummary[]) {
+  return entries.reduce<ContentsOrder | undefined>((first, { contentsOrder }) =>
+    byContentsOrder(contentsOrder, first) < 0 ? contentsOrder : first, undefined);
 }
 
 export function groupCatalog(entries: readonly PublishedPromptSummary[], field: "category" | "source" | "section") {
@@ -98,16 +115,21 @@ export function groupCatalog(entries: readonly PublishedPromptSummary[], field: 
     if (group) group.push(entry);
     else groups.set(key, [entry]);
   }
-  return [...groups].sort(([left], [right]) => {
+  return [...groups].sort(([left, leftItems], [right, rightItems]) => {
     if (left === undefined) return 1;
     if (right === undefined) return -1;
-    return korean.compare(left, right);
+    if (field !== "category") {
+      return byContentsOrder(firstContentsOrder(leftItems), firstContentsOrder(rightItems)) || korean.compare(left, right);
+    }
+    const rank = (value: string) => (textbookPurposes.indexOf(value) + 1) || textbookPurposes.length + 1;
+    return rank(left) - rank(right) || korean.compare(left, right);
   });
 }
 
 export function sortCatalog(entries: readonly PublishedPromptSummary[], view: CatalogView) {
   return [...entries].sort((left, right) =>
-    (view === "contents" ? (left.bookPage ?? left.pdfPage ?? Infinity) - (right.bookPage ?? right.pdfPage ?? Infinity) : 0) ||
+    (view === "contents" ? byContentsOrder(left.contentsOrder, right.contentsOrder) ||
+      (left.bookPage ?? left.pdfPage ?? Infinity) - (right.bookPage ?? right.pdfPage ?? Infinity) : 0) ||
     korean.compare(left.title, right.title) || korean.compare(left.id, right.id),
   );
 }

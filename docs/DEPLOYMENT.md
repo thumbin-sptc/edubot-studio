@@ -14,10 +14,11 @@
 | --- | --- |
 | 루트 | 홈에서 두 기능 시작 화면으로 이동 |
 | `create/` | 플랫폼 3종 × PC·모바일 웹 조합 모두 준비 중 |
-| `prompts/` | 공개 프롬프트 29건(특수학급 15건, 특수학교 14건) |
+| `prompts/` | 공개 프롬프트 51건(유치원 6건, 특수학교 14건, 특수학급 15건, IEP 16건) |
 | `data/` | 새 브라우저 프로필에서 자동 저장 OFF, 저장본 없음 |
 | `help/` | 이용 안내와 개인정보 보호 안내 |
 | `prompts/SC-001/`, `prompts/SS-001/` | HTTP 200, 승인된 판본의 작성 마법사 |
+| `prompts/KG-001/`, `prompts/IEP-001/` | HTTP 200, 승인된 판본의 원문 복사 |
 | `prompts/DD-001/`, `create/chatgpt/desktop-web/` | HTTP 404 |
 | `content/prompts/SC-001.json`, `content/prompt-inventory.json`, `tests/fixtures/synthetic-create.mjs` | HTTP 404 |
 

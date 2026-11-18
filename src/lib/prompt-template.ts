@@ -18,6 +18,7 @@ type FieldBase = {
 
 export type PromptOption = { value: string; label: string };
 export type PreviousResultImport = { fieldId: string; sourcePromptIds: string[] };
+export type ContentsOrder = { part: number; chapter: number; item: number };
 export type PromptCatalogMetadata = {
   category?: string;
   schoolEnvironment?: string;
@@ -26,6 +27,8 @@ export type PromptCatalogMetadata = {
   section?: string;
   pdfPage?: number;
   bookPage?: number;
+  contentsOrder?: ContentsOrder;
+  searchTags?: string[];
 };
 export type PromptField = FieldBase & (
   | { kind: TextKind }
@@ -199,6 +202,19 @@ function parseCatalogMetadata(data: Record<string, unknown>): PromptCatalogMetad
   }
   const display = isRecord(data.display) ? data.display : {};
   const source = isRecord(data.source) ? data.source : {};
+  let contentsOrder: ContentsOrder | undefined;
+  if (source.contentsOrder !== undefined) {
+    const raw = requireRecord(source.contentsOrder, "source.contentsOrder");
+    const part = positivePage(raw.part);
+    const chapter = positivePage(raw.chapter);
+    const item = positivePage(raw.item);
+    if (!part || !chapter || !item || !catalogText(source.document) || !catalogText(source.section)) {
+      throw new Error("Invalid source.contentsOrder or missing source document/section");
+    }
+    contentsOrder = { part, chapter, item };
+  }
+  const searchTags = display.searchTags === undefined ? undefined
+    : requireArray(display.searchTags, "display.searchTags").map((value) => requireText(value, "search tag").trim());
   return {
     category: catalogText(display.category),
     schoolEnvironment: catalogText(display.schoolEnvironment),
@@ -207,6 +223,8 @@ function parseCatalogMetadata(data: Record<string, unknown>): PromptCatalogMetad
     section: catalogText(source.section),
     pdfPage: positivePage(source.pdfPage),
     bookPage: positivePage(source.bookPage),
+    ...(contentsOrder && { contentsOrder }),
+    ...(searchTags && { searchTags }),
   };
 }
 

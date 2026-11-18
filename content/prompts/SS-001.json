@@ -1,69 +1,44 @@
 {
   "id": "SS-001",
-  "version": "0.2.0",
-  "title": "교사철학 작성하기",
-  "mode": "wizard",
-  "sourceOriginalText": "[역할]\n너는 특수학교 교육과정 전문가이자 교사교육과정 컨설턴트이다.\n[내가 생각하는 교육관]\n나는 다음과 같은 교육관을 중요하게 생각한다.\n• 학생 중심의 교육을 지향한다.\n• 학생의 삶과 실생활을 연결하는 교육을 중요하게 생각한다.\n• 학생의 강점과 교육적 요구를 바탕으로 교육과정을 설계한다.\n• 성취기준에 학생을 맞추기보다 학생의 삶 속에서 성취기준을 의미 있게 경험할 수 있도록 교육과정을 재구성한다.\n• 성취기준을 개별적으로 경험하기 어려운 경우 여러 성취기준을 통합·재구성한다.\n• 성취기준의 단순한 달성보다 학생의 의미 있는 경험과 성장을 중요하게 생각한다.\n[요청]\n위의 교육관을 바탕으로 나의 교사철학을 작성한다.\n• 학생을 바라보는 관점과 교육적 신념이 드러나도록 한다.\n• 교육과정, 수업, 평가에서 어떻게 실천할 것인지 자연스럽게 연결한다.\n• 학생의 장애 특성, 교육적 요구와 기본 교육과정의 특성을 고려한다.\n• 일반적인 교육 가치의 나열보다 나만의 교육적 관점이 드러나도록 한다.\n• 문장의 종결어미는 ‘~한다.’로 통일한다.\n• 교사교육과정에 바로 활용할 수 있도록 핵심 내용 중심의 한 문장으로 작성한다.",
-  "templateText": "[역할]\n너는 특수학교 교육과정 전문가이자 교사교육과정 컨설턴트이다.\n[내가 생각하는 교육관]\n나는 다음과 같은 교육관을 중요하게 생각한다.\n{{educationalBeliefs}}\n[요청]\n위의 교육관을 바탕으로 나의 교사철학을 작성한다.\n• 학생을 바라보는 관점과 교육적 신념이 드러나도록 한다.\n• 교육과정, 수업, 평가에서 어떻게 실천할 것인지 자연스럽게 연결한다.\n• 학생의 장애 특성, 교육적 요구와 기본 교육과정의 특성을 고려한다.\n• 일반적인 교육 가치의 나열보다 나만의 교육적 관점이 드러나도록 한다.\n• 문장의 종결어미는 ‘~한다.’로 통일한다.\n• 교사교육과정에 바로 활용할 수 있도록 핵심 내용 중심의 한 문장으로 작성한다.",
+  "version": "0.3.0",
+  "publicationStatus": "published",
+  "title": "특수학교 교사철학 작성",
+  "mode": "simple-copy",
+  "sourceOriginalText": "[역할]\n너는 특수학교 교육과정 전문가이자 교사교육과정 컨설턴트이다.\n[교육관]\n-\t학생 중심의 교육을 지향한다.\n-\t학생의 삶과 실생활을 연결하는 교육을 중요하게 생각한다.\n-\t학생의 강점과 교육적 요구를 바탕으로 교육과정을 설계한다.\n-\t성취기준에 학생을 맞추기보다 학생의 삶 속에서 성취기준을 의미 있게 경험할 수 있도록 교육과정을 재구성한다.\n-\t성취기준을 개별적으로 경험하기 어려운 경우 여러 성취기준을 통합·재구성한다.\n-\t성취기준의 단순한 달성보다 학생의 의미 있는 경험과 성장을 중요하게 생각한다.\n[작성 지침]\n위의 교육관을 바탕으로 학생관과 교육과정·수업·평가에서의 실천 방향이 드러나는 교사철학을 한 문장으로 작성한다. 종결어미는 ‘~한다.’로 통일한다.",
+  "templateText": "[역할]\n너는 특수학교 교육과정 전문가이자 교사교육과정 컨설턴트이다.\n[교육관]\n-\t학생 중심의 교육을 지향한다.\n-\t학생의 삶과 실생활을 연결하는 교육을 중요하게 생각한다.\n-\t학생의 강점과 교육적 요구를 바탕으로 교육과정을 설계한다.\n-\t성취기준에 학생을 맞추기보다 학생의 삶 속에서 성취기준을 의미 있게 경험할 수 있도록 교육과정을 재구성한다.\n-\t성취기준을 개별적으로 경험하기 어려운 경우 여러 성취기준을 통합·재구성한다.\n-\t성취기준의 단순한 달성보다 학생의 의미 있는 경험과 성장을 중요하게 생각한다.\n[작성 지침]\n위의 교육관을 바탕으로 학생관과 교육과정·수업·평가에서의 실천 방향이 드러나는 교사철학을 한 문장으로 작성한다. 종결어미는 ‘~한다.’로 통일한다.",
+  "fields": [],
+  "attachments": [],
+  "steps": [],
+  "source": {
+    "document": "Part II · 특수학교",
+    "section": "2장 특수학교 교사교육과정 설계 / 4. 교육철학 및 교육 방향 설계",
+    "contentsOrder": {
+      "part": 2,
+      "chapter": 2,
+      "item": 1
+    }
+  },
+  "display": {
+    "category": "교육과정 설계·운영",
+    "schoolEnvironment": "특수학교",
+    "schoolLevel": "공통",
+    "searchTags": [
+      "교사교육과정 설계"
+    ]
+  },
   "relatedPromptIds": [
     "SS-002"
   ],
-  "publicationStatus": "published",
-  "source": {
-    "document": "특수학교",
-    "section": "교육철학 및 교육 방향 설계",
-    "pdfPage": 5,
-    "sourceType": "pdf",
-    "originalHasEditorialAnnotation": true
-  },
-  "display": {
-    "category": "교육과정 설계",
-    "schoolEnvironment": "특수학교",
-    "schoolLevel": "공통"
-  },
-  "fields": [
-    {
-      "id": "educationalBeliefs",
-      "label": "어떤 교육관을 중요하게 생각하나요?",
-      "kind": "repeatable",
-      "required": true,
-      "helpText": "학생을 바라보는 관점과 교육과정·수업·평가의 실천 원칙을 한 항목씩 입력해 주세요.",
-      "itemType": "long-text",
-      "minItems": 1,
-      "maxItems": null,
-      "format": "각 항목을 • 기호로 시작하는 줄로 정리",
-      "placeholderToken": "{{educationalBeliefs}}"
-    }
-  ],
-  "steps": [
-    {
-      "id": "input-educationalBeliefs",
-      "title": "나의 교육관",
-      "kind": "input",
-      "fieldIds": [
-        "educationalBeliefs"
-      ]
-    },
-    {
-      "id": "complete",
-      "title": "프롬프트 완성",
-      "kind": "generated-output"
-    }
-  ],
+  "previousResultImports": [],
   "publicationApproval": {
-    "recordId": "EDUBOT-C13-20261116-SS-001",
-    "sourceVersion": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf · SHA-256 e17cf4180aa45766a5f926f00297be038ebfba3aef77082ea69349a7f4c4f739",
-    "templateVersion": "0.2.0",
-    "approvedAt": "2026-11-16",
+    "recordId": "CODEX31-SS-001",
+    "sourceVersion": "2026-11-18-docx-part-2",
+    "templateVersion": "0.3.0",
+    "approvedAt": "2026-11-18",
     "licenseStatus": "approved",
     "releaseApproved": true,
-    "sourceSha256": "88021d55cec46705fec1eef6fe9f66e4d1313c20a37ff3a0ffc1a21fc15353b3",
-    "templateSha256": "a05906a37b716aaaf22fbc8bdce13e7b3a5c4591e83eca3b5ab5d843147241f1",
-    "replacements": [
-      {
-        "token": "{{educationalBeliefs}}",
-        "originalText": "• 학생 중심의 교육을 지향한다.\n• 학생의 삶과 실생활을 연결하는 교육을 중요하게 생각한다.\n• 학생의 강점과 교육적 요구를 바탕으로 교육과정을 설계한다.\n• 성취기준에 학생을 맞추기보다 학생의 삶 속에서 성취기준을 의미 있게 경험할 수 있도록 교육과정을 재구성한다.\n• 성취기준을 개별적으로 경험하기 어려운 경우 여러 성취기준을 통합·재구성한다.\n• 성취기준의 단순한 달성보다 학생의 의미 있는 경험과 성장을 중요하게 생각한다."
-      }
-    ]
+    "sourceSha256": "42eab01ea24cb676ce44466991109e791e82f37f602045243fc30f75417c3cd5",
+    "templateSha256": "42eab01ea24cb676ce44466991109e791e82f37f602045243fc30f75417c3cd5",
+    "replacements": []
   }
 }

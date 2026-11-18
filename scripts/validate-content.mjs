@@ -162,7 +162,7 @@ export function validateContent() {
   errors.push(...creation.errors);
   if (!errors.length) errors.push(...brokenPublishedReferences(templates, ids));
   const warnings = errors.length ? [] : promptLinkWarnings(templates, inventory);
-  const candidateCount = items.filter(({ id }) => typeof id === 'string' && id.startsWith('DD-X')).length;
+  const candidateCount = items.filter(({ id }) => typeof id === 'string' && id.startsWith('DD-')).length;
   return {errors, warnings, inventoryCount: items.length, officialCount: items.length - candidateCount, candidateCount, templateCount: paths.length, publishedPromptCount: templates.filter((template) => template?.publicationStatus === 'published').length, publishedGuideCount: creation.entries.filter((entry) => entry.support === 'supported').length};
 }
 
@@ -173,7 +173,7 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
     process.exitCode=1;
   } else {
     for (const warning of warnings) console.warn(`⚠ ${warning}`);
-    console.log(`✅ 원고 공식 프롬프트 ${officialCount}건 + 추가 후보 ${candidateCount}건 (메타데이터 총 ${inventoryCount}건), 템플릿 ${templateCount}건 무결성 검사 통과 (공개 ${publishedPromptCount}건)`);
+    console.log(`✅ 현행 원고 프롬프트 ${officialCount}건 + 구판·추가 후보 ${candidateCount}건 (메타데이터 총 ${inventoryCount}건), 템플릿 ${templateCount}건 무결성 검사 통과 (공개 ${publishedPromptCount}건)`);
     console.log(`✅ 에듀봇 제작 콘텐츠 검사 통과 (공개 가이드 ${publishedGuideCount}건)`);
   }
 }

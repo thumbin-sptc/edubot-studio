@@ -1,5 +1,5 @@
 {
-  "version": "0.2",
+  "version": "0.3",
   "sources": {
     "특수학급": {
       "docxFile": "03_특수학급.docx"
@@ -15,403 +15,594 @@
   },
   "items": [
     {
-      "id": "SC-001",
-      "title": "교사철학 작성하기",
-      "source": "특수학급",
-      "section": "교육철학 및 교육 방향 설계",
-      "category": "교육과정 설계",
-      "schoolLevel": "공통",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "id": "KG-001",
+      "title": "도담데이 연간 놀이 운영계획",
+      "source": "Part I · 유치원",
+      "section": "1장 도담데이를 활용한 놀이 중심 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 1) 도담데이 놀이 프로그램 연간 운영 계획",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
       "suggestedNextIds": [
-        "SC-002"
-      ],
-      "sourceDocx": "03_특수학급.docx"
+        "KG-003"
+      ]
     },
     {
-      "id": "SC-002",
-      "title": "특수학급 교육목표 및 구현중점",
-      "source": "특수학급",
-      "section": "교육과정 운영 방향 설계 / 교육목표 및 구현중점",
-      "category": "교육과정 설계",
-      "schoolLevel": "공통",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "id": "KG-002",
+      "title": "놀이 관찰 기반 교육과정 재구성",
+      "source": "Part I · 유치원",
+      "section": "1장 도담데이를 활용한 놀이 중심 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 2) 놀이 관찰을 반영한 교육과정 재구성",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
       "suggestedNextIds": [
-        "SC-003"
-      ],
-      "sourceDocx": "03_특수학급.docx"
+        "KG-003",
+        "KG-004"
+      ]
     },
     {
-      "id": "SC-003",
-      "title": "구현중점별 사업 세부 추진 계획",
-      "source": "특수학급",
-      "section": "교육과정 운영 방향 설계 / 구현중점별 사업 세부 추진 계획",
-      "category": "교육과정 설계",
-      "schoolLevel": "공통",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-004",
-      "title": "월별 수학과 교육과정 운영 계획",
-      "source": "특수학급",
-      "section": "연간 교육과정 운영 계획 / 다학년 수학과 교육과정 재구성",
-      "category": "교육과정 재구성",
-      "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "id": "KG-003",
+      "title": "월별 놀이활동과 유아별 참여 지원",
+      "source": "Part I · 유치원",
+      "section": "1장 도담데이를 활용한 놀이 중심 교육과정 재구성 / 2. 놀이 중심 교수·학습 과정안 설계 / 1) 월별 놀이활동 계획 및 유아별 맞춤형 지원",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
       "suggestedNextIds": [
-        "SC-006"
-      ],
-      "sourceDocx": "03_특수학급.docx"
+        "KG-005"
+      ]
     },
     {
-      "id": "SC-005",
-      "title": "사회정서교육 특색교육활동 운영 계획",
-      "source": "특수학급",
-      "section": "연간 교육과정 운영 계획 / 사회정서교육",
-      "category": "특색교육활동",
-      "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "id": "KG-004",
+      "title": "유치원·초등학교 이음교육 연계 활동",
+      "source": "Part I · 유치원",
+      "section": "1장 도담데이를 활용한 놀이 중심 교육과정 재구성 / 2. 놀이 중심 교수·학습 과정안 설계 / 2) 유치원·초등학교 이음교육 연계 활동 설계",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "KG-005",
+      "title": "도담데이 관찰척도·평가기준 분석",
+      "source": "Part I · 유치원",
+      "section": "1장 도담데이를 활용한 놀이 중심 교육과정 재구성 / 3. 놀이 관찰 및 평가 / 1) 놀이 프로그램별 관찰척도 및 평가기준 분석",
+      "category": "평가",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
       "suggestedNextIds": [
-        "SC-007"
-      ],
-      "sourceDocx": "03_특수학급.docx"
+        "KG-006"
+      ]
     },
     {
-      "id": "SC-006",
-      "title": "다학년 수학과 교수·학습 과정안",
-      "source": "특수학급",
-      "section": "교수·학습 과정안 설계 / 다학년 수학과",
-      "category": "수업 설계",
-      "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [
-        "SC-008"
-      ],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-007",
-      "title": "사회정서교육 연계 교수·학습 과정안",
-      "source": "특수학급",
-      "section": "교수·학습 과정안 설계 / 사회정서교육",
-      "category": "수업 설계",
-      "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-008",
-      "title": "수학과 평가계획 재구성안",
-      "source": "특수학급",
-      "section": "교과별 평가 계획 / 수학과 평가계획 분석 및 재구성",
-      "category": "평가 설계",
-      "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [
-        "SC-009"
-      ],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-009",
-      "title": "학생별 평가방법 및 평가기준",
-      "source": "특수학급",
-      "section": "교과별 평가 계획 / 학생별 평가방법 및 평가기준 설계",
-      "category": "평가 설계",
-      "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-010",
-      "title": "월별 수학과 교육과정 운영 계획",
-      "source": "특수학급",
-      "section": "연간 교육과정 운영 계획 / 다학년 수학과 교육과정 재구성",
-      "category": "교육과정 재구성",
-      "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [
-        "SC-012"
-      ],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-011",
-      "title": "진로·직업 연계 특색교육활동 운영 계획",
-      "source": "특수학급",
-      "section": "연간 교육과정 운영 계획 / 진로·직업 연계 주제중심활동",
-      "category": "특색교육활동",
-      "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [
-        "SC-013"
-      ],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-012",
-      "title": "다학년 수학과 교수·학습 과정안",
-      "source": "특수학급",
-      "section": "교수·학습 과정안 설계 / 다학년 수학과",
-      "category": "수업 설계",
-      "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [
-        "SC-014"
-      ],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-013",
-      "title": "진로·직업 연계 교수·학습 과정안",
-      "source": "특수학급",
-      "section": "교수·학습 과정안 설계 / 진로·직업 연계 주제중심활동",
-      "category": "수업 설계",
-      "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-014",
-      "title": "수학과 평가계획 재구성안",
-      "source": "특수학급",
-      "section": "교과별 평가 계획 / 수학과 평가계획 분석 및 재구성",
-      "category": "평가 설계",
-      "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [
-        "SC-015"
-      ],
-      "sourceDocx": "03_특수학급.docx"
-    },
-    {
-      "id": "SC-015",
-      "title": "학생별 평가방법 및 평가기준",
-      "source": "특수학급",
-      "section": "교과별 평가 계획 / 학생별 평가방법 및 평가기준 설계",
-      "category": "평가 설계",
-      "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
-      "suggestedNextIds": [],
-      "sourceDocx": "03_특수학급.docx"
+      "id": "KG-006",
+      "title": "놀이 관찰기록으로 서술형 평가 작성",
+      "source": "Part I · 유치원",
+      "section": "1장 도담데이를 활용한 놀이 중심 교육과정 재구성 / 3. 놀이 관찰 및 평가 / 2) 놀이 관찰기록을 활용한 서술형 평가",
+      "category": "평가",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
+      "suggestedNextIds": []
     },
     {
       "id": "SS-001",
-      "title": "교사철학 작성하기",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 5,
-      "section": "교육철학 및 교육 방향 설계",
-      "category": "교육과정 설계",
+      "title": "특수학교 교사철학 작성",
+      "source": "Part II · 특수학교",
+      "section": "2장 특수학교 교사교육과정 설계 / 4. 교육철학 및 교육 방향 설계",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "공통",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SS-002"
       ]
     },
     {
       "id": "SS-002",
-      "title": "학급 경영 목표 및 중점",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 5,
-      "section": "교육과정 운영 방향 설계",
-      "category": "교육과정 설계",
+      "title": "특수학교 학급 경영 목표·중점",
+      "source": "Part II · 특수학교",
+      "section": "2장 특수학교 교사교육과정 설계 / 5. 교육과정 운영 방향 설계",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "공통",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": []
     },
     {
       "id": "SS-003",
-      "title": "사회 교과 연간 교육과정 운영 계획",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 7,
-      "section": "초등 / 연간 교육과정 운영 계획 / 사회",
-      "category": "교육과정 재구성",
+      "title": "초등 사회 교과 연간 운영계획",
+      "source": "Part II · 특수학교",
+      "section": "3장 특수학교(초등) 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 1) 사회 교과 교육과정 운영 계획",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SS-005"
       ]
     },
     {
       "id": "SS-004",
-      "title": "일상생활 활동 교육과정 운영 계획",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 11,
-      "section": "초등 / 연간 교육과정 운영 계획 / 일상생활 활동",
-      "category": "교육과정 재구성",
+      "title": "초등 일상생활 활동 운영계획",
+      "source": "Part II · 특수학교",
+      "section": "3장 특수학교(초등) 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 2) 일상생활 활동 교육과정 운영 계획",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
-        "SS-006"
+        "SS-006",
+        "SS-008"
       ]
     },
     {
       "id": "SS-005",
-      "title": "사회 교과 교수·학습 과정안",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 12,
-      "section": "초등 / 교수학습 과정안 / 사회",
-      "category": "수업 설계",
+      "title": "초등 사회 교과 교수·학습 과정안",
+      "source": "Part II · 특수학교",
+      "section": "3장 특수학교(초등) 교육과정 재구성 / 2. 교수·학습 과정안 설계 / 1) 사회 교과 세부 교수·학습 과정안",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SS-007"
       ]
     },
     {
       "id": "SS-006",
-      "title": "일상생활 활동 교수·학습 과정안",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 15,
-      "section": "초등 / 교수학습 과정안 / 일상생활 활동",
-      "category": "수업 설계",
+      "title": "초등 일상생활 활동 교수·학습 과정안",
+      "source": "Part II · 특수학교",
+      "section": "3장 특수학교(초등) 교육과정 재구성 / 2. 교수·학습 과정안 설계 / 2) 일상생활 활동 세부 교수·학습 과정안",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SS-008"
       ]
     },
     {
       "id": "SS-007",
-      "title": "사회 교육과정 평가 계획",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 17,
-      "section": "초등 / 운영 평가 / 사회",
-      "category": "평가 설계",
+      "title": "초등 사회 교과 평가계획",
+      "source": "Part II · 특수학교",
+      "section": "3장 특수학교(초등) 교육과정 재구성 / 3. 교육과정 운영 평가 계획 / 1) 사회 교과 교육과정 평가 계획",
+      "category": "평가",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": []
     },
     {
       "id": "SS-008",
-      "title": "일상생활 활동 교육과정 평가 계획",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 19,
-      "section": "초등 / 운영 평가 / 일상생활 활동",
-      "category": "평가 설계",
+      "title": "초등 일상생활 활동 평가계획",
+      "source": "Part II · 특수학교",
+      "section": "3장 특수학교(초등) 교육과정 재구성 / 3. 교육과정 운영 평가 계획 / 2) 일상생활 활동 교육과정 평가 계획",
+      "category": "평가",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "초등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": []
     },
     {
       "id": "SS-009",
-      "title": "사회 교과 연간 교육과정 운영 계획",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 22,
-      "section": "중등 / 연간 교육과정 운영 계획 / 사회",
-      "category": "교육과정 재구성",
+      "title": "중등 사회 교과 연간 운영계획",
+      "source": "Part II · 특수학교",
+      "section": "4장 특수학교(중등) 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 1) 사회 교과 교육과정 운영 계획",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SS-011"
       ]
     },
     {
       "id": "SS-010",
-      "title": "일상생활 활동 교육과정 운영 계획",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 24,
-      "section": "중등 / 연간 교육과정 운영 계획 / 일상생활 활동",
-      "category": "교육과정 재구성",
+      "title": "중등 일상생활 활동 운영계획",
+      "source": "Part II · 특수학교",
+      "section": "4장 특수학교(중등) 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 2) 일상생활 활동 교육과정 운영 계획",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
-        "SS-012"
+        "SS-012",
+        "SS-014"
       ]
     },
     {
       "id": "SS-011",
-      "title": "사회 교과 교수·학습 과정안",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 27,
-      "section": "중등 / 교수학습 과정안 / 사회",
-      "category": "수업 설계",
+      "title": "중등 사회 교과 교수·학습 과정안",
+      "source": "Part II · 특수학교",
+      "section": "4장 특수학교(중등) 교육과정 재구성 / 2. 교수·학습 과정안 설계 / 1) 사회 교과 세부 교수·학습 과정안",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SS-013"
       ]
     },
     {
       "id": "SS-012",
-      "title": "일상생활 활동 교수·학습 과정안",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 29,
-      "section": "중등 / 교수학습 과정안 / 일상생활 활동",
-      "category": "수업 설계",
+      "title": "중등 일상생활 활동 교수·학습 과정안",
+      "source": "Part II · 특수학교",
+      "section": "4장 특수학교(중등) 교육과정 재구성 / 2. 교수·학습 과정안 설계 / 2) 일상생활 활동 세부 교수·학습 과정안",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": [
         "SS-014"
       ]
     },
     {
       "id": "SS-013",
-      "title": "사회 교육과정 평가 계획",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 31,
-      "section": "중등 / 운영 평가 / 사회",
-      "category": "평가 설계",
+      "title": "중등 사회 교과 평가계획",
+      "source": "Part II · 특수학교",
+      "section": "4장 특수학교(중등) 교육과정 재구성 / 3. 교육과정 운영 평가 계획 / 1) 사회 교과 교육과정 평가 계획",
+      "category": "평가",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
       "suggestedNextIds": []
     },
     {
       "id": "SS-014",
-      "title": "일상생활 활동 교육과정 평가 계획",
-      "source": "특수학교",
-      "sourcePdf": "[특수학교] 교육과정 재구성 예시파일 제출본 (10.22) (1).pdf",
-      "pdfPage": 33,
-      "section": "중등 / 운영 평가 / 일상생활 활동",
-      "category": "평가 설계",
+      "title": "중등 일상생활 활동 평가계획",
+      "source": "Part II · 특수학교",
+      "section": "4장 특수학교(중등) 교육과정 재구성 / 3. 교육과정 운영 평가 계획 / 2) 일상생활 활동 교육과정 평가 계획",
+      "category": "평가",
+      "schoolEnvironment": "특수학교",
       "schoolLevel": "중등",
-      "promptType": "structured-writing",
-      "status": "위치·제목 확인 / 원문 템플릿화 필요",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-001",
+      "title": "특수학급 교사철학 작성",
+      "source": "Part III · 특수학급",
+      "section": "5장 특수학급 교육과정 설계 / 3. 생태학적 환경 분석 / 4. 교육철학 및 교육 방향 설계",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "SC-002"
+      ]
+    },
+    {
+      "id": "SC-002",
+      "title": "특수학급 교육목표·구현중점 설계",
+      "source": "Part III · 특수학급",
+      "section": "5장 특수학급 교육과정 설계 / 5. 교육과정 운영 방향 설계 / 1) 교육목표 및 구현중점",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "SC-003",
+        "SC-005",
+        "SC-011"
+      ]
+    },
+    {
+      "id": "SC-003",
+      "title": "구현중점별 사업 세부 추진계획",
+      "source": "Part III · 특수학급",
+      "section": "5장 특수학급 교육과정 설계 / 5. 교육과정 운영 방향 설계 / 2) 구현중점별 사업 세부 추진 계획",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "공통",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-004",
+      "title": "초등 다학년 수학과 연간 운영계획",
+      "source": "Part III · 특수학급",
+      "section": "6장 초등학교 특수학급 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 1) 다학년 수학과 교육과정 재구성",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "초등",
+      "suggestedNextIds": [
+        "SC-006"
+      ]
+    },
+    {
+      "id": "SC-005",
+      "title": "초등 사회정서교육 특색활동 운영계획",
+      "source": "Part III · 특수학급",
+      "section": "6장 초등학교 특수학급 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 2) 특색교육활동 운영 계획: 사회정서교육",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "초등",
+      "suggestedNextIds": [
+        "SC-007"
+      ]
+    },
+    {
+      "id": "SC-006",
+      "title": "초등 다학년 수학과 교수·학습 과정안",
+      "source": "Part III · 특수학급",
+      "section": "6장 초등학교 특수학급 교육과정 재구성 / 2. 교수·학습 과정안 설계 / 1) 다학년 수학과 교수·학습 과정안",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "초등",
+      "suggestedNextIds": [
+        "SC-008"
+      ]
+    },
+    {
+      "id": "SC-007",
+      "title": "초등 교과 연계 사회정서교육 과정안",
+      "source": "Part III · 특수학급",
+      "section": "6장 초등학교 특수학급 교육과정 재구성 / 2. 교수·학습 과정안 설계 / 2) 사회정서교육 교수·학습 과정안",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "초등",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-008",
+      "title": "초등 수학과 평가계획 재구성",
+      "source": "Part III · 특수학급",
+      "section": "6장 초등학교 특수학급 교육과정 재구성 / 3. 교과별 평가계획 / 1) 수학과 평가계획 분석 및 재구성",
+      "category": "평가",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "초등",
+      "suggestedNextIds": [
+        "SC-009"
+      ]
+    },
+    {
+      "id": "SC-009",
+      "title": "초등 학생별 평가방법·평가기준",
+      "source": "Part III · 특수학급",
+      "section": "6장 초등학교 특수학급 교육과정 재구성 / 3. 교과별 평가계획 / 2) 학생별 평가방법 및 평가기준 설계",
+      "category": "평가",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "초등",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-010",
+      "title": "중등 다학년 수학과 연간 운영계획",
+      "source": "Part III · 특수학급",
+      "section": "7장 중학교 특수학급 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 1) 다학년 수학과 교육과정 재구성",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "중등",
+      "suggestedNextIds": [
+        "SC-012"
+      ]
+    },
+    {
+      "id": "SC-011",
+      "title": "중등 진로·직업 연계 활동 운영계획",
+      "source": "Part III · 특수학급",
+      "section": "7장 중학교 특수학급 교육과정 재구성 / 1. 연간 교육과정 운영 계획 / 2) 특색교육활동 운영 계획: 진로·직업 연계 주제중심활동",
+      "category": "교육과정 설계·운영",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "중등",
+      "suggestedNextIds": [
+        "SC-013"
+      ]
+    },
+    {
+      "id": "SC-012",
+      "title": "중등 다학년 수학과 교수·학습 과정안",
+      "source": "Part III · 특수학급",
+      "section": "7장 중학교 특수학급 교육과정 재구성 / 2. 교수·학습 과정안 설계 / 1) 다학년 수학과 교수·학습 과정안",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "중등",
+      "suggestedNextIds": [
+        "SC-014"
+      ]
+    },
+    {
+      "id": "SC-013",
+      "title": "중등 진로·직업 연계 교수·학습 과정안",
+      "source": "Part III · 특수학급",
+      "section": "7장 중학교 특수학급 교육과정 재구성 / 2. 교수·학습 과정안 설계 / 2) 진로·직업 연계 주제중심활동 교수·학습 과정안",
+      "category": "수업·활동 설계",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "중등",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "SC-014",
+      "title": "중등 수학과 평가계획 재구성",
+      "source": "Part III · 특수학급",
+      "section": "7장 중학교 특수학급 교육과정 재구성 / 3. 교과별 평가계획 / 1) 수학과 평가계획 분석 및 재구성",
+      "category": "평가",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "중등",
+      "suggestedNextIds": [
+        "SC-015"
+      ]
+    },
+    {
+      "id": "SC-015",
+      "title": "중등 학생별 평가방법·평가기준",
+      "source": "Part III · 특수학급",
+      "section": "7장 중학교 특수학급 교육과정 재구성 / 3. 교과별 평가계획 / 2) 학생별 평가방법 및 평가기준 설계",
+      "category": "평가",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "중등",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "IEP-001",
+      "title": "유치원 놀이 관찰 기반 현행수준·요구 분석",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "8장 유치원: 도담데이를 활용한 놀이 중심 개별화교육계획 / 1. 놀이 관찰을 통한 현행수준 및 교육적 요구 분석",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
+      "suggestedNextIds": [
+        "IEP-002"
+      ]
+    },
+    {
+      "id": "IEP-002",
+      "title": "유치원 IEP 장·단기 목표 및 교육계획",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "8장 유치원: 도담데이를 활용한 놀이 중심 개별화교육계획 / 2. 놀이 중심 개별화교육계획 수립 / 1) 장·단기 교육목표 및 교육계획 설계",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
+      "suggestedNextIds": [
+        "IEP-003",
+        "IEP-004"
+      ]
+    },
+    {
+      "id": "IEP-003",
+      "title": "도담데이 놀이와 유치원 IEP 연계",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "8장 유치원: 도담데이를 활용한 놀이 중심 개별화교육계획 / 2. 놀이 중심 개별화교육계획 수립 / 2) 도담데이 프로그램과 개별화교육계획 연계",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
+      "suggestedNextIds": [
+        "IEP-004"
+      ]
+    },
+    {
+      "id": "IEP-004",
+      "title": "유치원 놀이 관찰 기반 IEP 목표 평가",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "8장 유치원: 도담데이를 활용한 놀이 중심 개별화교육계획 / 3. 개별화교육목표 평가 및 교육계획 조정 / 1) 놀이 관찰기록을 통한 목표 도달 평가",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
+      "suggestedNextIds": [
+        "IEP-005"
+      ]
+    },
+    {
+      "id": "IEP-005",
+      "title": "유치원 IEP 평가 결과 및 계획 조정",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "8장 유치원: 도담데이를 활용한 놀이 중심 개별화교육계획 / 3. 개별화교육목표 평가 및 교육계획 조정 / 2) 평가 결과를 반영한 교육계획 조정",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "유치원",
+      "schoolLevel": "유치원",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "IEP-006",
+      "title": "특수학교 IEP 교육적 요구·중점 영역 분석",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "9장 특수학교: 교과 및 생활 지원을 연계한 개별화교육계획 / 1. 학생별 교육적 요구 분석 및 중점 영역 선정",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학교",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-007",
+        "IEP-008",
+        "IEP-009"
+      ]
+    },
+    {
+      "id": "IEP-007",
+      "title": "특수학교 교과 중심 IEP 수립",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "9장 특수학교: 교과 및 생활 지원을 연계한 개별화교육계획 / 2. 개별화교육계획 수립 / 1) 교과 중심 개별화교육계획",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학교",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-010"
+      ]
+    },
+    {
+      "id": "IEP-008",
+      "title": "특수학교 생활 지원 중심 IEP 수립",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "9장 특수학교: 교과 및 생활 지원을 연계한 개별화교육계획 / 2. 개별화교육계획 수립 / 2) 생활 지원 중심 개별화교육계획",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학교",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-010"
+      ]
+    },
+    {
+      "id": "IEP-009",
+      "title": "특수학교 교과·생활 지원 통합 IEP 수립",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "9장 특수학교: 교과 및 생활 지원을 연계한 개별화교육계획 / 2. 개별화교육계획 수립 / 3) 교과와 생활 지원을 함께 다루는 개별화교육계획",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학교",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-010"
+      ]
+    },
+    {
+      "id": "IEP-010",
+      "title": "특수학교 IEP 평가초점·방법 설계",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "9장 특수학교: 교과 및 생활 지원을 연계한 개별화교육계획 / 3. 개별화교육목표 평가 및 교육계획 조정 / 1) 학생별 평가초점 및 평가방법 설계",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학교",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-011"
+      ]
+    },
+    {
+      "id": "IEP-011",
+      "title": "특수학교 IEP 평가 및 후속 계획 조정",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "9장 특수학교: 교과 및 생활 지원을 연계한 개별화교육계획 / 3. 개별화교육목표 평가 및 교육계획 조정 / 2) 평가 결과 분석 및 후속 교육계획 조정",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학교",
+      "schoolLevel": "공통",
+      "suggestedNextIds": []
+    },
+    {
+      "id": "IEP-012",
+      "title": "특수학급 IEP 교육적 요구·중점 영역 분석",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "10장 특수학급: 통합교육 환경에서의 교과 및 생활 지원 중심 개별화교육계획 / 1. 학생별 교육적 요구 분석 및 중점 영역 선정",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-013",
+        "IEP-014"
+      ]
+    },
+    {
+      "id": "IEP-013",
+      "title": "특수학급 교과 중심 IEP 수립",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "10장 특수학급: 통합교육 환경에서의 교과 및 생활 지원 중심 개별화교육계획 / 2. 개별화교육계획 수립 / 1) 교과 중심 개별화교육계획",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-015"
+      ]
+    },
+    {
+      "id": "IEP-014",
+      "title": "특수학급 생활 지원 중심 IEP 수립",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "10장 특수학급: 통합교육 환경에서의 교과 및 생활 지원 중심 개별화교육계획 / 2. 개별화교육계획 수립 / 2) 생활 지원 중심 개별화교육계획",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-015"
+      ]
+    },
+    {
+      "id": "IEP-015",
+      "title": "특수학급 수업 속 IEP 목표 실행·지원",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "10장 특수학급: 통합교육 환경에서의 교과 및 생활 지원 중심 개별화교육계획 / 3. 개별화교육계획의 실행 및 평가 / 1) 특수학급에서의 IEP 목표 실행 및 교수적 지원",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "공통",
+      "suggestedNextIds": [
+        "IEP-016"
+      ]
+    },
+    {
+      "id": "IEP-016",
+      "title": "특수학급 IEP 목표 평가·교육계획 조정",
+      "source": "Part IV · 개별화교육계획(IEP)",
+      "section": "10장 특수학급: 통합교육 환경에서의 교과 및 생활 지원 중심 개별화교육계획 / 3. 개별화교육계획의 실행 및 평가 / 2) 학생별 목표 도달 평가 및 교육계획 조정",
+      "category": "개별화교육계획(IEP)",
+      "schoolEnvironment": "특수학급",
+      "schoolLevel": "공통",
       "suggestedNextIds": []
     },
     {

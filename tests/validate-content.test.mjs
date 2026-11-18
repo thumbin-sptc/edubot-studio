@@ -7,9 +7,12 @@ import { syntheticSimple, syntheticWizard, withSyntheticPublication, wizardRepla
 test('inventory and registered prompt templates pass validations', () => {
   const result=validateContent();
   assert.deepEqual(result.errors,[]);
-  assert.equal(result.inventoryCount,43);
-  assert.equal(result.officialCount,34);
-  assert.equal(result.candidateCount,9);
+  assert.deepEqual(result.warnings, []);
+  assert.equal(result.inventoryCount,65);
+  assert.equal(result.officialCount,51);
+  assert.equal(result.candidateCount,14);
+  assert.equal(result.templateCount,51);
+  assert.equal(result.publishedPromptCount,51);
 });
 
 test('synthetic draft templates remain outside the published catalog', () => {
