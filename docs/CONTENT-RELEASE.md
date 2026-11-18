@@ -40,6 +40,13 @@ CI와 공개용 빌드는 기록의 형식과 상태, 버전·해시 일치, 그
 - [ ] 확인된 조합만 개별적으로 `published`로 전환한다. 미검수 조합은 준비 중으로 둔다. 실제로 미지원임이 확인된 조합에는 확인일과 근거를 기록한다.
 - [ ] 경로, 파일 또는 지침을 바꾸면 연결과 실파일, 해시·크기·버전을 다시 검수한다. 이전 가이드 진행 기록을 보존하도록 가이드 버전도 변경하고, 회수한 파일은 공개 디렉터리에서도 제거한다.
 
+### 실제 예시 화면을 제공하는 가이드
+
+- 초등 특수학급 GPTs의 ChatGPT Projects PC 가이드는 `illustratedJourney`를 사용한다. `audience`에 학교급·교육 환경·지침 원본 계열을 기록하고 `requiredIds`, `recommendedIds`, 검증한 HTTPS 도움말 동작 `help`를 선언한다. 공통 자료는 필수에 포함한다. 권리 미확인 권장·선택 파일은 가이드의 `knowledgeIds`에서 제외한다.
+- `text-only` 단계의 `example`과 `illustratedJourney.completionExample`에는 같은 형식의 안전 처리본을 등록한다. 실제 로그인에서 확보한 각각의 `captureId`, `source: "hands-on"`, `privacyChecked: true`, `licenseStatus: "approved"`, `verifiedAt`, 정지 PNG/JPEG `path`와 파일 `sha256`, `alt`, 핵심 위치 `focusText`를 기록한다.
+- 원본 화면의 계정명·이메일·기관·학생·실제 파일명·대화는 비공개로 유지한다. 공개용은 개인정보가 없는 연습 프로젝트에서 필요한 부분만 남긴 안전 처리본이다. 이전 검수 화면이나 합성 테스트 이미지를 실캡처로 등록하지 않는다.
+- 가이드에 포함한 원문 지침 및 각 자료의 외부 AI 이용 허용을 웹 재배포와 별도로 확인해 해당 레코드 `externalAiUse`에 플랫폼을 추가한다. `verification.completionChecked`는 실제 로그인 상태에서 역할·파일 근거·개인화 점검 결과를 남긴 뒤에만 설정한다. 이 확인은 기존 단계별 검수·별도 게시 기록에 더해 적용한다.
+
 ## 4. 검사와 배포 확인
 
 - [ ] 합성 공개 데이터는 테스트 또는 격리된 로컬 복제본에서만 쓴다. 합성 템플릿·파일을 운영 `content/`나 `public/`에 커밋하지 않는다.

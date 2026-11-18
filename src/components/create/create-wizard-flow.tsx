@@ -35,7 +35,7 @@ export function CreateWizardFlow({ steps, progress, onMove, focusOnMount = false
       <nav className="prompt-steps" aria-label="제작 단계">
         <div className="step-progress">
           <label htmlFor={progressId}>제작 진행률</label>
-          <span>{currentStage} / {totalStages}단계 · 직접 확인 {completedCount}개</span>
+          <span>단계 {currentStage} / 전체 {totalStages} · 직접 확인 {completedCount}개</span>
         </div>
         <progress id={progressId} value={currentStage} max={totalStages} />
         <ol>
@@ -48,7 +48,9 @@ export function CreateWizardFlow({ steps, progress, onMove, focusOnMount = false
               </button>
             </li>
           ))}
-          <li><button type="button" aria-current={!step ? "step" : undefined} onClick={() => move(null)}>완료 후 점검</button></li>
+          <li><button type="button" aria-current={!step ? "step" : undefined} onClick={() => move(null)}>
+            {totalStages}. 완료 후 점검
+          </button></li>
         </ol>
       </nav>
       {children(headingId, move)}
@@ -67,18 +69,22 @@ export function CreateWizardFlow({ steps, progress, onMove, focusOnMount = false
   );
 }
 
-export function CreateStepCheck({ label, checked, onChange }: {
+export function CreateStepCheck({ label, checked, onChange, showCriterion = false }: {
   label: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
+  showCriterion?: boolean;
 }) {
+  const criterionId = useId();
   return (
     <div className="create-self-check">
+      {showCriterion && <p id={criterionId}><strong>직접 확인할 것</strong> {label}</p>}
       <label className="create-checkbox">
-        <input type="checkbox" checked={checked} onChange={(event) => onChange(event.target.checked)} />
-        {label}
+        <input type="checkbox" checked={checked} aria-describedby={showCriterion ? criterionId : undefined}
+          onChange={(event) => onChange(event.target.checked)} />
+        {showCriterion ? "직접 확인했어요" : label}
       </label>
-      <p className="muted">외부 AI에서 작업을 마쳤는지 직접 확인해 주세요.</p>
+      {!showCriterion && <p className="muted">외부 AI에서 작업을 마쳤는지 직접 확인해 주세요.</p>}
     </div>
   );
 }

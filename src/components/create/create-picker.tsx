@@ -47,6 +47,13 @@ export function CreatePicker({ statuses }: { statuses: CreateStatus[] }) {
         </div>
       </fieldset>
       <div className="create-selection" aria-live="polite">
+        {combination && !selected && (
+          <div className="space-y-2">
+            <p><strong>{platforms[combination.platform]} · {devices[combination.device]} · 준비 중</strong></p>
+            <p>실제 조작과 자료 이용 권리를 확인한 뒤 제작 안내를 공개해요.</p>
+            <Link href="/prompts" className="create-text-link">프롬프트 라이브러리 둘러보기</Link>
+          </div>
+        )}
         {combination && selected?.status === "published" && (
           <Link href={createHref(combination)} className="action">제작 안내 시작</Link>
         )}

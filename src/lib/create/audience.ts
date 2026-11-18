@@ -1,21 +1,17 @@
 import { buildSelectedBundle, type ZipBuilder } from "./engine.ts";
 import {
-  type Device, type environments, type Instruction, type Knowledge, type Platform,
-  type PublishedGuide, type schoolLevels,
+  type Device, type GuideAudience, type Instruction, type Knowledge, type Platform,
+  type PublishedGuide,
 } from "./model.ts";
+export { sourceFamilies } from "./model.ts";
 
-export type Audience = {
-  schoolLevel: (typeof schoolLevels)[number];
-  environment: (typeof environments)[number];
-};
-export const sourceFamilies = ["GEMS", "GPTs"] as const;
+export type Audience = Pick<GuideAudience, "schoolLevel" | "environment">;
 export const targetSurfaces = {
   chatgpt: "ChatGPT Projects",
   gemini: "Gemini Gems",
   claude: "Claude Projects",
 } satisfies Record<Platform, string>;
-export type AudienceSelection = Audience & {
-  sourceFamily: (typeof sourceFamilies)[number];
+export type AudienceSelection = GuideAudience & {
   platform: Platform;
   device: Device;
 };
@@ -122,7 +118,8 @@ export function resolveAudience(
   if (target.review !== "approved") pendingChecks.push("release");
   if (!checkedGuide) pendingChecks.push("guide");
   if (!checkedGuide || pendingChecks.length ||
-      references.some(({ status }) => status !== "available" && status !== "out-of-scope")) {
+      references.some(({ status, applicability }) =>
+        applicability === "scope-pending" || (applicability === "required" && status !== "available"))) {
     return { kind: "blocked", instruction, references, pendingChecks };
   }
 
@@ -146,6 +143,30 @@ export function resolveAudience(
       requiredIds: mandatory.map(({ id }) => id), recommendedIds: suggested.map(({ id }) => id),
     },
   };
+}
+
+// Only called after the content loader has verified a published illustrated journey.
+export function illustratedAudienceOption(guide: PublishedGuide) {
+  const journey = guide.illustratedJourney;
+  if (!journey) return undefined;
+  const { platform, device, instruction } = guide;
+  const { schoolLevel, environment, sourceFamily } = journey.audience;
+  const selection: AudienceSelection = { schoolLevel, environment, sourceFamily, platform, device };
+  const candidate: AudienceCandidate = {
+    sourceFamily,
+    instruction: { id: instruction.id, version: instruction.version, sha256: instruction.sha256 },
+    classification: "candidate",
+    coverage: [{ schoolLevel, environment, status: "verified" }],
+    targets: [{
+      platform, device, compatibility: "verified", handsOn: "verified", redistribution: "confirmed", review: "approved",
+      references: guide.resources.map(({ id, sha256, title }) => ({
+        id, label: title,
+        applicability: journey.requiredIds.includes(id) ? "required" : journey.recommendedIds.includes(id) ? "recommended" : "optional",
+        match: { status: "exact", assets: [{ id, sha256 }] },
+      })),
+    }],
+  };
+  return { guide, selection, candidate };
 }
 
 export async function buildAudienceBundle(

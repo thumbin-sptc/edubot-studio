@@ -69,6 +69,30 @@ export function syntheticTextGuide(guide = syntheticGuides()[0]) {
   };
 }
 
+export function syntheticIllustratedGuide(guide = syntheticTextGuide()) {
+  const assets = {};
+  function example(id) {
+    const path = `/tutorials/qa32-${id}.png`;
+    assets[path] = still;
+    return {
+      ...rights, path, sha256: createHash("sha256").update(still).digest("hex"), captureId: `QA32-${id}`,
+      source: "hands-on", privacyChecked: true, alt: `브라우저 검수용 합성 표본 ${id}`,
+      focusText: "합성 표본에서 예시 화면 확대와 닫기를 시험합니다.",
+    };
+  }
+  return {
+    guide: {
+      ...guide, steps: guide.steps.map((step) => ({ ...step, example: example(step.id) })),
+      verification: { ...guide.verification, completionChecked: true },
+      illustratedJourney: {
+        audience: { schoolLevel: "초등학교", environment: "특수학급", sourceFamily: "GPTs" },
+        help: { kind: "external-link", label: "합성 도움말", url: "https://example.invalid/qa32-help", verifiedAt },
+        requiredIds: ["test-common"], recommendedIds: ["test-context"], completionExample: example("completion"),
+      },
+    }, assets,
+  };
+}
+
 export function writeFixture(root, relativePath, value) {
   const path = join(root, ...relativePath.split("/"));
   mkdirSync(dirname(path), { recursive: true });
@@ -76,9 +100,11 @@ export function writeFixture(root, relativePath, value) {
 }
 
 export function writeCreateFixtures(root, guides = syntheticGuides(), extraAssets = {}) {
+  const externalAiUse = [...new Set(guides.filter((guide) => guide.illustratedJourney).map((guide) => guide.platform))];
   writeFixture(root, "content/instructions/test-core.json", {
     id: "test-core", version: "1.0.0", coreInstruction: core,
     sha256: createHash("sha256").update(core).digest("hex"), publicationStatus, ...rights,
+    ...(externalAiUse.length && { externalAiUse }),
   });
   for (const [kind, title] of [["common", "공통 합성 자료"], ["context", "조건부 합성 자료"], ["optional", "자율 선택 합성 자료"]]) {
     const path = `/downloads/qa-${kind}.txt`;
@@ -91,6 +117,7 @@ export function writeCreateFixtures(root, guides = syntheticGuides(), extraAsset
       recommendedFor: kind === "context" ? { schoolLevels: ["초등학교"], environments: ["특수학급"] } : undefined,
       platformNotes: { chatgpt: { text: "합성 플랫폼 참고", verifiedAt } },
       fileSize: buffer.length, fileVersion: "1.0.0", publicationStatus, ...rights,
+      ...(externalAiUse.length && { externalAiUse }),
     });
   }
   const mediaPaths = new Set(guides.flatMap(({ steps }) => Array.isArray(steps)

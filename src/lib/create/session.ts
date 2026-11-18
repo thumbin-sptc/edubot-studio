@@ -4,7 +4,7 @@ import { isSavingEnabled } from "../save-preference.ts";
 import { guideRevision } from "./engine.ts";
 import {
   environments, isDevice, isPlatform, personalizationFields, schoolLevels,
-  type Device, type Personalization, type Platform, type PublishedGuide,
+  type CompletionKind, type Device, type Personalization, type Platform, type PublishedGuide,
 } from "./model.ts";
 
 export const createPrefix = "edubot-studio:create:";
@@ -16,6 +16,7 @@ export type CreateProgress = {
   checked: string[];
   selections: Record<string, boolean>;
   personalization?: Personalization;
+  reviewedChecks?: CompletionKind[];
 };
 export type CreateSession = {
   schemaVersion: 1;
@@ -50,7 +51,16 @@ function parseProgress(raw: unknown): CreateProgress | null {
       !Object.entries(raw.selections).every(([id, selected]) => promptIdPattern.test(id) && typeof selected === "boolean")) {
     return null;
   }
-  const result = { stepId: raw.stepId, checked: raw.checked, selections: raw.selections as Record<string, boolean> };
+  const reviewedChecks: CompletionKind[] | undefined = raw.reviewedChecks === undefined ? undefined : [];
+  if (reviewedChecks) {
+    if (!Array.isArray(raw.reviewedChecks)) return null;
+    for (const kind of raw.reviewedChecks) {
+      if (kind !== "role" && kind !== "knowledge" && kind !== "personalization") return null;
+      reviewedChecks.push(kind);
+    }
+  }
+  const result = { stepId: raw.stepId, checked: raw.checked, selections: raw.selections as Record<string, boolean>,
+    ...(reviewedChecks && { reviewedChecks }) };
   if (raw.personalization === undefined) return result;
   const personalization = parsePersonalization(raw.personalization);
   return personalization ? { ...result, personalization } : null;
