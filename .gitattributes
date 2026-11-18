@@ -1,2 +1,4 @@
 # Download bytes are hashed and must remain identical across Git checkouts.
 /public/downloads/** binary
+# Preserve the supplied SVG bytes across checkouts and the Pages export.
+/src/assets/brand/wordmark.svg -text
